@@ -10,7 +10,7 @@ import org.wpilib.driverstation.DriverStation.Alliance;
 import org.wpilib.system.RobotController;
 import org.wpilib.system.Threads;
 import org.wpilib.system.Timer;
-import org.wpilib.command2.Command;
+import org.wpilib.command3.Command;
 import org.wpilib.command2.CommandScheduler;
 import frc.robot.constants.Constants;
 import java.io.File;
