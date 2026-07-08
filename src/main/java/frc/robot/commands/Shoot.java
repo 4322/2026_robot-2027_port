@@ -11,12 +11,7 @@ import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import org.littletonrobotics.junction.Logger;
 
 public class Shoot {
-  public Command shootCommand(Shooter shooter, Drive drive) {
-    StateMachine stateMachine = new StateMachine("Shooter - shootCommand");
-
-    State idle = stateMachine.addState((() -> shooter.requestIdle(null, null, null)));
-    
-  }
+  
 }
 
 /*  Old Commands V2 code

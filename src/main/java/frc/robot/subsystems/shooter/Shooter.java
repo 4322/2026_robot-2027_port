@@ -3,12 +3,17 @@ package frc.robot.subsystems.shooter;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.system.Timer;
+import org.wpilib.command3.Command;
 import org.wpilib.command3.Mechanism;
+import org.wpilib.command3.StateMachine;
+import org.wpilib.command3.StateMachine.State;
 
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.areaManager.AreaManager;
+import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
 import frc.robot.subsystems.shooter.flywheel.Flywheel;
 import frc.robot.subsystems.shooter.hood.Hood;
@@ -454,5 +459,41 @@ public class Shooter extends Mechanism {
 
   public void turretUnjamOverride(boolean override) {
     turret.unjamOverride(override);
+  }
+
+  public Command shoot(Drive drive) {
+    StateMachine stateMachine = new StateMachine("Shooter - shootCommand");
+
+    State idle = stateMachine.addState((runRepeatedly(() -> requestIdle(null, null, null))
+      .named("Shooter - shoot [idle]")));
+    
+    State score = stateMachine.addState((runRepeatedly(() -> requestShoot(false, true))
+      .named("Shooter - shoot [score]")));
+    
+    State pass = stateMachine.addState((runRepeatedly(() -> requestShoot(false, false))
+      .named("Shooter - shoot [pass]")));
+
+    if (!AreaManager.isShootingArea(drive.getTurretPose())) {
+      stateMachine.setInitialState(idle);
+    } else {
+      if (AreaManager.getZoneOfPosition(drive.getTurretPose()) == Zone.ALLIANCE_ZONE) {
+        stateMachine.setInitialState(score);
+      } else {
+        stateMachine.setInitialState(pass);
+      }
+    }
+
+    stateMachine.switchFromAny(idle, score).to(pass).when(() -> AreaManager.isShootingArea(drive.getTurretPose()) && AreaManager.getZoneOfPosition(drive.getTurretPose()) != Zone.ALLIANCE_ZONE);
+    stateMachine.switchFromAny(idle, pass).to(score).when(() -> AreaManager.isShootingArea(drive.getTurretPose()) && AreaManager.getZoneOfPosition(drive.getTurretPose()) == Zone.ALLIANCE_ZONE);
+    stateMachine.switchFromAny(score, pass).to(idle).when(() -> !AreaManager.isShootingArea(drive.getTurretPose()));
+
+    stateMachine.onCancel().run(_ -> requestIdle(null, null, null)) // TODO figure out how this works
+  .named("Shooter - shoot [cancel]");
+
+  return stateMachine.alongWith(runRepeatedly(() -> Logger.recordOutput(
+        "Shooter/currentZone", AreaManager.getZoneOfPosition(drive.getTurretPose()).toString()))
+      .named("Shooter - shoot [log]")); // TODO fix this
+    
+    
   }
 }
