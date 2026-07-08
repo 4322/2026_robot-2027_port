@@ -24,6 +24,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.rlog.RLOGServer;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.wpilib.epilogue.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

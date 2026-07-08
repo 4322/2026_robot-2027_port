@@ -1,11 +1,25 @@
 package frc.robot.commands;
 
-import org.wpilib.command2.Command;
+import org.wpilib.command3.Command;
+import org.wpilib.command3.StateMachine;
+import org.wpilib.command3.StateMachine.State;
+
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
 import org.littletonrobotics.junction.Logger;
+
+public class Shoot {
+  public Command shootCommand(Shooter shooter, Drive drive) {
+    StateMachine stateMachine = new StateMachine("Shooter - shootCommand");
+
+    State idle = stateMachine.addState((() -> shooter.requestIdle(null, null, null)));
+    
+  }
+}
+
+/*  Old Commands V2 code
 
 public class Shoot extends Command {
   private Shooter shooter;
@@ -44,3 +58,4 @@ public class Shoot extends Command {
     shooter.requestIdle(null, null, null);
   }
 }
+*/

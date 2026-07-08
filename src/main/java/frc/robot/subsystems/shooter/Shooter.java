@@ -3,7 +3,8 @@ package frc.robot.subsystems.shooter;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.system.Timer;
-import org.wpilib.command2.SubsystemBase;
+import org.wpilib.command3.Mechanism;
+
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
@@ -20,7 +21,7 @@ import frc.robot.util.firecontrol.ShotCalculator;
 import frc.robot.util.firecontrol.ShotLUT;
 import org.littletonrobotics.junction.Logger;
 
-public class Shooter extends SubsystemBase {
+public class Shooter extends Mechanism {
 
   public enum ShooterState {
     STARTING_CONFIG,
@@ -137,7 +138,6 @@ public class Shooter extends SubsystemBase {
     return targetTurretAngleDeg;
   }
 
-  @Override
   public void periodic() {
     flywheel.inputsPeriodic();
     hood.inputsPeriodic();
