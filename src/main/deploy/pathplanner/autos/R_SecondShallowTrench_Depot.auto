@@ -1,0 +1,25 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_SecondShallowTrench_Depot_A"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_SecondShallowTrench_Depot_B"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "R2",
+  "choreoAuto": false
+}

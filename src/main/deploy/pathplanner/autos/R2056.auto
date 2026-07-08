@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_A"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_2056_G"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "R",
+  "choreoAuto": false
+}

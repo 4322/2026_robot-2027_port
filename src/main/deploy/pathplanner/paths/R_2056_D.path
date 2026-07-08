@@ -1,0 +1,99 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.862,
+        "y": 0.6
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.862,
+        "y": 0.5999999999999996
+      },
+      "isLocked": false,
+      "linkedName": "R.2056.C"
+    },
+    {
+      "anchor": {
+        "x": 6.296877192982455,
+        "y": 0.7729824561403518
+      },
+      "prevControl": {
+        "x": 5.795640350877193,
+        "y": 0.5820350877192992
+      },
+      "nextControl": {
+        "x": 6.682407694490143,
+        "y": 0.919851218619471
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.9094999999999995,
+        "y": 3.3428157894736854
+      },
+      "prevControl": {
+        "x": 7.260387076012585,
+        "y": 3.363456205709719
+      },
+      "nextControl": {
+        "x": 6.65993140670625,
+        "y": 3.3281352839858185
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.759900142653351,
+        "y": 2.6570328102710414
+      },
+      "prevControl": {
+        "x": 6.408263157894737,
+        "y": 2.3721666666666668
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "R.2056.A"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5245202558635412,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.5049614112458547,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 2.040511727078882,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -153.435
+  },
+  "reversed": false,
+  "folder": "R_2056",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

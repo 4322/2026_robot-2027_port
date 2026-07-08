@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.772838801711839,
+        "y": 5.490599144079885
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.8561483594864479,
+        "y": 5.425905848787445
+      },
+      "isLocked": false,
+      "linkedName": "R.SecondShallow_A"
+    },
+    {
+      "anchor": {
+        "x": 0.9375060240963853,
+        "y": 7.22589156626506
+      },
+      "prevControl": {
+        "x": 1.7352289156626508,
+        "y": 7.22589156626506
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2564315352697092,
+      "rotationDegrees": 135.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "R_SecondShallow",
+  "idealStartingState": {
+    "velocity": 4.0,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}
