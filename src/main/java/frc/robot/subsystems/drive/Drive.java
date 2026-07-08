@@ -37,7 +37,7 @@ import org.wpilib.util.Alert;
 import org.wpilib.util.Alert.AlertType;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStation.Alliance;
-import org.wpilib.command2.Command;
+import org.wpilib.command3.Command;
 import org.wpilib.command2.SubsystemBase;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
@@ -155,7 +155,6 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/ZeroPose", new Pose2d());
   }
 
-  @Override
   public void periodic() {
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);

@@ -6,12 +6,13 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
 import org.wpilib.hardware.discrete.DigitalInput;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.RobotController;
 import org.wpilib.system.Threads;
 import org.wpilib.system.Timer;
 import org.wpilib.command3.Command;
-import org.wpilib.command2.CommandScheduler;
+import org.wpilib.command3.Scheduler;
+
 import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +25,6 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.rlog.RLOGServer;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-import org.wpilib.epilogue.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -40,7 +40,7 @@ public class Robot extends LoggedRobot {
   private Timer coastButtonTimer = new Timer();
   private static Timer stabilizeCamerasTimer = new Timer();
 
-  public static Alliance alliance = DriverStation.Alliance.Blue;
+  public static Alliance alliance = Alliance.BLUE;
 
   public static PathPlannerPath C_To_Depot;
 
@@ -376,11 +376,15 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+
+    Scheduler.getDefault().run();
+    
+    /* V2 CommandScheduler
     CommandScheduler.getInstance().run();
+    */
 
-    RobotContainer.shooter.outputsPeriodic();
-
-    RobotContainer.intake.periodicOutputs();
+    robotContainer.periodic();
+    robotContainer.outputsPeriodic();
 
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {

@@ -411,4 +411,15 @@ public class RobotContainer {
     deployer.setBrakeMode(brake);
     hood.setBrakeMode(brake);
   }
+
+  public void periodic() {
+    drive.periodic();
+    shooter.periodic();
+    // TODO
+  }
+
+    public void outputsPeriodic() {
+        shooter.outputsPeriodic();
+        // TODO
+    }
 }
