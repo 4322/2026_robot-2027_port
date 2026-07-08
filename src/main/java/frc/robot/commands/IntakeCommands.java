@@ -5,12 +5,13 @@ import org.wpilib.driverstation.GenericHID;
 import static org.wpilib.units.Units.Seconds;
 
 import org.wpilib.command3.Command;
-import org.wpilib.command3.button.CommandGamepad;
+import org.wpilib.command3.button.CommandNiDsXboxController;
+
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
-  private static Command transitionToIntake(Intake intake, CommandGamepad controller) {
+  private static Command transitionToIntake(Intake intake, CommandNiDsXboxController controller) {
     return Command.noRequirements(coroutine -> {
       coroutine.await(intake(intake));
       controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.5);
@@ -76,7 +77,7 @@ public class IntakeCommands {
   }
   */
 
-  public static Command toggleIntake(Intake intake, CommandGamepad controller) {
+  public static Command toggleIntake(Intake intake, CommandNiDsXboxController controller) {
     return Command.noRequirements(coroutine -> {
       if (intake.getState() == IntakeState.INTAKING) {
         coroutine.await(idle(intake));

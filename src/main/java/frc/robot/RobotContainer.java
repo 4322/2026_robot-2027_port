@@ -8,11 +8,12 @@
 package frc.robot;
 
 import org.wpilib.driverstation.GenericHID;
-import org.wpilib.driverstation.XboxController;
 import org.wpilib.smartdashboard.Field2d;
 import org.wpilib.smartdashboard.SmartDashboard;
-import org.wpilib.command2.Command;
-import org.wpilib.command2.button.CommandXboxController;
+import org.wpilib.command3.Command;
+import org.wpilib.command3.button.CommandGamepad;
+import org.wpilib.command3.button.CommandNiDsXboxController;
+
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.IntakeCommands;
@@ -101,7 +102,7 @@ public class RobotContainer {
   private static Field2d field;
 
   // Controller
-  public static final CommandXboxController controller = new CommandXboxController(0);
+  public static final CommandNiDsXboxController controller = new CommandNiDsXboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
