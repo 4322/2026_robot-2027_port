@@ -6,7 +6,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import org.wpilib.driverstation.XboxController;
 import org.wpilib.simulation.DriverStationSim;

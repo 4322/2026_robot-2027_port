@@ -8,7 +8,7 @@
 package frc.robot.util;
 
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import frc.robot.constants.Constants;
 import java.util.Optional;

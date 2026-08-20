@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.areaManager;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
 

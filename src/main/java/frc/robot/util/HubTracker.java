@@ -4,7 +4,7 @@ import static org.wpilib.units.Units.Seconds;
 
 import org.wpilib.units.measure.Time;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import java.util.Optional;

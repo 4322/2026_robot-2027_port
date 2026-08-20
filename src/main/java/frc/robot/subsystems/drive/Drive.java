@@ -36,7 +36,7 @@ import org.wpilib.math.system.plant.DCMotor;
 import org.wpilib.util.Alert;
 import org.wpilib.util.Alert.AlertType;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.command3.Command;
 import org.wpilib.command2.SubsystemBase;
 import org.wpilib.command2.sysid.SysIdRoutine;

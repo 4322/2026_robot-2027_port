@@ -18,7 +18,7 @@ import org.wpilib.math.kinematics.ChassisSpeeds;
 import org.wpilib.math.trajectory.TrapezoidProfile;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.Commands;
