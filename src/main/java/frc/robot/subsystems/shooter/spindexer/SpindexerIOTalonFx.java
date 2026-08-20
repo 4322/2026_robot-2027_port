@@ -16,6 +16,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 import frc.robot.util.AverageStat;
 
@@ -82,7 +84,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
             new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Aligned));
 
     if (leaderConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + leaderMotor.getDeviceID()
               + " error (Spindexer Leader): "
@@ -90,7 +92,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
           false);
     }
     if (followerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " error (Spindexer Follower): "
@@ -98,7 +100,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
           false);
     }
     if (followerMotorSetStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " set follower error (Spindexer Follower): "

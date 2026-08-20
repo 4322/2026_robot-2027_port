@@ -20,6 +20,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 
 public class TurretIOTalonFx implements TurretIO {
@@ -91,7 +93,7 @@ public class TurretIOTalonFx implements TurretIO {
     StatusCode CANcoderTwoStatus = CANcoderTwo.getConfigurator().apply(CANconfigTwo);
 
     if (configStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + turretMotor.getDeviceID()
               + " error (Turret): "
@@ -99,7 +101,7 @@ public class TurretIOTalonFx implements TurretIO {
           false);
     }
     if (CANcoderOneStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "CANCoderOne "
               + CANcoderOne.getDeviceID()
               + " error (Turret): "
@@ -107,7 +109,7 @@ public class TurretIOTalonFx implements TurretIO {
           false);
     }
     if (CANcoderTwoStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "CANCoderTwo "
               + CANcoderTwo.getDeviceID()
               + " error (Turret): "

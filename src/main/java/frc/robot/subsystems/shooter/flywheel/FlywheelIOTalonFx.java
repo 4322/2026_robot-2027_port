@@ -18,6 +18,7 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.util.Color;
 import frc.robot.constants.Constants;
 import frc.robot.util.AverageStat;
@@ -101,7 +102,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
       CanandcolorSettings canandcolorConfigStatus =
           canandcolor.setSettings(canandcolorConfig, 1.0, 5);
       if (!canandcolorConfigStatus.isEmpty()) {
-        DriverStation.reportError(
+        DriverStationErrors.reportError(
             "Canandcolor "
                 + canandcolor.getAddress()
                 + " error (Flywheel Sensor): "
@@ -111,7 +112,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     }
 
     if (leaderConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + leaderMotor.getDeviceID()
               + " config error (Flywheel Leader): "
@@ -119,7 +120,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
           false);
     }
     if (followerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " config error (Flywheel Follower): "
@@ -127,7 +128,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
           false);
     }
     if (followerMotorSetStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " set follower error (Flywheel Follower): "

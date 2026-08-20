@@ -37,6 +37,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.util.AverageStat;
@@ -161,7 +163,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     settings.setInvertDirection(constants.EncoderInverted);
     CanandmagSettings turnEncoderConfigStatus = turnEncoder.setSettings(settings, 0.1, 5);
     if (!turnEncoderConfigStatus.isEmpty()) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Canandmag "
               + turnEncoder.getAddress().getDeviceId()
               + " (Swerve turn encoder) failed to configure",
@@ -177,7 +179,7 @@ public class ModuleIOTalonFX implements ModuleIO {
       // separate if statement to avoid dead code warning
       if (Constants.Drive.zeroTurnEncoders) {
         if (turnEncoder.setAbsPosition(0)) {
-          DriverStation.reportWarning(
+          DriverStationErrors.reportWarning(
               "Zero point set for turn encoder " + constants.EncoderId, false);
           try {
             // wait for encoder position to be received
@@ -185,14 +187,14 @@ public class ModuleIOTalonFX implements ModuleIO {
           } catch (InterruptedException e) {
           }
         } else {
-          DriverStation.reportError("Failed to zero turn encoder " + constants.EncoderId, false);
+          DriverStationErrors.reportError("Failed to zero turn encoder " + constants.EncoderId, false);
         }
       }
     }
 
     StatusCode turnPositionSetStatus = turnTalon.setPosition(turnEncoder.getAbsPosition());
     if (turnPositionSetStatus.isError()) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "TalonFX "
               + constants.SteerMotorId
               + " (Swerve turn motor) failed to initialize turn position",

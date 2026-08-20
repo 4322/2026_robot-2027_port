@@ -26,6 +26,8 @@ import org.littletonrobotics.junction.rlog.RLOGServer;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import org.wpilib.driverstation.DriverStationErrors;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -132,7 +134,7 @@ public class Robot extends LoggedRobot {
             if (file.getName().endsWith(".hoot")
                 || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
               file.delete();
-              DriverStation.reportWarning("Deleted " + file.getName() + " to free up space", false);
+              DriverStationErrors.reportWarning("Deleted " + file.getName() + " to free up space", false);
             }
           }
         }
@@ -151,14 +153,14 @@ public class Robot extends LoggedRobot {
                 try {
                   bytesToDelete -= Files.size(file.toPath());
                 } catch (IOException e) {
-                  DriverStation.reportError("Failed to get size of file " + file.getName(), false);
+                  DriverStationErrors.reportError("Failed to get size of file " + file.getName(), false);
                   continue;
                 }
                 if (file.delete()) {
-                  DriverStation.reportWarning(
+                  DriverStationErrors.reportWarning(
                       "Deleted " + file.getName() + " to free up space", false);
                 } else {
-                  DriverStation.reportError("Failed to delete " + file.getName(), false);
+                  DriverStationErrors.reportError("Failed to delete " + file.getName(), false);
                 }
                 if (bytesToDelete <= 0) {
                   break;
@@ -181,14 +183,14 @@ public class Robot extends LoggedRobot {
                 try {
                   bytesToDelete -= Files.size(file.toPath());
                 } catch (IOException e) {
-                  DriverStation.reportError("Failed to get size of file " + file.getName(), false);
+                  DriverStationErrors.reportError("Failed to get size of file " + file.getName(), false);
                   continue;
                 }
                 if (file.delete()) {
-                  DriverStation.reportWarning(
+                  DriverStationErrors.reportWarning(
                       "Deleted " + file.getName() + " to free up space", false);
                 } else {
-                  DriverStation.reportError("Failed to delete " + file.getName(), false);
+                  DriverStationErrors.reportError("Failed to delete " + file.getName(), false);
                 }
                 if (bytesToDelete <= 0) {
                   break;
@@ -283,7 +285,7 @@ public class Robot extends LoggedRobot {
 
       L_SINGLE_SWEEP_B_DEPOT = PathPlannerPath.fromPathFile("R_SingleSweep_B_Depot").mirrorPath();
     } catch (Exception e) {
-      DriverStation.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
+      DriverStationErrors.reportError("Failed to load PathPlanner path - " + e.getMessage(), true);
       System.exit(1);
     }
 
@@ -410,14 +412,14 @@ public class Robot extends LoggedRobot {
     if (Constants.currentMode != Constants.Mode.SIM) {
       if (!coastButton.get()) {
         // button is pressed in
-        DriverStation.reportWarning("Activating Coast Mode", false);
+        DriverStationErrors.reportWarning("Activating Coast Mode", false);
         coastButtonTimer.start();
       }
       if (coastButtonTimer.hasElapsed(0.1)) {
         robotContainer.setBrakeMode(false);
       }
       if (coastButtonTimer.hasElapsed(10)) {
-        DriverStation.reportWarning("Activating Brake Mode", false);
+        DriverStationErrors.reportWarning("Activating Brake Mode", false);
         robotContainer.setBrakeMode(true);
         coastButtonTimer.stop();
         coastButtonTimer.reset();
