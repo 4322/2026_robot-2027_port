@@ -38,8 +38,9 @@ import org.wpilib.util.Alert.AlertType;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.command3.Command;
-import org.wpilib.command2.SubsystemBase;
-import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.command3.Mechanism;
+import org.wpilib.command3.Scheduler;
+import org.wpilib.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -51,7 +52,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Drive extends SubsystemBase {
+public class Drive extends Mechanism {
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = Constants.CANivore.CANBus.isNetworkFD() ? 250.0 : 100.0;
   public static final double DRIVE_BASE_RADIUS =
@@ -153,6 +154,7 @@ public class Drive extends SubsystemBase {
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
     Logger.recordOutput("Drive/ZeroPose", new Pose2d());
+    Scheduler.getDefault().addPeriodic(this::periodic);
   }
 
   public void periodic() {

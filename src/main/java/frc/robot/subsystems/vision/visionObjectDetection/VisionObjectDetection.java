@@ -6,14 +6,15 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.command2.SubsystemBase;
+import org.wpilib.command3.Mechanism;
+import org.wpilib.command3.Scheduler;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.VisionObjectDetection.ObjectDetectionTarget;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import org.littletonrobotics.junction.Logger;
 
-public class VisionObjectDetection extends SubsystemBase {
+public class VisionObjectDetection extends Mechanism {
   private final VisionObjectDetectionIOInputsAutoLogged inputs =
       new VisionObjectDetectionIOInputsAutoLogged();
   private final VisionObjectDetectionIO io;
@@ -30,9 +31,9 @@ public class VisionObjectDetection extends SubsystemBase {
     this.drive = drive;
     this.io = io;
     this.robotCenterToCamera = Constants.VisionObjectDetection.robotCenterToCamera;
+    Scheduler.getDefault().addPeriodic(this::periodic);
   }
 
-  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Vision/ObjectDetectionCamera", inputs);

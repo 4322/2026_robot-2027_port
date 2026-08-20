@@ -306,7 +306,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    Scheduler.getDefault().schedule(FollowPathCommand.warmupCommand());
   }
 
   /** This function is called periodically during all modes. */
@@ -433,7 +433,7 @@ public class Robot extends LoggedRobot {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(autonomousCommand);
+      Scheduler.getDefault().schedule(autonomousCommand);
       Logger.recordOutput("AutoName", autonomousCommand.getName());
     }
   }
@@ -462,7 +462,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    Scheduler.getDefault().cancelAll();
   }
 
   /** This function is called periodically during test mode. */

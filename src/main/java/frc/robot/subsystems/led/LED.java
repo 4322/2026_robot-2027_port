@@ -1,13 +1,14 @@
 package frc.robot.subsystems.led;
 
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.command2.SubsystemBase;
+import org.wpilib.command3.Mechanism;
+import org.wpilib.command3.Scheduler;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.util.HubShiftUtil;
 import org.littletonrobotics.junction.Logger;
 
-public class LED extends SubsystemBase {
+public class LED extends Mechanism {
   private LEDState state = LEDState.DISABLED;
 
   private boolean climberDeployed = false;
@@ -42,9 +43,9 @@ public class LED extends SubsystemBase {
   public LED(LEDIO io, Drive drive) {
     this.io = io;
     this.drive = drive;
+    Scheduler.getDefault().addPeriodic(this::periodic);
   }
 
-  @Override
   public void periodic() {
     Logger.recordOutput("LED/State", state.toString());
     if (DriverStation.isDisabled()) {
