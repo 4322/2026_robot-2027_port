@@ -43,8 +43,8 @@ public class ClockUtil {
   }
 
   // Returns the FPGA timestamp in seconds
-  public static double getFPGATimeSeconds() {
-    return RobotController.getFPGATime() / 1.0E6;
+  public static double gettimeSeconds() {
+    return RobotController.getTime() / 1.0E6;
   }
 
   // At reference method
