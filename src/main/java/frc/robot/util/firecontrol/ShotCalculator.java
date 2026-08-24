@@ -308,18 +308,18 @@ public class ShotCalculator {
     // where acceleration is estimated from the velocity delta between this cycle and last.
     // This tracks better through turns and speed changes because it catches the curvature.
     double dt = config.phaseDelayMs / 1000.0;
-    double ax = (robotVel.vxMetersPerSecond - prevRobotVx) / 0.02;
-    double ay = (robotVel.vyMetersPerSecond - prevRobotVy) / 0.02;
-    double aOmega = (robotVel.omegaRadiansPerSecond - prevRobotOmega) / 0.02;
+    double ax = (robotVel.vx - prevRobotVx) / 0.02;
+    double ay = (robotVel.vy - prevRobotVy) / 0.02;
+    double aOmega = (robotVel.omega - prevRobotOmega) / 0.02;
     Pose2d compensatedPose =
         rawPose.exp(
             new Twist2d(
-                robotVel.vxMetersPerSecond * dt + 0.5 * ax * dt * dt,
-                robotVel.vyMetersPerSecond * dt + 0.5 * ay * dt * dt,
-                robotVel.omegaRadiansPerSecond * dt + 0.5 * aOmega * dt * dt));
-    prevRobotVx = robotVel.vxMetersPerSecond;
-    prevRobotVy = robotVel.vyMetersPerSecond;
-    prevRobotOmega = robotVel.omegaRadiansPerSecond;
+                robotVel.vx * dt + 0.5 * ax * dt * dt,
+                robotVel.vy * dt + 0.5 * ay * dt * dt,
+                robotVel.omega * dt + 0.5 * aOmega * dt * dt));
+    prevRobotVx = robotVel.vx;
+    prevRobotVy = robotVel.vy;
+    prevRobotOmega = robotVel.omega;
 
     double robotX = compensatedPose.getX();
     double robotY = compensatedPose.getY();
