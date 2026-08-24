@@ -14,14 +14,14 @@ import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Transform2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisAccelerations;
+import org.wpilib.math.kinematics.ChassisAccelerations;
 import org.wpilib.math.trajectory.TrapezoidProfile;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
-import org.wpilib.command2.Command;
-import org.wpilib.command2.Commands;
+import org.wpilib.command3.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.LoggedTunableNumber;
@@ -73,7 +73,7 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       DoubleSupplier omegaSupplier) {
-    return Commands.run(
+    return drive.runRepeatedly(
         () -> {
           // Get linear velocity
           Translation2d linearVelocity =
@@ -86,8 +86,8 @@ public class DriveCommands {
           omega = Math.copySign(omega * omega, omega);
 
           // Convert to field relative speeds & send command
-          ChassisSpeeds speeds =
-              new ChassisSpeeds(
+          ChassisAccelerations speeds =
+              new ChassisAccelerations(
                   linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                   linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                   omega * drive.getMaxAngularSpeedRadPerSec());
@@ -95,7 +95,7 @@ public class DriveCommands {
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
+              ChassisAccelerations.fromFieldRelativeSpeeds(
                   speeds,
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
@@ -134,8 +134,8 @@ public class DriveCommands {
             angularVelocityScaling *= Constants.Drive.maxAngularSpeedPercentPassing;
           }
 
-          ChassisSpeeds speeds =
-              new ChassisSpeeds(
+          ChassisAccelerations speeds =
+              new ChassisAccelerations(
                   linearVelocity.getX() * linearVelocityScaling,
                   linearVelocity.getY() * linearVelocityScaling,
                   omega * angularVelocityScaling);
@@ -143,7 +143,7 @@ public class DriveCommands {
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
-              ChassisSpeeds.fromFieldRelativeSpeeds(
+              ChassisAccelerations.fromFieldRelativeSpeeds(
                   speeds,
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
@@ -190,21 +190,21 @@ public class DriveCommands {
                       drive.getRotation().getRadians(), rotationSupplier.get().getRadians());
 
               // Convert to field relative speeds & send command
-              ChassisSpeeds speeds =
-                  new ChassisSpeeds(
+              ChassisAccelerations speeds =
+                  new ChassisAccelerations(
                       linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
                       linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
                       && DriverStation.getAlliance().get() == Alliance.Red;
-              ChassisSpeeds robotRelative =
-                  ChassisSpeeds.fromFieldRelativeSpeeds(
+              ChassisAccelerations robotRelative =
+                  ChassisAccelerations.fromFieldRelativeSpeeds(
                       speeds,
                       isFlipped
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
                           : drive.getRotation());
-              ChassisSpeeds corrected = rotateAboutShooter(robotRelative, centerOfRotation);
+              ChassisAccelerations corrected = rotateAboutShooter(robotRelative, centerOfRotation);
               drive.runVelocity(corrected);
             },
             drive)
@@ -224,8 +224,8 @@ public class DriveCommands {
    * Rotates robot about shooter location instead of center. This works by adding a translational
    * velocity that cancels the shooter movement due to rotation.
    */
-  public static ChassisSpeeds rotateAboutShooter(
-      ChassisSpeeds robotRelativeSpeeds, Translation2d shooterOffset) {
+  public static ChassisAccelerations rotateAboutShooter(
+      ChassisAccelerations robotRelativeSpeeds, Translation2d shooterOffset) {
 
     // If we're rotating with omega, the shooter moves tangentially
     // We need to add translation to keep shooter stationary
@@ -237,7 +237,7 @@ public class DriveCommands {
     double shooterVyFromRotation = omega * shooterOffset.getX();
 
     // Subtract this from robot velocity to make shooter the rotation center
-    return new ChassisSpeeds(
+    return new ChassisAccelerations(
         robotRelativeSpeeds.vxMetersPerSecond - shooterVxFromRotation,
         robotRelativeSpeeds.vyMetersPerSecond - shooterVyFromRotation,
         omega);
@@ -324,7 +324,7 @@ public class DriveCommands {
             Commands.run(
                 () -> {
                   double speed = limiter.calculate(WHEEL_RADIUS_MAX_VELOCITY);
-                  drive.runVelocity(new ChassisSpeeds(0.0, 0.0, speed));
+                  drive.runVelocity(new ChassisAccelerations(0.0, 0.0, speed));
                 },
                 drive)),
 
