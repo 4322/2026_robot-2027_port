@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * https://github.com/4201VitruvianBots/Rebuilt2026/blob/main/src/main/java/frc/team4201/lib/geometry/FieldRectangle2d.java
  */
 
-public class FieldRectangle2d extends Rectangle2d {
+public class FieldRectangle2d extends OrangeRectangle2d {
 
   public FieldRectangle2d(Pose2d center, double xWidth, double yWidth) {
     super(center, xWidth, yWidth);
