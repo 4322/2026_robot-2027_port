@@ -26,7 +26,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Transform2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
-import org.wpilib.math.kinematics.ChassisAccelerations;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveDriveKinematics;
 import org.wpilib.math.kinematics.SwerveModulePosition;
 import org.wpilib.math.kinematics.SwerveModuleState;
@@ -224,9 +224,9 @@ public class Drive extends Mechanism {
    *
    * @param speeds Speeds in meters/sec
    */
-  public void runVelocity(ChassisAccelerations speeds) {
+  public void runVelocity(ChassisVelocities speeds) {
     // Calculate module setpoints
-    ChassisAccelerations discreteSpeeds = ChassisAccelerations.discretize(speeds, 0.02);
+    ChassisVelocities discreteSpeeds = ChassisVelocities.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
@@ -254,7 +254,7 @@ public class Drive extends Mechanism {
 
   /** Stops the drive. */
   public void stop() {
-    runVelocity(new ChassisAccelerations());
+    runVelocity(new ChassisVelocities());
   }
 
   /**
@@ -303,7 +303,7 @@ public class Drive extends Mechanism {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "Drive/SwerveChassisSpeeds/Measured")
-  private ChassisAccelerations getChassisSpeeds() {
+  private ChassisVelocities getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -398,11 +398,11 @@ public class Drive extends Mechanism {
         getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
   }
 
-  public ChassisAccelerations getFieldRelativeVelocity() {
-    return ChassisAccelerations.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
+  public ChassisVelocities getFieldRelativeVelocity() {
+    return ChassisVelocities.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
   }
 
-  public ChassisAccelerations getRobotRelativeVelocity() {
+  public ChassisVelocities getRobotRelativeVelocity() {
     return getChassisSpeeds();
   }
 

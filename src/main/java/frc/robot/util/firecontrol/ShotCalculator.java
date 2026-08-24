@@ -26,7 +26,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
 import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
-import org.wpilib.math.kinematics.ChassisAccelerations;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.util.Units;
 import org.wpilib.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
@@ -100,8 +100,8 @@ public class ShotCalculator {
    */
   public record ShotInputs(
       Pose2d robotPose,
-      ChassisAccelerations fieldVelocity,
-      ChassisAccelerations robotVelocity,
+      ChassisVelocities fieldVelocity,
+      ChassisVelocities robotVelocity,
       Translation2d hubCenter,
       Translation2d hubForward,
       double visionConfidence,
@@ -111,8 +111,8 @@ public class ShotCalculator {
     /** Convenience constructor for callers that don't have pitch/roll data. */
     public ShotInputs(
         Pose2d robotPose,
-        ChassisAccelerations fieldVelocity,
-        ChassisAccelerations robotVelocity,
+        ChassisVelocities fieldVelocity,
+        ChassisVelocities robotVelocity,
         Translation2d hubCenter,
         Translation2d hubForward,
         double visionConfidence) {
@@ -291,8 +291,8 @@ public class ShotCalculator {
     }
 
     Pose2d rawPose = inputs.robotPose();
-    ChassisAccelerations fieldVel = inputs.fieldVelocity();
-    ChassisAccelerations robotVel = inputs.robotVelocity();
+    ChassisVelocities fieldVel = inputs.fieldVelocity();
+    ChassisVelocities robotVel = inputs.robotVelocity();
 
     double poseX = rawPose.getX();
     double poseY = rawPose.getY();
