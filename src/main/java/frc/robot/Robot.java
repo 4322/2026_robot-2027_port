@@ -27,6 +27,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import org.wpilib.driverstation.DriverStationErrors;
+import org.wpilib.driverstation.MatchState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -300,13 +301,10 @@ public class Robot extends LoggedRobot {
         || Constants.currentMode == Constants.Mode.REPLAY) {
       // enable subsystems in sim mode
     }
-  }
 
-  @Override
-  public void robotInit() {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
-    Scheduler.getDefault().schedule(FollowPathCommand.warmupCommand());
+    //Scheduler.getDefault().schedule(FollowPathCommand.warmupCommand()); TODO disabled for now because pathplanner warmup command is v2 still
   }
 
   /** This function is called periodically during all modes. */
@@ -365,7 +363,7 @@ public class Robot extends LoggedRobot {
     // timing (see the template project documentation for details).
     // Don't do this when there are issues causing the CPU to be maxed out for any reason.
     if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(true, 99);
+      // TODO commented out Threads.setCurrentThreadPriority( 99);
     }
 
     // insure that the sim runs before everything else
@@ -390,11 +388,11 @@ public class Robot extends LoggedRobot {
 
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(false, 10);
+      // TODO commented out Threads.setCurrentThreadPriority(false, 10);
     }
 
     if (allianceUpdateTimer.hasElapsed(1)) {
-      Optional<Alliance> allianceOptional = DriverStation.getAlliance();
+      Optional<Alliance> allianceOptional = MatchState.getAlliance();
       if (allianceOptional.isPresent()) {
         alliance = allianceOptional.get();
       }
@@ -457,17 +455,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
-
-  /** This function is called once when test mode is enabled. */
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    Scheduler.getDefault().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
 
   /** This function is called once when the robot is first started up. */
   @Override
