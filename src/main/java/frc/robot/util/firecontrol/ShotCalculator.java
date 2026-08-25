@@ -17,7 +17,6 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
  */
-
 package frc.robot.util.firecontrol;
 
 import org.wpilib.math.util.MathUtil;
@@ -26,12 +25,12 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
 import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
-import org.wpilib.math.kinematics.ChassisSpeeds;
 import org.wpilib.math.util.Units;
 import org.wpilib.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
 import org.littletonrobotics.junction.Logger;
+import org.wpilib.math.kinematics.ChassisVelocities;
 
 /**
  * Shoot-on-the-move fire control solver. Figures out what RPM and heading your robot needs while
@@ -73,639 +72,564 @@ import org.littletonrobotics.junction.Logger;
  */
 public class ShotCalculator {
 
-  /**
-   * The result of calculate(). RPM to spin up, time of flight, heading to aim at, and a 0-100
-   * confidence score.
-   */
-  public record LaunchParameters(
-      double rpm,
-      double timeOfFlightSec,
-      Rotation2d turretAngle,
-      double hoodAngle,
-      double turretAngularVelocityRadPerSec,
-      boolean isValid,
-      double confidence,
-      double solvedDistanceM,
-      int iterationsUsed,
-      boolean warmStartUsed) {
+    /**
+     * The result of calculate(). RPM to spin up, time of flight, heading to aim at, and a 0-100
+     * confidence score.
+     */
+    public record LaunchParameters(double rpm, double timeOfFlightSec, Rotation2d turretAngle, double hoodAngle, double turretAngularVelocityRadPerSec, boolean isValid, double confidence, double solvedDistanceM, int iterationsUsed, boolean warmStartUsed) {
 
-    public static final LaunchParameters INVALID =
-        new LaunchParameters(0, 0, new Rotation2d(), 0, 0, false, 0, 0, 0, false);
-  }
-
-  /**
-   * All the state the solver needs from your robot each cycle. pitchDeg and rollDeg are absolute
-   * tilt angles in degrees. If your gyro doesn't report these, just pass 0.0 for both and set
-   * config.maxTiltDeg to something huge.
-   */
-  public record ShotInputs(
-      Pose2d robotPose,
-      ChassisSpeeds fieldVelocity,
-      ChassisSpeeds robotVelocity,
-      Translation2d hubCenter,
-      Translation2d hubForward,
-      double visionConfidence,
-      double pitchDeg,
-      double rollDeg) {
-
-    /** Convenience constructor for callers that don't have pitch/roll data. */
-    public ShotInputs(
-        Pose2d robotPose,
-        ChassisSpeeds fieldVelocity,
-        ChassisSpeeds robotVelocity,
-        Translation2d hubCenter,
-        Translation2d hubForward,
-        double visionConfidence) {
-      this(
-          robotPose,
-          fieldVelocity,
-          robotVelocity,
-          hubCenter,
-          hubForward,
-          visionConfidence,
-          0.0,
-          0.0);
-    }
-  }
-
-  /**
-   * Tuning parameters. Set these to match your robot, or wire them to SmartDashboard/TunableNumber.
-   */
-  public static class Config {
-    // Launcher geometry (measure from CAD)
-    public double launcherOffsetX = 0.20; // meters forward of robot center
-    public double launcherOffsetY = 0.0; // meters left of robot center
-
-    // How close/far you can score from (meters)
-    public double minScoringDistance = 0.5;
-    public double maxScoringDistance = 5.0;
-
-    // Newton solver tuning
-    public int maxIterations = 25;
-    public double convergenceTolerance = 0.001; // seconds
-    public double tofMin = 0.05;
-    public double tofMax = 5.0;
-
-    // Below this speed (m/s), don't bother with SOTM, just aim straight
-    public double minSOTMSpeed = 0.1;
-
-    // Above this speed (m/s), don't shoot, we're outside calibration range
-    public double maxSOTMSpeed = 3.0;
-
-    // Latency compensation (ms)
-    public double phaseDelayMs = 30.0; // vision pipeline lag
-    public double mechLatencyMs = 20.0; // how long the mechanism takes to respond
-
-    // Linear drag damping constant (1/s) for SOTM horizontal velocity decay.
-    // displacement = v0 * (1 - e^(-c*t)) / c
-    // c = 0.5*rho*Cd*A*v_ref / m = 0.24 for our ball at ~10 m/s. Set to 0 to disable.
-    public double sotmDragCoeff = 0.24;
-
-    // Confidence scoring weights (5-component weighted geometric mean)
-    public double wConvergence = 1.0;
-    public double wVelocityStability = 0.8;
-    public double wVisionConfidence = 1.2;
-    public double wHeadingAccuracy = 1.5;
-    public double wDistanceInRange = 0.5;
-    public double headingMaxErrorRad = Math.toRadians(15);
-
-    // Heading tolerance tightens as robot speed increases.
-    // scaledMaxError = base / (1 + speedScalar * speed). Set to 0 to disable.
-    public double headingSpeedScalar = 1.0;
-
-    // Heading tolerance scales with distance from hub.
-    // Farther = tighter because the same angle error produces a larger miss at long range.
-    // scaledMaxError *= referenceDistance / distance, clamped [0.5, 2.0].
-    public double headingReferenceDistance = 2.5; // meters
-
-    // Suppress firing when pitch or roll exceeds this threshold.
-    // Bumps and ramps tilt the robot, which throws off aim. Set to 90 to disable.
-    public double maxTiltDeg = 5.0;
-
-    // Rotation between the launcher face and robot front. 0 = forward-facing,
-    // Math.PI = rear-facing. The solver rotates the drive heading so the
-    // correct face points at the hub.
-    public double shooterAngleOffsetRad = 0.0;
-  }
-
-  private final Config config;
-
-  private final InterpolatingDoubleTreeMap rpmMap = new InterpolatingDoubleTreeMap();
-  private final InterpolatingDoubleTreeMap tofMap = new InterpolatingDoubleTreeMap();
-  private final InterpolatingDoubleTreeMap correctionRpmMap = new InterpolatingDoubleTreeMap();
-  private final InterpolatingDoubleTreeMap correctionTofMap = new InterpolatingDoubleTreeMap();
-
-  // If set via loadShotLUT(), base RPM/TOF/angle come from here instead of the
-  // separate maps. Corrections and copilot offset still layer on top.
-  private ShotLUT shotLUT = null;
-
-  // Copilot RPM trim (flat offset applied during match)
-  private double rpmOffset = 0;
-
-  // Solver state (reused across cycles to avoid allocation)
-  private double previousTOF = -1;
-  private double previousSpeed = 0;
-
-  // Previous-cycle velocities for acceleration estimation
-  private double prevRobotVx = 0;
-  private double prevRobotVy = 0;
-  private double prevRobotOmega = 0;
-
-  // Determines whether to modify target based on if scoring or not
-  // If scoring, modify hub target
-  private boolean forScoring;
-
-  // For easier logging
-  private String logPath = "SOTF/";
-
-  public ShotCalculator(Config config, boolean forScoring) {
-    this.config = config;
-    this.forScoring = forScoring;
-    if (forScoring) {
-      this.logPath += "Scoring/";
-    } else {
-      this.logPath += "Passing/";
-    }
-  }
-
-  /** Default config. You still need to call loadLUTEntry() to fill the lookup tables. */
-  public ShotCalculator() {
-    this(new Config(), true);
-  }
-
-  /**
-   * Add a distance/RPM/TOF point to the lookup table. Use ProjectileSimulator to generate these, or
-   * hand-tune.
-   */
-  public void loadLUTEntry(double distanceM, double rpm, double tof) {
-    rpmMap.put(distanceM, rpm);
-    tofMap.put(distanceM, tof);
-  }
-
-  // LUT lookup: base value + any corrections + copilot RPM offset
-  double effectiveRPM(double distance) {
-    double base = shotLUT != null ? shotLUT.getRPM(distance) : rpmMap.get(distance);
-    Double correction = correctionRpmMap.get(distance);
-    return base + (correction != null ? correction : 0.0) + rpmOffset;
-  }
-
-  // TODO: Add correction and offset if needed, not used on any LUTs anyway so not important
-  double effectiveHoodAngle(double distance) {
-    return shotLUT.getAngle(distance);
-  }
-
-  double effectiveTOF(double distance) {
-    double base = shotLUT != null ? shotLUT.getTOF(distance) : tofMap.get(distance);
-    Double correction = correctionTofMap.get(distance);
-    return base + (correction != null ? correction : 0.0);
-  }
-
-  // Drag-adjusted effective TOF: actual displacement < v*tof because drag.
-  // Returns (1 - e^(-c*tof)) / c, or just tof if no drag.
-  private double dragCompensatedTOF(double tof) {
-    double c = config.sotmDragCoeff;
-    if (c < 1e-6) return tof; // no drag correction
-    return (1.0 - Math.exp(-c * tof)) / c;
-  }
-
-  /** Central finite difference derivative of the TOF lookup table. */
-  private static final double DERIV_H = 0.01; // 1cm step
-
-  double tofMapDerivative(double d) {
-    double tHigh = effectiveTOF(d + DERIV_H);
-    double tLow = effectiveTOF(d - DERIV_H);
-    return (tHigh - tLow) / (2.0 * DERIV_H);
-  }
-
-  /**
-   * Solve for the firing solution. Call once per cycle in robotPeriodic(). Returns INVALID if
-   * you're out of range, behind the hub, going too fast, or the inputs are bad.
-   */
-  public LaunchParameters calculate(ShotInputs inputs) {
-    if (inputs == null
-        || inputs.robotPose() == null
-        || inputs.fieldVelocity() == null
-        || inputs.robotVelocity() == null) {
-      Logger.recordOutput(logPath + "error", "Null robot poses");
-      return LaunchParameters.INVALID;
+        public static final LaunchParameters INVALID = new LaunchParameters(0, 0, new Rotation2d(), 0, 0, false, 0, 0, 0, false);
     }
 
-    Pose2d rawPose = inputs.robotPose();
-    ChassisSpeeds fieldVel = inputs.fieldVelocity();
-    ChassisSpeeds robotVel = inputs.robotVelocity();
+    /**
+     * All the state the solver needs from your robot each cycle. pitchDeg and rollDeg are absolute
+     * tilt angles in degrees. If your gyro doesn't report these, just pass 0.0 for both and set
+     * config.maxTiltDeg to something huge.
+     */
+    public record ShotInputs(Pose2d robotPose, ChassisVelocities fieldVelocity, ChassisVelocities robotVelocity, Translation2d hubCenter, Translation2d hubForward, double visionConfidence, double pitchDeg, double rollDeg) {
 
-    double poseX = rawPose.getX();
-    double poseY = rawPose.getY();
-    if (Double.isNaN(poseX)
-        || Double.isNaN(poseY)
-        || Double.isInfinite(poseX)
-        || Double.isInfinite(poseY)) {
-      Logger.recordOutput(logPath + "error", "None");
-      return LaunchParameters.INVALID;
-    }
-
-    // Second-order pose prediction. Instead of just v*dt, we use v*dt + 0.5*a*dt^2
-    // where acceleration is estimated from the velocity delta between this cycle and last.
-    // This tracks better through turns and speed changes because it catches the curvature.
-    double dt = config.phaseDelayMs / 1000.0;
-    double ax = (robotVel.vxMetersPerSecond - prevRobotVx) / 0.02;
-    double ay = (robotVel.vyMetersPerSecond - prevRobotVy) / 0.02;
-    double aOmega = (robotVel.omegaRadiansPerSecond - prevRobotOmega) / 0.02;
-    Pose2d compensatedPose =
-        rawPose.exp(
-            new Twist2d(
-                robotVel.vxMetersPerSecond * dt + 0.5 * ax * dt * dt,
-                robotVel.vyMetersPerSecond * dt + 0.5 * ay * dt * dt,
-                robotVel.omegaRadiansPerSecond * dt + 0.5 * aOmega * dt * dt));
-    prevRobotVx = robotVel.vxMetersPerSecond;
-    prevRobotVy = robotVel.vyMetersPerSecond;
-    prevRobotOmega = robotVel.omegaRadiansPerSecond;
-
-    double robotX = compensatedPose.getX();
-    double robotY = compensatedPose.getY();
-    double heading = compensatedPose.getRotation().getRadians();
-
-    Translation2d hubCenter = inputs.hubCenter();
-
-    // If scoring into hub (center of field), use offset to score into edge of hub
-    if (forScoring) {
-      hubCenter =
-          hubCenter.plus(
-              new Translation2d(Units.inchesToMeters(3), 0)
-                  .rotateBy(hubCenter.minus(compensatedPose.getTranslation()).getAngle()));
-    }
-
-    double hubX = hubCenter.getX();
-    double hubY = hubCenter.getY();
-
-    // Behind-hub detection: dot product with hub forward vector
-    Translation2d hubForward = inputs.hubForward();
-    double dot = (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
-    if (dot < 0) {
-      return LaunchParameters.INVALID;
-    }
-
-    // Tilt gate. Bumps and ramps knock the launcher off-axis, so
-    // suppress firing when the chassis is tilted beyond the threshold.
-    if (Math.abs(inputs.pitchDeg()) > config.maxTiltDeg
-        || Math.abs(inputs.rollDeg()) > config.maxTiltDeg) {
-      return LaunchParameters.INVALID;
-    }
-
-    // Transform robot center to launcher position
-    double cosH = Math.cos(heading);
-    double sinH = Math.sin(heading);
-    double launcherX = robotX + config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
-    double launcherY = robotY + config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
-
-    // Launcher velocity includes rotational component: v_launcher = v_robot + omega x r
-    double launcherFieldOffX = config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
-    double launcherFieldOffY = config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
-    double omega = fieldVel.omegaRadiansPerSecond;
-    double vx = fieldVel.vxMetersPerSecond + (-launcherFieldOffY) * omega;
-    double vy = fieldVel.vyMetersPerSecond + launcherFieldOffX * omega;
-
-    // Displacement from launcher to hub
-    double rx = hubX - launcherX;
-    double ry = hubY - launcherY;
-    double distance = Math.hypot(rx, ry);
-
-    if (distance < config.minScoringDistance || distance > config.maxScoringDistance) {
-      Logger.recordOutput(logPath + "error", "Out of distance bounds");
-      return LaunchParameters.INVALID;
-    }
-
-    double robotSpeed = Math.hypot(vx, vy);
-
-    // Speed cap: shots above this speed are out of calibration range
-    if (robotSpeed > config.maxSOTMSpeed) {
-      Logger.recordOutput(logPath + "error", "Larger than max robot speed");
-      return LaunchParameters.INVALID;
-    }
-
-    boolean velocityFiltered = robotSpeed < config.minSOTMSpeed;
-
-    double solvedTOF;
-    double projDist;
-    int iterationsUsed;
-    boolean warmStartUsed;
-
-    if (velocityFiltered) {
-      // Static shot: no velocity compensation needed
-      solvedTOF = effectiveTOF(distance);
-      projDist = distance;
-      iterationsUsed = 0;
-      warmStartUsed = false;
-    } else {
-      // Newton-method SOTM solver
-      int maxIter = config.maxIterations;
-      double convTol = config.convergenceTolerance;
-
-      // Warm start from previous cycle's solution when available
-      double tof;
-      if (previousTOF > 0) {
-        tof = previousTOF;
-        warmStartUsed = true;
-      } else {
-        tof = effectiveTOF(distance);
-        warmStartUsed = false;
-      }
-
-      projDist = distance;
-      iterationsUsed = 0;
-
-      for (int i = 0; i < maxIter; i++) {
-        double prevTOF = tof;
-
-        // Compute drag exponent once per iteration for both drift and derivative
-        double c = config.sotmDragCoeff;
-        double dragExp = c < 1e-6 ? 1.0 : Math.exp(-c * tof);
-        double driftTOF = c < 1e-6 ? tof : (1.0 - dragExp) / c;
-
-        // Projected displacement at time t, with drag-compensated velocity offset
-        double prx = rx - vx * driftTOF;
-        double pry = ry - vy * driftTOF;
-        projDist = Math.hypot(prx, pry);
-
-        // Degenerate guard: ball is essentially on top of the hub
-        if (projDist < 0.01) {
-          tof = effectiveTOF(distance);
-          iterationsUsed = maxIter + 1; // flag as diverged
-          Logger.recordOutput(logPath + "error", "DistTooClose");
-          break;
+        /**
+         * Convenience constructor for callers that don't have pitch/roll data.
+         */
+        public ShotInputs(Pose2d robotPose, ChassisVelocities fieldVelocity, ChassisVelocities robotVelocity, Translation2d hubCenter, Translation2d hubForward, double visionConfidence) {
+            this(robotPose, fieldVelocity, robotVelocity, hubCenter, hubForward, visionConfidence, 0.0, 0.0);
         }
+    }
 
-        double lookupTOF = effectiveTOF(projDist);
+    /**
+     * Tuning parameters. Set these to match your robot, or wire them to SmartDashboard/TunableNumber.
+     */
+    public static class Config {
 
-        // Derivative for Newton step (chain rule: d/dt of dragCompensatedTOF = e^(-ct))
-        double dPrime = -dragExp * (prx * vx + pry * vy) / projDist;
-        double gPrime = tofMapDerivative(projDist);
-        double f = lookupTOF - tof;
-        double fPrime = gPrime * dPrime - 1.0;
+        // Launcher geometry (measure from CAD)
+        // meters forward of robot center
+        public double launcherOffsetX = 0.20;
 
-        // Newton step with near-zero denominator guard
-        if (Math.abs(fPrime) > 0.01) {
-          tof = tof - f / fPrime;
+        // meters left of robot center
+        public double launcherOffsetY = 0.0;
+
+        // How close/far you can score from (meters)
+        public double minScoringDistance = 0.5;
+
+        public double maxScoringDistance = 5.0;
+
+        // Newton solver tuning
+        public int maxIterations = 25;
+
+        // seconds
+        public double convergenceTolerance = 0.001;
+
+        public double tofMin = 0.05;
+
+        public double tofMax = 5.0;
+
+        // Below this speed (m/s), don't bother with SOTM, just aim straight
+        public double minSOTMSpeed = 0.1;
+
+        // Above this speed (m/s), don't shoot, we're outside calibration range
+        public double maxSOTMSpeed = 3.0;
+
+        // Latency compensation (ms)
+        // vision pipeline lag
+        public double phaseDelayMs = 30.0;
+
+        // how long the mechanism takes to respond
+        public double mechLatencyMs = 20.0;
+
+        // Linear drag damping constant (1/s) for SOTM horizontal velocity decay.
+        // displacement = v0 * (1 - e^(-c*t)) / c
+        // c = 0.5*rho*Cd*A*v_ref / m = 0.24 for our ball at ~10 m/s. Set to 0 to disable.
+        public double sotmDragCoeff = 0.24;
+
+        // Confidence scoring weights (5-component weighted geometric mean)
+        public double wConvergence = 1.0;
+
+        public double wVelocityStability = 0.8;
+
+        public double wVisionConfidence = 1.2;
+
+        public double wHeadingAccuracy = 1.5;
+
+        public double wDistanceInRange = 0.5;
+
+        public double headingMaxErrorRad = Math.toRadians(15);
+
+        // Heading tolerance tightens as robot speed increases.
+        // scaledMaxError = base / (1 + speedScalar * speed). Set to 0 to disable.
+        public double headingSpeedScalar = 1.0;
+
+        // Heading tolerance scales with distance from hub.
+        // Farther = tighter because the same angle error produces a larger miss at long range.
+        // scaledMaxError *= referenceDistance / distance, clamped [0.5, 2.0].
+        // meters
+        public double headingReferenceDistance = 2.5;
+
+        // Suppress firing when pitch or roll exceeds this threshold.
+        // Bumps and ramps tilt the robot, which throws off aim. Set to 90 to disable.
+        public double maxTiltDeg = 5.0;
+
+        // Rotation between the launcher face and robot front. 0 = forward-facing,
+        // Math.PI = rear-facing. The solver rotates the drive heading so the
+        // correct face points at the hub.
+        public double shooterAngleOffsetRad = 0.0;
+    }
+
+    private final Config config;
+
+    private final InterpolatingDoubleTreeMap rpmMap = new InterpolatingDoubleTreeMap();
+
+    private final InterpolatingDoubleTreeMap tofMap = new InterpolatingDoubleTreeMap();
+
+    private final InterpolatingDoubleTreeMap correctionRpmMap = new InterpolatingDoubleTreeMap();
+
+    private final InterpolatingDoubleTreeMap correctionTofMap = new InterpolatingDoubleTreeMap();
+
+    // If set via loadShotLUT(), base RPM/TOF/angle come from here instead of the
+    // separate maps. Corrections and copilot offset still layer on top.
+    private ShotLUT shotLUT = null;
+
+    // Copilot RPM trim (flat offset applied during match)
+    private double rpmOffset = 0;
+
+    // Solver state (reused across cycles to avoid allocation)
+    private double previousTOF = -1;
+
+    private double previousSpeed = 0;
+
+    // Previous-cycle velocities for acceleration estimation
+    private double prevRobotVx = 0;
+
+    private double prevRobotVy = 0;
+
+    private double prevRobotOmega = 0;
+
+    // Determines whether to modify target based on if scoring or not
+    // If scoring, modify hub target
+    private boolean forScoring;
+
+    // For easier logging
+    private String logPath = "SOTF/";
+
+    public ShotCalculator(Config config, boolean forScoring) {
+        this.config = config;
+        this.forScoring = forScoring;
+        if (forScoring) {
+            this.logPath += "Scoring/";
         } else {
-          tof = lookupTOF; // fixed-point fallback
+            this.logPath += "Passing/";
         }
+    }
 
-        // Per-iteration clamp prevents runaway
-        tof = MathUtil.clamp(tof, config.tofMin, config.tofMax);
+    /**
+     * Default config. You still need to call loadLUTEntry() to fill the lookup tables.
+     */
+    public ShotCalculator() {
+        this(new Config(), true);
+    }
 
-        iterationsUsed = i + 1;
+    /**
+     * Add a distance/RPM/TOF point to the lookup table. Use ProjectileSimulator to generate these, or
+     * hand-tune.
+     */
+    public void loadLUTEntry(double distanceM, double rpm, double tof) {
+        rpmMap.put(distanceM, rpm);
+        tofMap.put(distanceM, tof);
+    }
 
-        // Convergence check
-        if (Math.abs(tof - prevTOF) < convTol) {
-          break;
+    // LUT lookup: base value + any corrections + copilot RPM offset
+    double effectiveRPM(double distance) {
+        double base = shotLUT != null ? shotLUT.getRPM(distance) : rpmMap.get(distance);
+        Double correction = correctionRpmMap.get(distance);
+        return base + (correction != null ? correction : 0.0) + rpmOffset;
+    }
+
+    // TODO: Add correction and offset if needed, not used on any LUTs anyway so not important
+    double effectiveHoodAngle(double distance) {
+        return shotLUT.getAngle(distance);
+    }
+
+    double effectiveTOF(double distance) {
+        double base = shotLUT != null ? shotLUT.getTOF(distance) : tofMap.get(distance);
+        Double correction = correctionTofMap.get(distance);
+        return base + (correction != null ? correction : 0.0);
+    }
+
+    // Drag-adjusted effective TOF: actual displacement < v*tof because drag.
+    // Returns (1 - e^(-c*tof)) / c, or just tof if no drag.
+    private double dragCompensatedTOF(double tof) {
+        double c = config.sotmDragCoeff;
+        // no drag correction
+        if (c < 1e-6)
+            return tof;
+        return (1.0 - Math.plus(-c * tof.exp())) / c;
+    }
+
+    /**
+     * Central finite difference derivative of the TOF lookup table.
+     */
+    // 1cm step
+    private static final double DERIV_H = 0.01;
+
+    double tofMapDerivative(double d) {
+        double tHigh = effectiveTOF(d + DERIV_H);
+        double tLow = effectiveTOF(d - DERIV_H);
+        return (tHigh - tLow) / (2.0 * DERIV_H);
+    }
+
+    /**
+     * Solve for the firing solution. Call once per cycle in robotPeriodic(). Returns INVALID if
+     * you're out of range, behind the hub, going too fast, or the inputs are bad.
+     */
+    public LaunchParameters calculate(ShotInputs inputs) {
+        if (inputs == null || inputs.robotPose() == null || inputs.fieldVelocity() == null || inputs.robotVelocity() == null) {
+            Logger.recordOutput(logPath + "error", "Null robot poses");
+            return LaunchParameters.INVALID;
         }
-      }
-
-      // Divergence guard
-      if (tof > config.tofMax || tof < 0.0 || Double.isNaN(tof)) {
-        tof = effectiveTOF(distance);
-        iterationsUsed = maxIter + 1;
-      }
-
-      solvedTOF = tof;
+        Pose2d rawPose = inputs.robotPose();
+        ChassisVelocities fieldVel = inputs.fieldVelocity();
+        ChassisVelocities robotVel = inputs.robotVelocity();
+        double poseX = rawPose.getX();
+        double poseY = rawPose.getY();
+        if (Double.isNaN(poseX) || Double.isNaN(poseY) || Double.isInfinite(poseX) || Double.isInfinite(poseY)) {
+            Logger.recordOutput(logPath + "error", "None");
+            return LaunchParameters.INVALID;
+        }
+        // Second-order pose prediction. Instead of just v*dt, we use v*dt + 0.5*a*dt^2
+        // where acceleration is estimated from the velocity delta between this cycle and last.
+        // This tracks better through turns and speed changes because it catches the curvature.
+        double dt = config.phaseDelayMs / 1000.0;
+        double ax = (robotVel.vx - prevRobotVx) / 0.02;
+        double ay = (robotVel.vy - prevRobotVy) / 0.02;
+        double aOmega = (robotVel.omega - prevRobotOmega) / 0.02;
+        Pose2d compensatedPose = rawPose.plus(new Twist2d(robotVel.vx * dt + 0.5 * ax * dt * dt, robotVel.vy * dt + 0.5 * ay * dt * dt, robotVel.omega * dt + 0.5 * aOmega * dt * dt).exp());
+        prevRobotVx = robotVel.vx;
+        prevRobotVy = robotVel.vy;
+        prevRobotOmega = robotVel.omega;
+        double robotX = compensatedPose.getX();
+        double robotY = compensatedPose.getY();
+        double heading = compensatedPose.getRotation().getRadians();
+        Translation2d hubCenter = inputs.hubCenter();
+        // If scoring into hub (center of field), use offset to score into edge of hub
+        if (forScoring) {
+            hubCenter = hubCenter.plus(new Translation2d(Units.inchesToMeters(3), 0).rotateBy(hubCenter.minus(compensatedPose.getTranslation()).getAngle()));
+        }
+        double hubX = hubCenter.getX();
+        double hubY = hubCenter.getY();
+        // Behind-hub detection: dot product with hub forward vector
+        Translation2d hubForward = inputs.hubForward();
+        double dot = (hubX - robotX) * hubForward.getX() + (hubY - robotY) * hubForward.getY();
+        if (dot < 0) {
+            return LaunchParameters.INVALID;
+        }
+        // Tilt gate. Bumps and ramps knock the launcher off-axis, so
+        // suppress firing when the chassis is tilted beyond the threshold.
+        if (Math.abs(inputs.pitchDeg()) > config.maxTiltDeg || Math.abs(inputs.rollDeg()) > config.maxTiltDeg) {
+            return LaunchParameters.INVALID;
+        }
+        // Transform robot center to launcher position
+        double cosH = Math.cos(heading);
+        double sinH = Math.sin(heading);
+        double launcherX = robotX + config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
+        double launcherY = robotY + config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
+        // Launcher velocity includes rotational component: v_launcher = v_robot + omega x r
+        double launcherFieldOffX = config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
+        double launcherFieldOffY = config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
+        double omega = fieldVel.omega;
+        double vx = fieldVel.vx + (-launcherFieldOffY) * omega;
+        double vy = fieldVel.vy + launcherFieldOffX * omega;
+        // Displacement from launcher to hub
+        double rx = hubX - launcherX;
+        double ry = hubY - launcherY;
+        double distance = Math.hypot(rx, ry);
+        if (distance < config.minScoringDistance || distance > config.maxScoringDistance) {
+            Logger.recordOutput(logPath + "error", "Out of distance bounds");
+            return LaunchParameters.INVALID;
+        }
+        double robotSpeed = Math.hypot(vx, vy);
+        // Speed cap: shots above this speed are out of calibration range
+        if (robotSpeed > config.maxSOTMSpeed) {
+            Logger.recordOutput(logPath + "error", "Larger than max robot speed");
+            return LaunchParameters.INVALID;
+        }
+        boolean velocityFiltered = robotSpeed < config.minSOTMSpeed;
+        double solvedTOF;
+        double projDist;
+        int iterationsUsed;
+        boolean warmStartUsed;
+        if (velocityFiltered) {
+            // Static shot: no velocity compensation needed
+            solvedTOF = effectiveTOF(distance);
+            projDist = distance;
+            iterationsUsed = 0;
+            warmStartUsed = false;
+        } else {
+            // Newton-method SOTM solver
+            int maxIter = config.maxIterations;
+            double convTol = config.convergenceTolerance;
+            // Warm start from previous cycle's solution when available
+            double tof;
+            if (previousTOF > 0) {
+                tof = previousTOF;
+                warmStartUsed = true;
+            } else {
+                tof = effectiveTOF(distance);
+                warmStartUsed = false;
+            }
+            projDist = distance;
+            iterationsUsed = 0;
+            for (int i = 0; i < maxIter; i++) {
+                double prevTOF = tof;
+                // Compute drag exponent once per iteration for both drift and derivative
+                double c = config.sotmDragCoeff;
+                double dragExp = c < 1e-6 ? 1.0 : Math.plus(-c * tof.exp());
+                double driftTOF = c < 1e-6 ? tof : (1.0 - dragExp) / c;
+                // Projected displacement at time t, with drag-compensated velocity offset
+                double prx = rx - vx * driftTOF;
+                double pry = ry - vy * driftTOF;
+                projDist = Math.hypot(prx, pry);
+                // Degenerate guard: ball is essentially on top of the hub
+                if (projDist < 0.01) {
+                    tof = effectiveTOF(distance);
+                    // flag as diverged
+                    iterationsUsed = maxIter + 1;
+                    Logger.recordOutput(logPath + "error", "DistTooClose");
+                    break;
+                }
+                double lookupTOF = effectiveTOF(projDist);
+                // Derivative for Newton step (chain rule: d/dt of dragCompensatedTOF = e^(-ct))
+                double dPrime = -dragExp * (prx * vx + pry * vy) / projDist;
+                double gPrime = tofMapDerivative(projDist);
+                double f = lookupTOF - tof;
+                double fPrime = gPrime * dPrime - 1.0;
+                // Newton step with near-zero denominator guard
+                if (Math.abs(fPrime) > 0.01) {
+                    tof = tof - f / fPrime;
+                } else {
+                    // fixed-point fallback
+                    tof = lookupTOF;
+                }
+                // Per-iteration clamp prevents runaway
+                tof = Math.clamp(tof, config.tofMin, config.tofMax);
+                iterationsUsed = i + 1;
+                // Convergence check
+                if (Math.abs(tof - prevTOF) < convTol) {
+                    break;
+                }
+            }
+            // Divergence guard
+            if (tof > config.tofMax || tof < 0.0 || Double.isNaN(tof)) {
+                tof = effectiveTOF(distance);
+                iterationsUsed = maxIter + 1;
+            }
+            solvedTOF = tof;
+        }
+        // Save for next cycle's warm start
+        previousTOF = solvedTOF;
+        double effectiveTOF = solvedTOF + config.mechLatencyMs / 1000.0;
+        // RPM from LUT at solved distance
+        double effectiveRPMValue = effectiveRPM(projDist);
+        // Hood from LUT at solved distance
+        double effectiveHoodAngleValue = effectiveHoodAngle(projDist);
+        // Drive angle: aim at velocity-compensated target position
+        double compTargetX;
+        double compTargetY;
+        if (velocityFiltered) {
+            compTargetX = hubX;
+            compTargetY = hubY;
+        } else {
+            double headingDriftTOF = dragCompensatedTOF(solvedTOF);
+            compTargetX = hubX - vx * headingDriftTOF;
+            compTargetY = hubY - vy * headingDriftTOF;
+        }
+        double aimX = compTargetX - launcherX;
+        double aimY = compTargetY - launcherY;
+        // Turret angle with robot rotation compensation
+        Rotation2d turretAngle = new Rotation2d(aimX, aimY).rotateBy(compensatedPose.getRotation().unaryMinus());
+        // TODO: Remove since not needed for turret
+        if (config.shooterAngleOffsetRad != 0.0) {
+            turretAngle = turretAngle.plus(new Rotation2d(config.shooterAngleOffsetRad));
+        }
+        // Heading error for confidence calculation
+        // TODO: Not accurate for turret, remove
+        double headingErrorRad = MathUtil.angleModulus(turretAngle.getRadians() - heading);
+        // Angular velocity feedforward: rate of change of aim angle
+        double turretAngularVelocityRad = 0;
+        if (!velocityFiltered && distance > 0.1) {
+            // tangential velocity / distance gives angular rate
+            double tangentialVel = (ry * vx - rx * vy) / distance;
+            turretAngularVelocityRad = tangentialVel / distance;
+            // corner angular rate - chassis angular rate = turret angular rate feed forward
+            turretAngularVelocityRad = turretAngularVelocityRad - fieldVel.omega;
+        }
+        // Solver convergence quality
+        double solverQuality;
+        if (velocityFiltered) {
+            solverQuality = 1.0;
+        } else {
+            int maxIter = config.maxIterations;
+            if (iterationsUsed > maxIter) {
+                solverQuality = 0.0;
+            } else if (iterationsUsed <= 3) {
+                solverQuality = 1.0;
+            } else {
+                solverQuality = MathUtil.lerp(1.0, 0.1, (double) (iterationsUsed - 3) / (maxIter - 3));
+            }
+        }
+        double confidence = computeConfidence(solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
+        previousSpeed = robotSpeed;
+        Logger.recordOutput(logPath + "RPM", effectiveRPMValue);
+        Logger.recordOutput(logPath + "TOF", effectiveTOF);
+        Logger.recordOutput(logPath + "turretAngle", turretAngle);
+        Logger.recordOutput(logPath + "hoodAngle", effectiveHoodAngleValue);
+        Logger.recordOutput(logPath + "turretRadPerSecFF", turretAngularVelocityRad);
+        Logger.recordOutput(logPath + "error", "None");
+        Logger.recordOutput(logPath + "warmStart", warmStartUsed);
+        Logger.recordOutput(logPath + "normalDistToTarget", distance);
+        Logger.recordOutput(logPath + "projDistToTarget", projDist);
+        Logger.recordOutput(logPath + "targetPosition", new Pose2d(hubCenter, Rotation2d.kZero));
+        if (Constants.firingManagerMode == SubsystemMode.TUNING) {
+            SmartDashboard.putNumber("Tuning/distanceToTarget", distance);
+        }
+        return new LaunchParameters(effectiveRPMValue, effectiveTOF, turretAngle, effectiveHoodAngleValue, turretAngularVelocityRad, true, confidence, distance, iterationsUsed, warmStartUsed);
     }
 
-    // Save for next cycle's warm start
-    previousTOF = solvedTOF;
-
-    double effectiveTOF = solvedTOF + config.mechLatencyMs / 1000.0;
-
-    // RPM from LUT at solved distance
-    double effectiveRPMValue = effectiveRPM(projDist);
-
-    // Hood from LUT at solved distance
-    double effectiveHoodAngleValue = effectiveHoodAngle(projDist);
-
-    // Drive angle: aim at velocity-compensated target position
-    double compTargetX;
-    double compTargetY;
-    if (velocityFiltered) {
-      compTargetX = hubX;
-      compTargetY = hubY;
-    } else {
-      double headingDriftTOF = dragCompensatedTOF(solvedTOF);
-      compTargetX = hubX - vx * headingDriftTOF;
-      compTargetY = hubY - vy * headingDriftTOF;
-    }
-    double aimX = compTargetX - launcherX;
-    double aimY = compTargetY - launcherY;
-    // Turret angle with robot rotation compensation
-    Rotation2d turretAngle =
-        new Rotation2d(aimX, aimY).rotateBy(compensatedPose.getRotation().unaryMinus());
-
-    // TODO: Remove since not needed for turret
-    if (config.shooterAngleOffsetRad != 0.0) {
-      turretAngle = turretAngle.plus(new Rotation2d(config.shooterAngleOffsetRad));
-    }
-
-    // Heading error for confidence calculation
-    // TODO: Not accurate for turret, remove
-    double headingErrorRad = MathUtil.angleModulus(turretAngle.getRadians() - heading);
-
-    // Angular velocity feedforward: rate of change of aim angle
-    double turretAngularVelocityRad = 0;
-    if (!velocityFiltered && distance > 0.1) {
-      // tangential velocity / distance gives angular rate
-      double tangentialVel = (ry * vx - rx * vy) / distance;
-      turretAngularVelocityRad = tangentialVel / distance;
-
-      // corner angular rate - chassis angular rate = turret angular rate feed forward
-      turretAngularVelocityRad = turretAngularVelocityRad - fieldVel.omegaRadiansPerSecond;
+    /**
+     * Confidence from 0 to 100. Weighted geometric mean of 5 factors: solver convergence, velocity
+     * stability, vision confidence, heading accuracy, and distance from range edges. If any single
+     * factor drops to zero (like vision dies), the whole score tanks to zero. That's intentional
+     * because you really shouldn't be shooting if any one factor is gone.
+     */
+    private double computeConfidence(double solverQuality, double currentSpeed, double headingErrorRad, double distance, double visionConfidence) {
+        // 1. Solver quality (passed in, already 0-1)
+        double convergenceQuality = solverQuality;
+        // 2. Velocity stability: penalize rapid speed changes
+        double speedDelta = Math.abs(currentSpeed - previousSpeed);
+        double velocityStability = Math.clamp(1.0 - speedDelta / 0.5, 0, 1);
+        // 3. Vision confidence (0-1, from caller)
+        double visionConf = Math.clamp(visionConfidence, 0, 1);
+        // 4. Heading accuracy with speed scaling and distance scaling.
+        // Faster robot = tighter tolerance (because velocity errors compound).
+        // Closer to hub = tighter tolerance (because small angles mean big misses).
+        double distanceScale = Math.clamp(config.headingReferenceDistance / distance, 0.5, 2.0);
+        double speedScale = 1.0 / (1.0 + config.headingSpeedScalar * currentSpeed);
+        double scaledMaxError = config.headingMaxErrorRad * distanceScale * speedScale;
+        double headingErr = Math.abs(headingErrorRad);
+        double headingAccuracy = Math.clamp(1.0 - headingErr / scaledMaxError, 0, 1);
+        // 5. Distance in range: penalty for being near min/max scoring boundaries
+        double rangeSpan = config.maxScoringDistance - config.minScoringDistance;
+        double rangeFraction = (distance - config.minScoringDistance) / rangeSpan;
+        double distInRange = 1.0 - 2.0 * Math.abs(rangeFraction - 0.5);
+        distInRange = Math.clamp(distInRange, 0, 1);
+        // Weighted geometric mean (one zero kills it)
+        double[] c = { convergenceQuality, velocityStability, visionConf, headingAccuracy, distInRange };
+        double[] w = { config.wConvergence, config.wVelocityStability, config.wVisionConfidence, config.wHeadingAccuracy, config.wDistanceInRange };
+        double sumW = 0;
+        double logSum = 0;
+        for (int i = 0; i < 5; i++) {
+            if (c[i] <= 0)
+                return 0;
+            logSum += w[i] * Math.log(c[i]);
+            sumW += w[i];
+        }
+        if (sumW <= 0)
+            return 0;
+        double composite = Math.plus(logSum / sumW.exp()) * 100.0;
+        return Math.clamp(composite, 0, 100);
     }
 
-    // Solver convergence quality
-    double solverQuality;
-    if (velocityFiltered) {
-      solverQuality = 1.0;
-    } else {
-      int maxIter = config.maxIterations;
-      if (iterationsUsed > maxIter) {
-        solverQuality = 0.0;
-      } else if (iterationsUsed <= 3) {
-        solverQuality = 1.0;
-      } else {
-        solverQuality =
-            MathUtil.interpolate(1.0, 0.1, (double) (iterationsUsed - 3) / (maxIter - 3));
-      }
+    /**
+     * Layer a per-distance RPM adjustment on top of the base LUT. Good for field tuning at comp.
+     */
+    public void addRpmCorrection(double distance, double deltaRpm) {
+        correctionRpmMap.put(distance, deltaRpm);
     }
 
-    double confidence =
-        computeConfidence(
-            solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
-
-    previousSpeed = robotSpeed;
-
-    Logger.recordOutput(logPath + "RPM", effectiveRPMValue);
-    Logger.recordOutput(logPath + "TOF", effectiveTOF);
-    Logger.recordOutput(logPath + "turretAngle", turretAngle);
-    Logger.recordOutput(logPath + "hoodAngle", effectiveHoodAngleValue);
-    Logger.recordOutput(logPath + "turretRadPerSecFF", turretAngularVelocityRad);
-    Logger.recordOutput(logPath + "error", "None");
-    Logger.recordOutput(logPath + "warmStart", warmStartUsed);
-    Logger.recordOutput(logPath + "normalDistToTarget", distance);
-    Logger.recordOutput(logPath + "projDistToTarget", projDist);
-    Logger.recordOutput(logPath + "targetPosition", new Pose2d(hubCenter, Rotation2d.kZero));
-
-    if (Constants.firingManagerMode == SubsystemMode.TUNING) {
-      SmartDashboard.putNumber("Tuning/distanceToTarget", distance);
+    /**
+     * Layer a per-distance TOF adjustment on top of the base LUT.
+     */
+    public void addTofCorrection(double distance, double deltaTof) {
+        correctionTofMap.put(distance, deltaTof);
     }
 
-    return new LaunchParameters(
-        effectiveRPMValue,
-        effectiveTOF,
-        turretAngle,
-        effectiveHoodAngleValue,
-        turretAngularVelocityRad,
-        true,
-        confidence,
-        distance,
-        iterationsUsed,
-        warmStartUsed);
-  }
-
-  /**
-   * Confidence from 0 to 100. Weighted geometric mean of 5 factors: solver convergence, velocity
-   * stability, vision confidence, heading accuracy, and distance from range edges. If any single
-   * factor drops to zero (like vision dies), the whole score tanks to zero. That's intentional
-   * because you really shouldn't be shooting if any one factor is gone.
-   */
-  private double computeConfidence(
-      double solverQuality,
-      double currentSpeed,
-      double headingErrorRad,
-      double distance,
-      double visionConfidence) {
-
-    // 1. Solver quality (passed in, already 0-1)
-    double convergenceQuality = solverQuality;
-
-    // 2. Velocity stability: penalize rapid speed changes
-    double speedDelta = Math.abs(currentSpeed - previousSpeed);
-    double velocityStability = MathUtil.clamp(1.0 - speedDelta / 0.5, 0, 1);
-
-    // 3. Vision confidence (0-1, from caller)
-    double visionConf = MathUtil.clamp(visionConfidence, 0, 1);
-
-    // 4. Heading accuracy with speed scaling and distance scaling.
-    // Faster robot = tighter tolerance (because velocity errors compound).
-    // Closer to hub = tighter tolerance (because small angles mean big misses).
-    double distanceScale = MathUtil.clamp(config.headingReferenceDistance / distance, 0.5, 2.0);
-    double speedScale = 1.0 / (1.0 + config.headingSpeedScalar * currentSpeed);
-    double scaledMaxError = config.headingMaxErrorRad * distanceScale * speedScale;
-    double headingErr = Math.abs(headingErrorRad);
-    double headingAccuracy = MathUtil.clamp(1.0 - headingErr / scaledMaxError, 0, 1);
-
-    // 5. Distance in range: penalty for being near min/max scoring boundaries
-    double rangeSpan = config.maxScoringDistance - config.minScoringDistance;
-    double rangeFraction = (distance - config.minScoringDistance) / rangeSpan;
-    double distInRange = 1.0 - 2.0 * Math.abs(rangeFraction - 0.5);
-    distInRange = MathUtil.clamp(distInRange, 0, 1);
-
-    // Weighted geometric mean (one zero kills it)
-    double[] c = {convergenceQuality, velocityStability, visionConf, headingAccuracy, distInRange};
-    double[] w = {
-      config.wConvergence,
-      config.wVelocityStability,
-      config.wVisionConfidence,
-      config.wHeadingAccuracy,
-      config.wDistanceInRange
-    };
-
-    double sumW = 0;
-    double logSum = 0;
-    for (int i = 0; i < 5; i++) {
-      if (c[i] <= 0) return 0;
-      logSum += w[i] * Math.log(c[i]);
-      sumW += w[i];
+    /**
+     * Clear all corrections, back to the raw LUT.
+     */
+    public void clearCorrections() {
+        correctionRpmMap.clear();
+        correctionTofMap.clear();
     }
 
-    if (sumW <= 0) return 0;
-    double composite = Math.exp(logSum / sumW) * 100.0;
-    return MathUtil.clamp(composite, 0, 100);
-  }
+    /**
+     * Bump the RPM offset by delta. Clamped to +/- 200. Bind this to copilot D-pad.
+     */
+    public void adjustOffset(double delta) {
+        rpmOffset = Math.clamp(rpmOffset + delta, -200, 200);
+    }
 
-  /** Layer a per-distance RPM adjustment on top of the base LUT. Good for field tuning at comp. */
-  public void addRpmCorrection(double distance, double deltaRpm) {
-    correctionRpmMap.put(distance, deltaRpm);
-  }
+    /**
+     * Reset the RPM offset to zero. Call this on mode transitions so trim doesn't carry over.
+     */
+    public void resetOffset() {
+        rpmOffset = 0;
+    }
 
-  /** Layer a per-distance TOF adjustment on top of the base LUT. */
-  public void addTofCorrection(double distance, double deltaTof) {
-    correctionTofMap.put(distance, deltaTof);
-  }
+    public double getOffset() {
+        return rpmOffset;
+    }
 
-  /** Clear all corrections, back to the raw LUT. */
-  public void clearCorrections() {
-    correctionRpmMap.clear();
-    correctionTofMap.clear();
-  }
+    /**
+     * Raw time-of-flight from the LUT at this distance (no velocity compensation).
+     */
+    public double getTimeOfFlight(double distanceM) {
+        return effectiveTOF(distanceM);
+    }
 
-  /** Bump the RPM offset by delta. Clamped to +/- 200. Bind this to copilot D-pad. */
-  public void adjustOffset(double delta) {
-    rpmOffset = MathUtil.clamp(rpmOffset + delta, -200, 200);
-  }
+    /**
+     * Base RPM at this distance, before any corrections or offset.
+     */
+    public double getBaseRPM(double distance) {
+        if (shotLUT != null)
+            return shotLUT.getRPM(distance);
+        return rpmMap.get(distance);
+    }
 
-  /** Reset the RPM offset to zero. Call this on mode transitions so trim doesn't carry over. */
-  public void resetOffset() {
-    rpmOffset = 0;
-  }
+    /**
+     * Reset the warm start state. Call this after a pose reset so the solver doesn't use stale data.
+     */
+    public void resetWarmStart() {
+        previousTOF = -1;
+        previousSpeed = 0;
+        prevRobotVx = 0;
+        prevRobotVy = 0;
+        prevRobotOmega = 0;
+    }
 
-  public double getOffset() {
-    return rpmOffset;
-  }
+    /**
+     * Load a ShotLUT instead of calling loadLUTEntry() one at a time. RPM, hood angle, and TOF all
+     * interpolate together so they can't drift apart. Corrections from addRpmCorrection() and copilot
+     * offset still layer on top.
+     *
+     * <p>Takes priority over any entries added through loadLUTEntry().
+     */
+    public void loadShotLUT(ShotLUT lut) {
+        this.shotLUT = lut;
+    }
 
-  /** Raw time-of-flight from the LUT at this distance (no velocity compensation). */
-  public double getTimeOfFlight(double distanceM) {
-    return effectiveTOF(distanceM);
-  }
+    /**
+     * Hood angle at this distance from the ShotLUT. Returns 0 if you loaded data through
+     * loadLUTEntry() instead, since the basic path doesn't carry angle info.
+     */
+    public double getHoodAngle(double distance) {
+        if (shotLUT != null)
+            return shotLUT.getAngle(distance);
+        return 0;
+    }
 
-  /** Base RPM at this distance, before any corrections or offset. */
-  public double getBaseRPM(double distance) {
-    if (shotLUT != null) return shotLUT.getRPM(distance);
-    return rpmMap.get(distance);
-  }
+    InterpolatingDoubleTreeMap getRpmMap() {
+        return rpmMap;
+    }
 
-  /**
-   * Reset the warm start state. Call this after a pose reset so the solver doesn't use stale data.
-   */
-  public void resetWarmStart() {
-    previousTOF = -1;
-    previousSpeed = 0;
-    prevRobotVx = 0;
-    prevRobotVy = 0;
-    prevRobotOmega = 0;
-  }
-
-  /**
-   * Load a ShotLUT instead of calling loadLUTEntry() one at a time. RPM, hood angle, and TOF all
-   * interpolate together so they can't drift apart. Corrections from addRpmCorrection() and copilot
-   * offset still layer on top.
-   *
-   * <p>Takes priority over any entries added through loadLUTEntry().
-   */
-  public void loadShotLUT(ShotLUT lut) {
-    this.shotLUT = lut;
-  }
-
-  /**
-   * Hood angle at this distance from the ShotLUT. Returns 0 if you loaded data through
-   * loadLUTEntry() instead, since the basic path doesn't carry angle info.
-   */
-  public double getHoodAngle(double distance) {
-    if (shotLUT != null) return shotLUT.getAngle(distance);
-    return 0;
-  }
-
-  InterpolatingDoubleTreeMap getRpmMap() {
-    return rpmMap;
-  }
-
-  InterpolatingDoubleTreeMap getTofMap() {
-    return tofMap;
-  }
+    InterpolatingDoubleTreeMap getTofMap() {
+        return tofMap;
+    }
 }

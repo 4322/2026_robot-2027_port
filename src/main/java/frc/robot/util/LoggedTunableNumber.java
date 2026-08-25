@@ -13,118 +13,122 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
  * value not in dashboard.
  */
 public class LoggedTunableNumber implements DoubleSupplier {
-  private static final String tableKey = "TunableNumbers";
 
-  private final String key;
-  private boolean hasDefault = false;
-  private double defaultValue;
-  private boolean forceDisplay = false;
-  private LoggedNetworkNumber dashboardNumber;
-  private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
+    private static final String tableKey = "TunableNumbers";
 
-  /**
-   * Create a new LoggedTunableNumber
-   *
-   * @param dashboardKey Key on dashboard
-   */
-  public LoggedTunableNumber(String dashboardKey) {
-    this.key = tableKey + "/" + dashboardKey;
-  }
+    private final String key;
 
-  /**
-   * Create a new LoggedTunableNumber with the default value
-   *
-   * @param dashboardKey Key on dashboard
-   * @param defaultValue Default value
-   */
-  public LoggedTunableNumber(String dashboardKey, double defaultValue) {
-    this(dashboardKey);
-    initDefault(defaultValue);
-  }
+    private boolean hasDefault = false;
 
-  public LoggedTunableNumber(String dashboardKey, double defaultValue, boolean forceDisplay) {
-    this(dashboardKey);
-    this.forceDisplay = forceDisplay;
-    initDefault(defaultValue);
-  }
+    private double defaultValue;
 
-  /**
-   * Set the default value of the number. The default value can only be set once.
-   *
-   * @param defaultValue The default value
-   */
-  public void initDefault(double defaultValue) {
-    if (!hasDefault) {
-      hasDefault = true;
-      this.defaultValue = defaultValue;
-      if (Constants.tuningWithLoggableNumbers || forceDisplay) {
-        dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
-      }
-    }
-  }
+    private boolean forceDisplay = false;
 
-  /**
-   * Get the current value, from dashboard if available and in tuning mode.
-   *
-   * @return The current value
-   */
-  public double get() {
-    if (!hasDefault) {
-      return 0.0;
-    } else {
-      return Constants.tuningWithLoggableNumbers || forceDisplay
-          ? dashboardNumber.get()
-          : defaultValue;
-    }
-  }
+    private LoggedNetworkNumber dashboardNumber;
 
-  /**
-   * Checks whether the number has changed since our last check
-   *
-   * @param id Unique identifier for the caller to avoid conflicts when shared between multiple
-   *     objects. Recommended approach is to pass the result of "hashCode()"
-   * @return True if the number has changed since the last time this method was called, false
-   *     otherwise.
-   */
-  public boolean hasChanged(int id) {
-    double currentValue = get();
-    Double lastValue = lastHasChangedValues.get(id);
-    if (lastValue == null || currentValue != lastValue) {
-      lastHasChangedValues.put(id, currentValue);
-      return true;
+    private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
+
+    /**
+     * Create a new LoggedTunableNumber
+     *
+     * @param dashboardKey Key on dashboard
+     */
+    public LoggedTunableNumber(String dashboardKey) {
+        this.key = tableKey + "/" + dashboardKey;
     }
 
-    return false;
-  }
-
-  /**
-   * Runs action if any of the tunableNumbers have changed
-   *
-   * @param id Unique identifier for the caller to avoid conflicts when shared between multiple *
-   *     objects. Recommended approach is to pass the result of "hashCode()"
-   * @param action Callback to run when any of the tunable numbers have changed. Access tunable
-   *     numbers in order inputted in method
-   * @param tunableNumbers All tunable numbers to check
-   */
-  public static void ifChanged(
-      int id, Consumer<double[]> action, LoggedTunableNumber... tunableNumbers) {
-    if (Arrays.stream(tunableNumbers).anyMatch(tunableNumber -> tunableNumber.hasChanged(id))) {
-      action.accept(Arrays.stream(tunableNumbers).mapToDouble(LoggedTunableNumber::get).toArray());
+    /**
+     * Create a new LoggedTunableNumber with the default value
+     *
+     * @param dashboardKey Key on dashboard
+     * @param defaultValue Default value
+     */
+    public LoggedTunableNumber(String dashboardKey, double defaultValue) {
+        this(dashboardKey);
+        initDefault(defaultValue);
     }
-  }
 
-  /** Runs action if any of the tunableNumbers have changed */
-  public static void ifChanged(int id, Runnable action, LoggedTunableNumber... tunableNumbers) {
-    ifChanged(id, values -> action.run(), tunableNumbers);
-  }
+    public LoggedTunableNumber(String dashboardKey, double defaultValue, boolean forceDisplay) {
+        this(dashboardKey);
+        this.forceDisplay = forceDisplay;
+        initDefault(defaultValue);
+    }
 
-  @Override
-  public double getAsDouble() {
-    return get();
-  }
+    /**
+     * Set the default value of the number. The default value can only be set once.
+     *
+     * @param defaultValue The default value
+     */
+    public void initDefault(double defaultValue) {
+        if (!hasDefault) {
+            hasDefault = true;
+            this.defaultValue = defaultValue;
+            if (Constants.tuningWithLoggableNumbers || forceDisplay) {
+                dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
+            }
+        }
+    }
 
-  public double get(int i) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'get'");
-  }
+    /**
+     * Get the current value, from dashboard if available and in tuning mode.
+     *
+     * @return The current value
+     */
+    public double get() {
+        if (!hasDefault) {
+            return 0.0;
+        } else {
+            return Constants.tuningWithLoggableNumbers || forceDisplay ? dashboardNumber.get() : defaultValue;
+        }
+    }
+
+    /**
+     * Checks whether the number has changed since our last check
+     *
+     * @param id Unique identifier for the caller to avoid conflicts when shared between multiple
+     *     objects. Recommended approach is to pass the result of "hashCode()"
+     * @return True if the number has changed since the last time this method was called, false
+     *     otherwise.
+     */
+    public boolean hasChanged(int id) {
+        double currentValue = get();
+        Double lastValue = lastHasChangedValues.get(id);
+        if (lastValue == null || currentValue != lastValue) {
+            lastHasChangedValues.put(id, currentValue);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Runs action if any of the tunableNumbers have changed
+     *
+     * @param id Unique identifier for the caller to avoid conflicts when shared between multiple *
+     *     objects. Recommended approach is to pass the result of "hashCode()"
+     * @param action Callback to run when any of the tunable numbers have changed. Access tunable
+     *     numbers in order inputted in method
+     * @param tunableNumbers All tunable numbers to check
+     */
+    public static void ifChanged(int id, Consumer<double[]> action, LoggedTunableNumber... tunableNumbers) {
+        if (Arrays.stream(tunableNumbers).anyMatch(tunableNumber -> tunableNumber.hasChanged(id))) {
+            action.accept(Arrays.stream(tunableNumbers).mapToDouble(LoggedTunableNumber::get).toArray());
+        }
+    }
+
+    /**
+     * Runs action if any of the tunableNumbers have changed
+     */
+    public static void ifChanged(int id, Runnable action, LoggedTunableNumber... tunableNumbers) {
+        ifChanged(id, values -> action.run(), tunableNumbers);
+    }
+
+    @Override
+    public double getAsDouble() {
+        return get();
+    }
+
+    public double get(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'get'");
+    }
 }

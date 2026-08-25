@@ -3,7 +3,6 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.driverstation.DriverStation.Alliance;
 import org.wpilib.command2.InstantCommand;
 import org.wpilib.command2.ParallelDeadlineGroup;
 import org.wpilib.command2.SequentialCommandGroup;
@@ -17,55 +16,23 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.driverstation.Alliance;
 
 public class R2Sweep extends SequentialCommandGroup {
-  PathPlannerPath firstPath;
 
-  public R2Sweep(Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
-    firstPath = Robot.R_2SWEEP_A;
-    Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
-    Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
+    PathPlannerPath firstPath;
 
-    setName("R_2_SWEEP");
-
-    addCommands(
-        new InstantCommand(
-            () -> {
-              if (Robot.alliance == Alliance.Blue) {
+    public R2Sweep(Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+        firstPath = Robot.R_2SWEEP_A;
+        Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
+        Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
+        setName("R_2_SWEEP");
+        addCommands(new InstantCommand(() -> {
+            if (Robot.alliance == Alliance.BLUE) {
                 drive.setPose(startPoseBlue);
-              } else {
+            } else {
                 drive.setPose(startPoseRed);
-              }
-            }),
-        new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
-        AutoBuilder.followPath(firstPath),
-        new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.R_2SWEEP_B),
-            ShooterCommands.idle(shooter, intake, 15.0, 40.0, 260.0),
-            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
-        new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.R_2SWEEP_CG),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-            IntakeCommands.autoSmoosh(
-                intake,
-                Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)),
-        IntakeCommands.intake(intake),
-        new WaitUntilCommand(() -> shooter.isHoodLowered()),
-        AutoBuilder.followPath(Robot.R_2SWEEP_DE),
-        new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.R_2SWEEP_F),
-            ShooterCommands.idle(shooter, intake, 14.0, 40.0, 165.0),
-            ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
-        new ParallelDeadlineGroup(
-            AutoBuilder.followPath(Robot.R_2056_C),
-            ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
-            IntakeCommands.autoSmoosh(
-                intake,
-                Constants.Autonomous.smooshDelaySecond2056,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)),
-        IntakeCommands.intake(intake),
-        AutoBuilder.followPath(Robot.R_2056_G));
-  }
+            }
+        }), new UtilityCommands.WaitSupplierCommand(autoStartDelay), IntakeCommands.intake(intake), AutoBuilder.followPath(firstPath), new ParallelDeadlineGroup(AutoBuilder.followPath(Robot.R_2SWEEP_B), ShooterCommands.idle(shooter, intake, 15.0, 40.0, 260.0), ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)), new ParallelDeadlineGroup(AutoBuilder.followPath(Robot.R_2SWEEP_CG), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake), IntakeCommands.autoSmoosh(intake, Constants.Autonomous.twoSweepSmooshDelayFirstPass, Constants.Autonomous.twoSweepShootTimeFirstPass)), IntakeCommands.intake(intake), new WaitUntilCommand(() -> shooter.isHoodLowered()), AutoBuilder.followPath(Robot.R_2SWEEP_DE), new ParallelDeadlineGroup(AutoBuilder.followPath(Robot.R_2SWEEP_F), ShooterCommands.idle(shooter, intake, 14.0, 40.0, 165.0), ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)), new ParallelDeadlineGroup(AutoBuilder.followPath(Robot.R_2056_C), ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake), IntakeCommands.autoSmoosh(intake, Constants.Autonomous.smooshDelaySecond2056, Constants.Autonomous.twoSweepShootTimeFirstPass)), IntakeCommands.intake(intake), AutoBuilder.followPath(Robot.R_2056_G));
+    }
 }

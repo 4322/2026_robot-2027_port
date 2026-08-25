@@ -17,7 +17,6 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
  */
-
 package frc.robot.util.firecontrol;
 
 import org.wpilib.math.interpolation.InterpolatingTreeMap;
@@ -45,52 +44,58 @@ import org.wpilib.math.interpolation.InverseInterpolator;
  */
 public class ShotLUT {
 
-  private final InterpolatingTreeMap<Double, ShotParameters> map;
-  private int entryCount = 0;
+    private final InterpolatingTreeMap<Double, ShotParameters> map;
 
-  public ShotLUT() {
-    map =
-        new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotParameters.interpolator());
-  }
+    private int entryCount = 0;
 
-  /** Insert or overwrite the parameters at a given distance. */
-  public void put(double distanceM, ShotParameters params) {
-    map.put(distanceM, params);
-    entryCount++;
-  }
+    public ShotLUT() {
+        map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotParameters.interpolator());
+    }
 
-  /** Convenience: insert from individual fields. */
-  public void put(double distanceM, double rpm, double angleDeg, double tofSec) {
-    put(distanceM, new ShotParameters(rpm, angleDeg, tofSec));
-  }
+    /**
+     * Insert or overwrite the parameters at a given distance.
+     */
+    public void put(double distanceM, ShotParameters params) {
+        map.put(distanceM, params);
+        entryCount++;
+    }
 
-  /**
-   * Get the interpolated parameters at a distance. Returns ShotParameters.ZERO if the map is empty.
-   */
-  public ShotParameters get(double distanceM) {
-    ShotParameters result = map.get(distanceM);
-    return result != null ? result : ShotParameters.ZERO;
-  }
+    /**
+     * Convenience: insert from individual fields.
+     */
+    public void put(double distanceM, double rpm, double angleDeg, double tofSec) {
+        put(distanceM, new ShotParameters(rpm, angleDeg, tofSec));
+    }
 
-  public double getRPM(double distanceM) {
-    return get(distanceM).rpm();
-  }
+    /**
+     * Get the interpolated parameters at a distance. Returns ShotParameters.ZERO if the map is empty.
+     */
+    public ShotParameters get(double distanceM) {
+        ShotParameters result = map.get(distanceM);
+        return result != null ? result : ShotParameters.ZERO;
+    }
 
-  public double getAngle(double distanceM) {
-    return get(distanceM).angleDeg();
-  }
+    public double getRPM(double distanceM) {
+        return get(distanceM).rpm();
+    }
 
-  public double getTOF(double distanceM) {
-    return get(distanceM).tofSec();
-  }
+    public double getAngle(double distanceM) {
+        return get(distanceM).angleDeg();
+    }
 
-  public void clear() {
-    map.clear();
-    entryCount = 0;
-  }
+    public double getTOF(double distanceM) {
+        return get(distanceM).tofSec();
+    }
 
-  /** Approximate number of entries added (may overcount if same key is put twice). */
-  public int size() {
-    return entryCount;
-  }
+    public void clear() {
+        map.clear();
+        entryCount = 0;
+    }
+
+    /**
+     * Approximate number of entries added (may overcount if same key is put twice).
+     */
+    public int size() {
+        return entryCount;
+    }
 }

@@ -5,32 +5,47 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface DeployerIO {
 
-  @AutoLog
-  public static class DeployerIOInputs {
-    public boolean motorConnected = false;
-    public double statorCurrentAmps = 0.0;
-    public double supplyCurrentAmps = 0.0;
-    public double motorTempCelcius = 0.0;
-    public double motorDegreesPerSec = 0.0;
-    public double appliedVolts = 0.0;
-    public double angleDeg = 0.0;
-    public double encoderRotations = 0.0;
-    public boolean encoderConnected = false;
-  }
+    @AutoLog
+    public static class DeployerIOInputs {
 
-  public default void updateInputs(DeployerIOInputs inputs) {}
+        public boolean motorConnected = false;
 
-  public default void setPosition(double requestedPosDeg) {}
+        public double statorCurrentAmps = 0.0;
 
-  public default void setVoltage(double voltage) {}
+        public double supplyCurrentAmps = 0.0;
 
-  public default void setBrakeMode(boolean mode) {}
+        public double motorTempCelcius = 0.0;
 
-  public default void stop() {}
+        public double motorDegreesPerSec = 0.0;
 
-  public default TalonFX getTalonFX() {
-    return null;
-  }
+        public double appliedVolts = 0.0;
 
-  public default void seedPosition(double newAngle) {}
+        public double angleDeg = 0.0;
+
+        public double encoderRotations = 0.0;
+
+        public boolean encoderConnected = false;
+    }
+
+    public default void updateInputs(DeployerIOInputs inputs) {
+    }
+
+    public default void setPosition(double requestedPosDeg) {
+    }
+
+    public default void setVoltage(double voltage) {
+    }
+
+    public default void setBrakeMode(boolean mode) {
+    }
+
+    public default void stop() {
+    }
+
+    public default TalonFX getTalonFX() {
+        return null;
+    }
+
+    public default void seedPosition(double newAngle) {
+    }
 }

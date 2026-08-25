@@ -17,7 +17,6 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
  */
-
 package frc.robot.util.firecontrol;
 
 import org.wpilib.math.util.MathUtil;
@@ -32,18 +31,16 @@ import org.wpilib.math.interpolation.Interpolator;
  */
 public record ShotParameters(double rpm, double angleDeg, double tofSec) {
 
-  /** All zeros. Safe as a default when the LUT is empty. */
-  public static final ShotParameters ZERO = new ShotParameters(0, 0, 0);
+    /**
+     * All zeros. Safe as a default when the LUT is empty.
+     */
+    public static final ShotParameters ZERO = new ShotParameters(0, 0, 0);
 
-  /**
-   * Linear interpolator for use with WPILib's InterpolatingTreeMap. Plug this into the constructor
-   * alongside InverseInterpolator.forDouble().
-   */
-  public static Interpolator<ShotParameters> interpolator() {
-    return (start, end, t) ->
-        new ShotParameters(
-            MathUtil.interpolate(start.rpm, end.rpm, t),
-            MathUtil.interpolate(start.angleDeg, end.angleDeg, t),
-            MathUtil.interpolate(start.tofSec, end.tofSec, t));
-  }
+    /**
+     * Linear interpolator for use with WPILib's InterpolatingTreeMap. Plug this into the constructor
+     * alongside InverseInterpolator.forDouble().
+     */
+    public static Interpolator<ShotParameters> interpolator() {
+        return (start, end, t) -> new ShotParameters(MathUtil.lerp(start.rpm, end.rpm, t), MathUtil.lerp(start.angleDeg, end.angleDeg, t), MathUtil.lerp(start.tofSec, end.tofSec, t));
+    }
 }
