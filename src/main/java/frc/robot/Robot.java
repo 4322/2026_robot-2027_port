@@ -302,9 +302,9 @@ public class Robot extends LoggedRobot {
         if (Constants.currentMode == Constants.Mode.SIM || Constants.currentMode == Constants.Mode.REPLAY) {
             // enable subsystems in sim mode
         }
+        robotInit();
     }
 
-    @Override
     public void robotInit() {
         // disable REV logging
         StatusLogger.disableAutoLogging();
