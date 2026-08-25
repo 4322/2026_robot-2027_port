@@ -1,7 +1,9 @@
 package frc.robot.subsystems.shooter;
 
 import org.wpilib.math.geometry.Translation2d;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.system.Timer;
 import org.wpilib.command2.SubsystemBase;
 import frc.robot.Robot;
@@ -171,7 +173,7 @@ public class Shooter extends SubsystemBase {
       }
       return;
     }
-    if (DriverStation.isDisabled() && state != ShooterState.STARTING_CONFIG) {
+    if (RobotState.isDisabled() && state != ShooterState.STARTING_CONFIG) {
       // Reset variable in case disabling during unwind
       doUnwind = false;
       hoodOverrideDeg = null;
@@ -194,7 +196,7 @@ public class Shooter extends SubsystemBase {
       }
       case DISABLED -> {
         resetIdleTimeout = true;
-        if (DriverStation.isEnabled()) {
+        if (RobotState.isEnabled()) {
           state = ShooterState.IDLE;
         }
       }
@@ -313,7 +315,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
       targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       targetFFRadPerSec = 0;
-      if (Robot.alliance == DriverStation.Alliance.BLUE) {
+      if (Robot.alliance == Alliance.BLUE) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
       } else {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
@@ -324,13 +326,13 @@ public class Shooter extends SubsystemBase {
       ShotCalculator.ShotInputs inputs;
 
       if (isScoring) {
-        if (Robot.alliance == DriverStation.Alliance.RED) {
+        if (Robot.alliance == Alliance.RED) {
           shootForward = new Translation2d(-1, 0);
         } else {
           shootForward = new Translation2d(1, 0);
         }
       } else {
-        if (Robot.alliance == DriverStation.Alliance.RED) {
+        if (Robot.alliance == Alliance.RED) {
           shootForward = new Translation2d(1, 0);
         } else {
           shootForward = new Translation2d(-1, 0);

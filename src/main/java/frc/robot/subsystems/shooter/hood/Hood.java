@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter.hood;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.system.Timer;
 import org.wpilib.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
@@ -59,7 +60,7 @@ public class Hood {
   }
 
   private void homeHood() {
-    if (!DriverStation.isEnabled()) {
+    if (!RobotState.isEnabled()) {
       homingTimer.stop();
       homingTimer.reset();
       io.setVoltage(0);

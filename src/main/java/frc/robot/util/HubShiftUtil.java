@@ -8,6 +8,7 @@
 package frc.robot.util;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import frc.robot.constants.Constants;
@@ -111,12 +112,12 @@ public class HubShiftUtil {
     boolean active = false;
     ShiftEnum currentShift = ShiftEnum.DISABLED;
 
-    if (DriverStation.isAutonomousEnabled()) {
+    if (RobotState.isAutonomousEnabled()) {
       stateTimeElapsed = currentTime;
       stateTimeRemaining = autoEndTime - currentTime;
       active = true;
       currentShift = ShiftEnum.AUTO;
-    } else if (DriverStation.isEnabled()) {
+    } else if (RobotState.isEnabled()) {
       int currentShiftIndex = -1;
       for (int i = 0; i < shiftStartTimes.length; i++) {
         if (currentTime >= shiftStartTimes[i] && currentTime < shiftEndTimes[i]) {

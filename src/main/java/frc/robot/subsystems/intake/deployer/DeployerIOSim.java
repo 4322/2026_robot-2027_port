@@ -2,6 +2,8 @@ package frc.robot.subsystems.intake.deployer;
 
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
+
 import frc.robot.constants.Constants;
 
 public class DeployerIOSim implements DeployerIO {
@@ -43,7 +45,7 @@ public class DeployerIOSim implements DeployerIO {
   }
 
   private void simVolts() {
-    if (DriverStation.isEnabled()) {
+    if (RobotState.isEnabled()) {
       if (requestedVoltage == undefinedVoltage) {
         voltage = 0;
       } else if (voltage < requestedVoltage) {
@@ -55,7 +57,7 @@ public class DeployerIOSim implements DeployerIO {
   }
 
   private void simPos() {
-    if (DriverStation.isEnabled()) {
+    if (RobotState.isEnabled()) {
       if (currentAngle < requestedAngle) {
         currentAngle += (requestedAngle - currentAngle) * fastRate;
       } else {

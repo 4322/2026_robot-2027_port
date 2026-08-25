@@ -6,6 +6,7 @@ import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.system.Timer;
 import org.wpilib.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
@@ -59,7 +60,7 @@ public class Turret {
       case NORMAL -> {
         updateAtGoalTimer();
 
-        if (DriverStation.isDisabled()) {
+        if (RobotState.isDisabled()) {
           state = turretState.DISABLED;
         }
 
@@ -71,7 +72,7 @@ public class Turret {
             prevDeg = inputs.turretDegs;
             needsToUnwind = false;
             unjamOverride = false;
-            if (!DriverStation.isDisabled()) {
+            if (!RobotState.isDisabled()) {
               state = turretState.SET_TURRET_ANGLE;
             }
             break;

@@ -42,8 +42,8 @@ public record ShotParameters(double rpm, double angleDeg, double tofSec) {
   public static Interpolator<ShotParameters> interpolator() {
     return (start, end, t) ->
         new ShotParameters(
-            MathUtil.interpolate(start.rpm, end.rpm, t),
-            MathUtil.interpolate(start.angleDeg, end.angleDeg, t),
-            MathUtil.interpolate(start.tofSec, end.tofSec, t));
+            Interpolator.forDouble().interpolate(start.rpm, end.rpm, t),
+            Interpolator.forDouble().interpolate(start.angleDeg, end.angleDeg, t),
+            Interpolator.forDouble().interpolate(start.tofSec, end.tofSec, t));
   }
 }

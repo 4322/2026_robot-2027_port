@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.spindexer;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
+
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -33,7 +35,7 @@ public class Spindexer {
     switch (Constants.spindexerMode) {
       case TUNING -> {}
       case NORMAL -> {
-        if (DriverStation.isDisabled()) {
+        if (RobotState.isDisabled()) {
           state = SpindexerStates.DISABLED;
         }
 
@@ -41,7 +43,7 @@ public class Spindexer {
           case DISABLED -> {
             // Reset variables
             unjamOverride = false;
-            if (DriverStation.isEnabled()) {
+            if (RobotState.isEnabled()) {
               state = SpindexerStates.IDLE;
             }
           }

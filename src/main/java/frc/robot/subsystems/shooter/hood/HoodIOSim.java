@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter.hood;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
+
 import frc.robot.constants.Constants;
 
 public class HoodIOSim implements HoodIO {
@@ -28,7 +30,7 @@ public class HoodIOSim implements HoodIO {
   }
 
   private void simPos() {
-    if (DriverStation.isEnabled()) {
+    if (RobotState.isEnabled()) {
       if (positionDeg < requestedPositionDeg) {
         positionDeg += (requestedPositionDeg - positionDeg) * Constants.Sim.hoodRate;
       } else {

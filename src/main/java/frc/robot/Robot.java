@@ -7,6 +7,7 @@ import com.revrobotics.util.StatusLogger;
 import org.wpilib.hardware.discrete.DigitalInput;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStationErrors;
+import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.RobotController;
 import org.wpilib.system.Threads;
@@ -40,7 +41,7 @@ public class Robot extends LoggedRobot {
   private Timer coastButtonTimer = new Timer();
   private static Timer stabilizeCamerasTimer = new Timer();
 
-  public static Alliance alliance = DriverStation.Alliance.BLUE;
+  public static Alliance alliance = Alliance.BLUE;
 
   public static PathPlannerPath C_To_Depot;
 
@@ -298,9 +299,9 @@ public class Robot extends LoggedRobot {
         || Constants.currentMode == Constants.Mode.REPLAY) {
       // enable subsystems in sim mode
     }
+    robotInit();
   }
 
-  @Override
   public void robotInit() {
     StatusLogger.disableAutoLogging(); // disable REV logging
     SignalLogger.stop(); // disable CTRE logging
@@ -363,7 +364,7 @@ public class Robot extends LoggedRobot {
     // timing (see the template project documentation for details).
     // Don't do this when there are issues causing the CPU to be maxed out for any reason.
     if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(true, 99);
+      Threads.setCurrentThreadPriority(99);
     }
 
     // insure that the sim runs before everything else
@@ -384,7 +385,7 @@ public class Robot extends LoggedRobot {
 
     // Return to non-RT thread priority (do not modify the first argument)
     if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(false, 10);
+      Threads.setCurrentThreadPriority(10);
     }
 
     if (allianceUpdateTimer.hasElapsed(1)) {
@@ -451,17 +452,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {}
-
-  /** This function is called once when test mode is enabled. */
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
 
   /** This function is called once when the robot is first started up. */
   @Override

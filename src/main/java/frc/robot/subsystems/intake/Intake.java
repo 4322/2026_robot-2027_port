@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.command2.SubsystemBase;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.Deployer.DeployerState;
@@ -37,7 +38,7 @@ public class Intake extends SubsystemBase {
 
   public void periodicOutputs() {
 
-    if (DriverStation.isDisabled() && state != IntakeState.STARING_CONFIG) {
+    if (RobotState.isDisabled() && state != IntakeState.STARING_CONFIG) {
       setState(IntakeState.IDLE);
     }
 

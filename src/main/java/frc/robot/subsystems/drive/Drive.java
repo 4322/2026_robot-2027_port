@@ -36,6 +36,7 @@ import org.wpilib.math.system.plant.DCMotor;
 import org.wpilib.util.Alert;
 import org.wpilib.util.Alert.AlertType;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.SubsystemBase;
@@ -166,14 +167,14 @@ public class Drive extends SubsystemBase {
     odometryLock.unlock();
 
     // Stop moving when disabled
-    if (DriverStation.isDisabled()) {
+    if (RobotState.isDisabled()) {
       for (var module : modules) {
         module.stop();
       }
     }
 
     // Log empty setpoint states when disabled
-    if (DriverStation.isDisabled()) {
+    if (RobotState.isDisabled()) {
       Logger.recordOutput("Drive/SwerveStates/Setpoints", new SwerveModuleState[] {});
       Logger.recordOutput("Drive/SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }

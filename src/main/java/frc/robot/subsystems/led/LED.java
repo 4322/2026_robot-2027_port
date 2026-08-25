@@ -1,6 +1,7 @@
 package frc.robot.subsystems.led;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.RobotState;
 import org.wpilib.command2.SubsystemBase;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -47,7 +48,7 @@ public class LED extends SubsystemBase {
   @Override
   public void periodic() {
     Logger.recordOutput("LED/State", state.toString());
-    if (DriverStation.isDisabled()) {
+    if (RobotState.isDisabled()) {
       setLEDState(LEDState.DISABLED);
     } else if (climberDeployed) {
       setLEDState(LEDState.CLIMBER_DEPLOYED);
