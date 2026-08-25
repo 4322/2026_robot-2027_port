@@ -1,7 +1,7 @@
 package frc.robot.subsystems.shooter.areaManager;
 
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.FieldConstants;
 
@@ -23,7 +23,7 @@ public class AreaManager {
   }
 
   public static boolean isShootingArea(Pose2d position) {
-    if (Robot.alliance == Alliance.Blue) {
+    if (Robot.alliance == Alliance.BLUE) {
       return !(FieldConstants.Red.frontOfHub.contains(position)
           // Not in neutral side of blue trench
           || FieldConstants.Blue.stopShootLeftNeutral.contains(position)
@@ -43,7 +43,7 @@ public class AreaManager {
   }
 
   public static Zone getZoneOfPosition(Pose2d position) {
-    if (Robot.alliance == Alliance.Blue) {
+    if (Robot.alliance == Alliance.BLUE) {
       if (FieldConstants.Blue.stopShootLeftNeutral.contains(position)) {
         return Zone.LEFT_STOP_SHOOT;
       } else if (FieldConstants.Blue.stopShootRightNeutral.contains(position)) {

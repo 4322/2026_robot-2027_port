@@ -14,6 +14,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 import frc.robot.util.AverageStat;
 
@@ -65,7 +67,7 @@ public class TunnelIOTalonFx implements TunnelIO {
     StatusCode configStatus = motor.getConfigurator().apply(config);
 
     if (configStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon " + motor.getDeviceID() + " error (Tunnel): " + configStatus.getDescription(),
           false);
     }
@@ -119,6 +121,6 @@ public class TunnelIOTalonFx implements TunnelIO {
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    motor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    motor.configNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

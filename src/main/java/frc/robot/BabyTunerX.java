@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import org.wpilib.networktables.NetworkTableEntry;
 import org.wpilib.networktables.NetworkTableInstance;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.system.Timer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -100,7 +101,7 @@ public class BabyTunerX {
     }
 
     if (BabyTunerX.subsystemName != subsystemName) {
-      DriverStation.reportError("Tuning multiple subsystems is not supported", false);
+      DriverStationErrors.reportError("Tuning multiple subsystems is not supported", false);
       System.exit(1);
     }
 
@@ -167,7 +168,7 @@ public class BabyTunerX {
       status = talonFX.getConfigurator().apply(config);
 
       if (status != StatusCode.OK) {
-        DriverStation.reportError(
+        DriverStationErrors.reportError(
             "Talon "
                 + talonFX.getDeviceID()
                 + " error (Right Elevator): "
@@ -182,7 +183,7 @@ public class BabyTunerX {
     tunable.initDefault(val);
     // throw away initial settings change
     if (!tunable.hasChanged(motorIdx)) {
-      DriverStation.reportError("This should never happen", true);
+      DriverStationErrors.reportError("This should never happen", true);
       System.exit(0);
     }
   }

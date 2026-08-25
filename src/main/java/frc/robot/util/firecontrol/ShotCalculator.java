@@ -26,7 +26,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
 import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.util.Units;
 import org.wpilib.smartdashboard.SmartDashboard;
 import frc.robot.constants.Constants;
@@ -100,8 +100,8 @@ public class ShotCalculator {
    */
   public record ShotInputs(
       Pose2d robotPose,
-      ChassisSpeeds fieldVelocity,
-      ChassisSpeeds robotVelocity,
+      ChassisVelocities fieldVelocity,
+      ChassisVelocities robotVelocity,
       Translation2d hubCenter,
       Translation2d hubForward,
       double visionConfidence,
@@ -111,8 +111,8 @@ public class ShotCalculator {
     /** Convenience constructor for callers that don't have pitch/roll data. */
     public ShotInputs(
         Pose2d robotPose,
-        ChassisSpeeds fieldVelocity,
-        ChassisSpeeds robotVelocity,
+        ChassisVelocities fieldVelocity,
+        ChassisVelocities robotVelocity,
         Translation2d hubCenter,
         Translation2d hubForward,
         double visionConfidence) {
@@ -291,8 +291,8 @@ public class ShotCalculator {
     }
 
     Pose2d rawPose = inputs.robotPose();
-    ChassisSpeeds fieldVel = inputs.fieldVelocity();
-    ChassisSpeeds robotVel = inputs.robotVelocity();
+    ChassisVelocities fieldVel = inputs.fieldVelocity();
+    ChassisVelocities robotVel = inputs.robotVelocity();
 
     double poseX = rawPose.getX();
     double poseY = rawPose.getY();
@@ -308,18 +308,18 @@ public class ShotCalculator {
     // where acceleration is estimated from the velocity delta between this cycle and last.
     // This tracks better through turns and speed changes because it catches the curvature.
     double dt = config.phaseDelayMs / 1000.0;
-    double ax = (robotVel.vxMetersPerSecond - prevRobotVx) / 0.02;
-    double ay = (robotVel.vyMetersPerSecond - prevRobotVy) / 0.02;
-    double aOmega = (robotVel.omegaRadiansPerSecond - prevRobotOmega) / 0.02;
+    double ax = (robotVel.vx - prevRobotVx) / 0.02;
+    double ay = (robotVel.vy - prevRobotVy) / 0.02;
+    double aOmega = (robotVel.omega - prevRobotOmega) / 0.02;
     Pose2d compensatedPose =
         rawPose.exp(
             new Twist2d(
-                robotVel.vxMetersPerSecond * dt + 0.5 * ax * dt * dt,
-                robotVel.vyMetersPerSecond * dt + 0.5 * ay * dt * dt,
-                robotVel.omegaRadiansPerSecond * dt + 0.5 * aOmega * dt * dt));
-    prevRobotVx = robotVel.vxMetersPerSecond;
-    prevRobotVy = robotVel.vyMetersPerSecond;
-    prevRobotOmega = robotVel.omegaRadiansPerSecond;
+                robotVel.vx * dt + 0.5 * ax * dt * dt,
+                robotVel.vy * dt + 0.5 * ay * dt * dt,
+                robotVel.omega * dt + 0.5 * aOmega * dt * dt));
+    prevRobotVx = robotVel.vx;
+    prevRobotVy = robotVel.vy;
+    prevRobotOmega = robotVel.omega;
 
     double robotX = compensatedPose.getX();
     double robotY = compensatedPose.getY();
@@ -361,9 +361,9 @@ public class ShotCalculator {
     // Launcher velocity includes rotational component: v_launcher = v_robot + omega x r
     double launcherFieldOffX = config.launcherOffsetX * cosH - config.launcherOffsetY * sinH;
     double launcherFieldOffY = config.launcherOffsetX * sinH + config.launcherOffsetY * cosH;
-    double omega = fieldVel.omegaRadiansPerSecond;
-    double vx = fieldVel.vxMetersPerSecond + (-launcherFieldOffY) * omega;
-    double vy = fieldVel.vyMetersPerSecond + launcherFieldOffX * omega;
+    double omega = fieldVel.omega;
+    double vx = fieldVel.vx + (-launcherFieldOffY) * omega;
+    double vy = fieldVel.vy + launcherFieldOffX * omega;
 
     // Displacement from launcher to hub
     double rx = hubX - launcherX;
@@ -515,7 +515,7 @@ public class ShotCalculator {
       turretAngularVelocityRad = tangentialVel / distance;
 
       // corner angular rate - chassis angular rate = turret angular rate feed forward
-      turretAngularVelocityRad = turretAngularVelocityRad - fieldVel.omegaRadiansPerSecond;
+      turretAngularVelocityRad = turretAngularVelocityRad - fieldVel.omega;
     }
 
     // Solver convergence quality

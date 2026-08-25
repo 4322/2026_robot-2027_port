@@ -15,6 +15,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 
 public class RollersIOTalonFX implements RollersIO {
@@ -67,7 +69,7 @@ public class RollersIOTalonFX implements RollersIO {
             new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
     if (leaderConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + leaderMotor.getDeviceID()
               + " config error (Rollers Leader): "
@@ -75,7 +77,7 @@ public class RollersIOTalonFX implements RollersIO {
           false);
     }
     if (followerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " config error (Rollers Follower): "
@@ -83,7 +85,7 @@ public class RollersIOTalonFX implements RollersIO {
           false);
     }
     if (followerMotorSetStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + followerMotor.getDeviceID()
               + " set follower error (Rollers Follower): "

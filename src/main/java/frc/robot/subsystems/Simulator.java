@@ -6,7 +6,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import org.wpilib.driverstation.XboxController;
 import org.wpilib.simulation.DriverStationSim;
@@ -230,34 +230,34 @@ public class Simulator {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_2_SWEEP, Alliance.Blue));
-      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.Blue));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_2_SWEEP, Alliance.BLUE));
+      case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.BLUE));
       case DO_NOTHING -> List.of(
-          new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.Blue));
+          new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.BLUE));
       case CONTROLLER_TEST -> List.of(
-          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.Blue),
-          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.Blue));
+          new RegressionTest("Controller Test 1", TeleopScenario.CONTROLLER_TEST1, Alliance.BLUE),
+          new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.BLUE));
       case SUBSYSTEM_TEST_BOTH -> List.of(
           new RegressionTest(
-              "Auto test", AutoName.R_2_SWEEP, TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+              "Auto test", AutoName.R_2_SWEEP, TeleopScenario.AUTO_ROTATE, Alliance.BLUE));
       case SUBSYSTEM_TEST_TELE -> List.of(
-          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.Blue));
+          new RegressionTest("Subsystem Test", TeleopScenario.SUBSYSTEM_TEST, Alliance.BLUE));
       case TEST_AUTOROTATE -> List.of(
-          new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.Blue));
+          new RegressionTest("Auto Rotate", TeleopScenario.AUTO_ROTATE, Alliance.BLUE));
       case TURRET -> List.of(
-          new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.Blue));
+          new RegressionTest("Turret Test", TeleopScenario.TURRET, Alliance.BLUE));
       case ALL_AUTOS -> List.of();
       case ZONES -> List.of(
-          new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.Blue),
-          new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.Red));
+          new RegressionTest("Zones Blue", TeleopScenario.ZONES, Alliance.BLUE),
+          new RegressionTest("Zones Red", TeleopScenario.ZONES, Alliance.RED));
       case INTAKE_TEST -> List.of(
-          new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.Blue));
+          new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.BLUE));
       case DRIVE_WHILE_SHOOTING -> List.of(
           new RegressionTest(
-              "Drive While Shooting", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.Blue));
+              "Drive While Shooting", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
       case TRENCHES -> List.of(
-          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Blue),
-          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.Red));
+          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.BLUE),
+          new RegressionTest("Trenches", TeleopScenario.TRENCHES, Alliance.RED));
       default -> List.of();
     };
   }
@@ -306,7 +306,7 @@ public class Simulator {
       this.eventType = eventType;
       this.eventStatus = eventStatus;
       this.pose =
-          currentAlliance == Alliance.Blue || !(pose instanceof FieldPose2d)
+          currentAlliance == Alliance.BLUE || !(pose instanceof FieldPose2d)
               ? pose
               : ((FieldPose2d) pose).flipPose();
     }
@@ -914,7 +914,7 @@ public class Simulator {
     Logger.recordOutput("Sim/EventType", "Disabled");
 
     DriverStationSim.setAutonomous(events == autoEvents);
-    if (currentAlliance == Alliance.Red) {
+    if (currentAlliance == Alliance.RED) {
       DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
     } else {
       DriverStationSim.setAllianceStationId(AllianceStationID.Blue2);

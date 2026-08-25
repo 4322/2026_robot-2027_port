@@ -2,7 +2,7 @@ package frc.robot.subsystems.shooter.firingManager;
 
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
@@ -22,7 +22,7 @@ public class FiringManager {
   public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
-    if (Robot.alliance == Alliance.Blue) {
+    if (Robot.alliance == Alliance.BLUE) {
 
       switch (zone) {
         case ALLIANCE_ZONE:

@@ -313,7 +313,7 @@ public class Shooter extends SubsystemBase {
       targetTunnelSpeedRPS = Constants.Tunnel.shootRPS;
       targetSpindexerSpeedRPS = Constants.Spindexer.shootRPS;
       targetFFRadPerSec = 0;
-      if (Robot.alliance == DriverStation.Alliance.Blue) {
+      if (Robot.alliance == DriverStation.Alliance.BLUE) {
         targetTurretAngleDeg = Constants.fixedSolutionBlue.turretAngleDeg;
       } else {
         targetTurretAngleDeg = Constants.fixedSolutionRed.turretAngleDeg;
@@ -324,13 +324,13 @@ public class Shooter extends SubsystemBase {
       ShotCalculator.ShotInputs inputs;
 
       if (isScoring) {
-        if (Robot.alliance == DriverStation.Alliance.Red) {
+        if (Robot.alliance == DriverStation.Alliance.RED) {
           shootForward = new Translation2d(-1, 0);
         } else {
           shootForward = new Translation2d(1, 0);
         }
       } else {
-        if (Robot.alliance == DriverStation.Alliance.Red) {
+        if (Robot.alliance == DriverStation.Alliance.RED) {
           shootForward = new Translation2d(1, 0);
         } else {
           shootForward = new Translation2d(-1, 0);

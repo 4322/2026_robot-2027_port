@@ -21,6 +21,8 @@ import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 
 public class DeployerIOTalonFX implements DeployerIO {
@@ -89,7 +91,7 @@ public class DeployerIOTalonFX implements DeployerIO {
     // Must configure CANcoder before TalonFX since TalonFX is using CANcoder as feedback device
     StatusCode CANcoderStatus = canCoder.getConfigurator().apply(canCoderConfigs);
     if (CANcoderStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + canCoder.getDeviceID()
               + " error (CANCoder): "
@@ -98,7 +100,7 @@ public class DeployerIOTalonFX implements DeployerIO {
     }
     StatusCode deployerConfigStatus = deployerMotor.getConfigurator().apply(motorConfigs);
     if (deployerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
+      DriverStationErrors.reportError(
           "Talon "
               + deployerMotor.getDeviceID()
               + " error (Deployer): "
@@ -188,6 +190,6 @@ public class DeployerIOTalonFX implements DeployerIO {
 
   @Override
   public void setBrakeMode(boolean mode) {
-    deployerMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    deployerMotor.configNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }

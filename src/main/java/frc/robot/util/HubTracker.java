@@ -4,7 +4,7 @@ import static org.wpilib.units.Units.Seconds;
 
 import org.wpilib.units.measure.Time;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import java.util.Optional;
@@ -88,7 +88,7 @@ public class HubTracker {
    * Alliance}. Will return {@code false} if disabled or in between auto and teleop.
    */
   public static boolean isActive(Shift shift) {
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    Optional<Alliance> alliance = MatchState.getAlliance();
     return alliance.isPresent() && isActive(alliance.get(), shift);
   }
 
@@ -98,7 +98,7 @@ public class HubTracker {
    */
   public static boolean isActive() {
     Optional<Shift> currentShift = getCurrentShift();
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    Optional<Alliance> alliance = MatchState.getAlliance();
     return currentShift.isPresent()
         && alliance.isPresent()
         && isActive(alliance.get(), currentShift.get());
@@ -107,7 +107,7 @@ public class HubTracker {
   /** Returns whether the robot is able to shoot, including buffer time around hub windows. */
   /*
     public static boolean isAbleToShoot() {
-      Optional<Alliance> allianceOpt = DriverStation.getAlliance();
+      Optional<Alliance> allianceOpt = MatchState.getAlliance();
       if (allianceOpt.isEmpty()) {
         Logger.recordOutput("HubTracker/isAbleToShoot", "Alliance Empty");
         return false;
@@ -152,7 +152,7 @@ public class HubTracker {
    */
   public static boolean isActiveNext() {
     Optional<Shift> nextShift = getNextShift();
-    Optional<Alliance> alliance = DriverStation.getAlliance();
+    Optional<Alliance> alliance = MatchState.getAlliance();
     return nextShift.isPresent()
         && alliance.isPresent()
         && isActive(alliance.get(), nextShift.get());
@@ -168,9 +168,9 @@ public class HubTracker {
     char msgChar = msg.length() > 0 ? msg.charAt(0) : ' ';
     switch (msgChar) {
       case 'B':
-        return Optional.of(Alliance.Blue);
+        return Optional.of(Alliance.BLUE);
       case 'R':
-        return Optional.of(Alliance.Red);
+        return Optional.of(Alliance.RED);
       default:
         return Optional.empty();
     }

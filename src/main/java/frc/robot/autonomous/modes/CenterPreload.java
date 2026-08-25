@@ -3,7 +3,7 @@ package frc.robot.autonomous.modes;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import org.wpilib.math.geometry.Pose2d;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.command2.InstantCommand;
 import org.wpilib.command2.SequentialCommandGroup;
 import frc.robot.Robot;
@@ -26,7 +26,7 @@ public class CenterPreload extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(
             () -> {
-              if (Robot.alliance == Alliance.Blue) {
+              if (Robot.alliance == Alliance.BLUE) {
                 drive.setPose(startPoseBlue);
               } else {
                 drive.setPose(startPoseRed);

@@ -5,6 +5,8 @@ import com.reduxrobotics.sensors.canandgyro.CanandgyroSettings;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+
 import frc.robot.constants.Constants;
 import java.util.Queue;
 
@@ -23,7 +25,7 @@ public class GyroIOBoron implements GyroIO {
     CanandgyroSettings gyroConfigStatus = gyro.setSettings(settings, 0.02, 5);
 
     if (!gyroConfigStatus.isEmpty()) {
-      DriverStation.reportError("Gyro failed to configure", false);
+      DriverStationErrors.reportError("Gyro failed to configure", false);
     }
     yawTimestampQueue = PhoenixOdometryThread.getInstance().makeTimestampQueue();
     yawPositionQueue =

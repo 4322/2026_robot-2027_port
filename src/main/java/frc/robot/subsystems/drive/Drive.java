@@ -26,7 +26,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Transform2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
-import org.wpilib.math.kinematics.ChassisSpeeds;
+import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.kinematics.SwerveDriveKinematics;
 import org.wpilib.math.kinematics.SwerveModulePosition;
 import org.wpilib.math.kinematics.SwerveModuleState;
@@ -36,7 +36,7 @@ import org.wpilib.math.system.plant.DCMotor;
 import org.wpilib.util.Alert;
 import org.wpilib.util.Alert.AlertType;
 import org.wpilib.driverstation.DriverStation;
-import org.wpilib.driverstation.DriverStation.Alliance;
+import org.wpilib.driverstation.Alliance;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.SubsystemBase;
 import org.wpilib.command2.sysid.SysIdRoutine;
@@ -129,7 +129,7 @@ public class Drive extends SubsystemBase {
             new PIDConstants(Constants.Autonomous.pathPlannerDrivekP, 0.0, 0.0),
             new PIDConstants(Constants.Autonomous.pathPlannerRotationkP, 0.0, 0.0)),
         PP_CONFIG,
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        () -> MatchState.getAlliance().orElse(Alliance.BLUE) == Alliance.RED,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(
@@ -223,9 +223,9 @@ public class Drive extends SubsystemBase {
    *
    * @param speeds Speeds in meters/sec
    */
-  public void runVelocity(ChassisSpeeds speeds) {
+  public void runVelocity(ChassisVelocities speeds) {
     // Calculate module setpoints
-    ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+    ChassisVelocities discreteSpeeds = ChassisVelocities.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, TunerConstants.kSpeedAt12Volts);
 
@@ -253,7 +253,7 @@ public class Drive extends SubsystemBase {
 
   /** Stops the drive. */
   public void stop() {
-    runVelocity(new ChassisSpeeds());
+    runVelocity(new ChassisVelocities());
   }
 
   /**
@@ -302,7 +302,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "Drive/SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  private ChassisVelocities getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -394,14 +394,14 @@ public class Drive extends SubsystemBase {
 
   public Translation2d getVelocity() {
     return new Translation2d(
-        getChassisSpeeds().vxMetersPerSecond, getChassisSpeeds().vyMetersPerSecond);
+        getChassisSpeeds().vx, getChassisSpeeds().vy);
   }
 
-  public ChassisSpeeds getFieldRelativeVelocity() {
-    return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
+  public ChassisVelocities getFieldRelativeVelocity() {
+    return ChassisVelocities.fromRobotRelativeSpeeds(getRobotRelativeVelocity(), getRotation());
   }
 
-  public ChassisSpeeds getRobotRelativeVelocity() {
+  public ChassisVelocities getRobotRelativeVelocity() {
     return getChassisSpeeds();
   }
 
