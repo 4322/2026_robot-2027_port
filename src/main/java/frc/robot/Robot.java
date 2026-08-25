@@ -37,7 +37,7 @@ import org.wpilib.driverstation.MatchState;
  */
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
-  private RobotContainer robotContainer;
+  public RobotContainer robotContainer;
   private Timer allianceUpdateTimer = new Timer();
   private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
   private Timer coastButtonTimer = new Timer();
