@@ -22,7 +22,7 @@ public class FiringManager {
   public static Translation2d getShootingTarget(Pose2d robotPosition) {
     Zone zone = AreaManager.getZoneOfPosition(robotPosition);
 
-    if (Robot.alliance == Alliance.Blue) {
+    if (Robot.alliance == Alliance.BLUE) {
 
       switch (zone) {
         case ALLIANCE_ZONE:

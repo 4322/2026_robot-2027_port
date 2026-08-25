@@ -32,7 +32,7 @@ public class CenterStartToDepot extends SequentialCommandGroup {
         new InstantCommand(() -> Logger.recordOutput("Autonomous/autoStarted", true)),
         new InstantCommand(
             () -> {
-              if (Robot.alliance == Alliance.Blue) {
+              if (Robot.alliance == Alliance.BLUE) {
                 drive.setPose(startPoseBlue);
               } else {
                 drive.setPose(startPoseRed);

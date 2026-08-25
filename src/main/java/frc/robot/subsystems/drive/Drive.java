@@ -130,7 +130,7 @@ public class Drive extends Mechanism {
             new PIDConstants(Constants.Autonomous.pathPlannerDrivekP, 0.0, 0.0),
             new PIDConstants(Constants.Autonomous.pathPlannerRotationkP, 0.0, 0.0)),
         PP_CONFIG,
-        () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+        () -> DriverStation.getAlliance().orElse(Alliance.BLUE) == Alliance.RED,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathPlannerLogging.setLogActivePathCallback(

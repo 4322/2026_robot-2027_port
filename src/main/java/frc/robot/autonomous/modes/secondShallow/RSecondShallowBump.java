@@ -30,7 +30,7 @@ public class RSecondShallowBump extends SequentialCommandGroup {
     addCommands(
         new InstantCommand(
             () -> {
-              if (Robot.alliance == Alliance.Blue) {
+              if (Robot.alliance == Alliance.BLUE) {
                 drive.setPose(startPoseBlue);
               } else {
                 drive.setPose(startPoseRed);
