@@ -1,22 +1,29 @@
 package frc.robot.commands;
 
 import org.wpilib.driverstation.GenericHID;
-import org.wpilib.command3.Command;
-import org.wpilib.command3.button.CommandXboxController;
+import org.wpilib.command2.Command;
+import org.wpilib.command2.Commands;
+import org.wpilib.command2.ConditionalCommand;
+import org.wpilib.command2.SequentialCommandGroup;
+import org.wpilib.command2.WaitCommand;
+import org.wpilib.command2.button.CommandNiDsXboxController;
+
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
-public class IntakeCommands implements Mechanism {
-  private static Command transitionToIntake(Intake intake, CommandXboxController controller) {
-    return run(coroutine -> {
-      coroutine.await(intake(intake));
-      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
-      coroutine.wait(0.25);
-      controller.setRumble(GenericHID.RumbleType.kLeftRumble, 0.0);
-      
-    })
-    .named("Transition to Intake");
-    
+public class IntakeCommands {
+  private static Command transitionToIntake(Intake intake, CommandNiDsXboxController controller) {
+    return intake(intake)
+        .andThen(
+            Commands.run(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.5);
+                    })
+                .withTimeout(0.25)
+                .finallyDo(
+                    () -> {
+                      controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.0);
+                    }));
   }
 
   public static Command idle(Intake intake) {
@@ -34,7 +41,7 @@ public class IntakeCommands implements Mechanism {
         });
   }
 
-  public static Command toggleIntake(Intake intake, CommandXboxController controller) {
+  public static Command toggleIntake(Intake intake, CommandNiDsXboxController controller) {
     return new ConditionalCommand(
         transitionToIntake(intake, controller)
             .onlyIf(

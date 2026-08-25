@@ -8,6 +8,7 @@
 package frc.robot.util;
 
 import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.RobotState;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
@@ -75,7 +76,7 @@ public class HubShiftUtil {
     }
 
     // Return FMS value
-    String message = DriverStation.getGameSpecificMessage();
+    String message = MatchState.getGameData().orElse("");
     if (message.length() > 0) {
       char character = message.charAt(0);
       if (character == 'R') {
