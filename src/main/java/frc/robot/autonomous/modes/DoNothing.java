@@ -1,15 +1,14 @@
 package frc.robot.autonomous.modes;
 
-import org.wpilib.command2.InstantCommand;
-import org.wpilib.command2.SequentialCommandGroup;
+import org.wpilib.command3.Command;
 import frc.robot.subsystems.shooter.hood.Hood;
-import org.littletonrobotics.junction.Logger;
 
-public class DoNothing extends SequentialCommandGroup {
-  public DoNothing(Hood hood) {
-    setName("DO_NOTHING");
-    addCommands(
-        new InstantCommand(() -> hood.requestGoal(0.0, false)),
-        new InstantCommand(() -> Logger.recordOutput("Autonomous/AutoStarted", "DoNothing")));
+public class DoNothing {
+
+  public static Command auto(Hood hood) {
+    return Command.sequence(
+      Command.noRequirements(coroutine -> hood.requestGoal(0.0, false)).named("hoodSetGoal")
+    ).named("DO_NOTHING");
   }
+
 }
