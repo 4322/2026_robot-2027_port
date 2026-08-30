@@ -20,7 +20,6 @@
 
 package frc.robot.util.firecontrol;
 
-import org.wpilib.math.util.MathUtil;
 import org.wpilib.math.interpolation.Interpolator;
 
 /**
