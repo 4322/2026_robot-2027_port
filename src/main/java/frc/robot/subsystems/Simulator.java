@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import org.wpilib.hardware.hal.AllianceStationID;
+import org.wpilib.hardware.hal.RobotMode;
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
@@ -9,10 +10,14 @@ import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
 import org.wpilib.driverstation.NiDsXboxController;
+import org.wpilib.driverstation.POVDirection;
+import org.wpilib.driverstation.internal.DriverStationBackend;
 import org.wpilib.simulation.DriverStationSim;
 import org.wpilib.command2.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.autonomous.AutonomousSelector.AutoName;
+import frc.robot.util.OrangePose2d;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -124,20 +129,6 @@ public class Simulator {
     INACTIVE
   }
 
-  private enum POVDirection {
-    NONE(-1),
-    UP(0),
-    RIGHT(90),
-    DOWN(180),
-    LEFT(270);
-
-    public final int value;
-
-    private POVDirection(int value) {
-      this.value = value;
-    }
-  }
-
   private enum ControllerAxis {
     LEFT_X(0),
     LEFT_Y(1),
@@ -153,15 +144,15 @@ public class Simulator {
     }
   }
 
-  public class FieldPose2d extends Pose2d {
+  public class FieldPose2d extends OrangePose2d {
     public FieldPose2d(double x, double y, Rotation2d rotation) {
       super(x, y, rotation);
     }
 
-    public Pose2d flipPose() {
+    public OrangePose2d flipPose() {
       double flippedX = Units.inchesToMeters(651.22) - getX();
       double flippedY = Units.inchesToMeters(317.69) - getY();
-      return new Pose2d(flippedX, flippedY, getRotation().plus(Rotation2d.kPi));
+      return new OrangePose2d(flippedX, flippedY, getRotation().plus(Rotation2d.kPi));
     }
   }
 
@@ -267,7 +258,7 @@ public class Simulator {
     private EventStatus eventStatus;
     private String eventName;
     private EventType eventType;
-    private Pose2d pose;
+    private OrangePose2d pose;
 
     SimEvent(double eventTime, String eventName, EventType eventType) {
       this(eventTime, eventName, eventType, EventStatus.ACTIVE);
@@ -279,7 +270,7 @@ public class Simulator {
 
     @SuppressWarnings("unused")
     SimEvent(double eventTime, String eventName, EventType eventType, Translation2d position) {
-      this(eventTime, eventName, eventType, new Pose2d(position, Rotation2d.kZero));
+      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.kZero));
     }
 
     SimEvent(
@@ -288,10 +279,10 @@ public class Simulator {
         EventType eventType,
         Translation2d position,
         EventStatus eventStatus) {
-      this(eventTime, eventName, eventType, new Pose2d(position, Rotation2d.kZero), eventStatus);
+      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.kZero), eventStatus);
     }
 
-    SimEvent(double eventTime, String eventName, EventType eventType, Pose2d pose) {
+    SimEvent(double eventTime, String eventName, EventType eventType, OrangePose2d pose) {
       this(eventTime, eventName, eventType, pose, EventStatus.ACTIVE);
     }
 
@@ -299,7 +290,7 @@ public class Simulator {
         double eventTime,
         String eventName,
         EventType eventType,
-        Pose2d pose,
+        OrangePose2d pose,
         EventStatus eventStatus) {
       this.eventTime = eventTime;
       this.eventName = eventName;
@@ -351,12 +342,12 @@ public class Simulator {
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.3, 0.3, Rotation2d.k180deg)),
+              new OrangePose2d(-0.3, 0.3, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0.3, Rotation2d.k180deg)),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.RELEASE_POV),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.RELEASE_LEFT_TRIGGER),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.RELEASE_RIGHT_TRIGGER),
@@ -372,13 +363,13 @@ public class Simulator {
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.3, 0.3, Rotation2d.kZero)),
+              new OrangePose2d(-0.3, 0.3, Rotation2d.kZero)),
           // Turn X isn't used, setting it here to test controller data reset
           new SimEvent(
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(1, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(1, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.HOLD_X),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
@@ -394,12 +385,12 @@ public class Simulator {
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.4, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.4, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       case SUBSYSTEM_TEST -> List.of(
@@ -411,48 +402,48 @@ public class Simulator {
               t += 2.0,
               "Drive 1",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.5, 0, Rotation2d.k180deg)),
+              new OrangePose2d(0.5, 0, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.0,
               "Drive 2",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+              new OrangePose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t, "Turn 1", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, -0.5, Rotation2d.kZero)),
+              t, "Turn 1", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, -0.5, Rotation2d.kZero)),
           new SimEvent(
               t += 1.5,
               "Drive 3",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, -0.5, Rotation2d.k180deg)),
+              new OrangePose2d(0, -0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t, "Turn 2", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0.5, Rotation2d.kZero)),
+              t, "Turn 2", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0.5, Rotation2d.kZero)),
           new SimEvent(
-              t += 1.5, "Turn 3", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 1.5, "Turn 3", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.75,
               "Drive 4",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.8, 0, Rotation2d.k180deg)),
+              new OrangePose2d(-0.8, 0, Rotation2d.k180deg)),
           new SimEvent(
               t += 2,
               "Drive 5",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.5, 0.5, Rotation2d.k180deg)),
+              new OrangePose2d(-0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 0.75,
               "Drive 6",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+              new OrangePose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 1,
               "Drive 7",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.75, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0.75, Rotation2d.k180deg)),
           new SimEvent(
               t += 1,
               "Drive 8",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0, Rotation2d.k180deg)),
           new SimEvent(t += 3.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       case AUTO_ROTATE -> List.of(
@@ -462,48 +453,48 @@ public class Simulator {
               t += 1,
               "Drive to Neutral Zone",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.5, 0.5, Rotation2d.k180deg)),
+              new OrangePose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.5,
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+              new OrangePose2d(0.0, 0.0, Rotation2d.k180deg)),
           new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0.1,
               "Drive Back",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.5, -0.5, Rotation2d.k180deg)),
+              new OrangePose2d(-0.5, -0.5, Rotation2d.k180deg)),
           new SimEvent(
               t += 1.5,
               "Drive to Opposing Zone",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.67, 0.0, Rotation2d.k180deg)),
+              new OrangePose2d(0.67, 0.0, Rotation2d.k180deg)),
           new SimEvent(
               t += 4,
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+              new OrangePose2d(0.0, 0.0, Rotation2d.k180deg)),
           new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Drive Back",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-0.67, 0, Rotation2d.k180deg)),
+              new OrangePose2d(-0.67, 0, Rotation2d.k180deg)),
           new SimEvent(
               t += 4,
               "Stop Drive",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.0, 0.0, Rotation2d.k180deg)),
+              new OrangePose2d(0.0, 0.0, Rotation2d.k180deg)),
           new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 0,
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0.3, Rotation2d.k180deg)),
           new SimEvent(t += 0.1, "Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 6, "Stop Shooting", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(t += 0.1, "Final Movement", EventType.END_OF_SCENARIO));
@@ -519,36 +510,36 @@ public class Simulator {
               t += 0.1,
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0.0, 0.3, Rotation2d.kZero)),
+              new OrangePose2d(0.0, 0.3, Rotation2d.kZero)),
           new SimEvent(t += 1.0, "Start unjam button", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5.0, "Start unjam button", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 20.0,
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0.0, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(0.0, -0.3, Rotation2d.kZero)),
           new SimEvent(t += 40.0, "Final Movement", EventType.END_OF_SCENARIO));
       case Slowly_Up_down -> List.of(
           new SimEvent(
               t += 0,
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0.3, Rotation2d.k180deg)),
           new SimEvent(
               t += 0,
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, -0.3, Rotation2d.k180deg)),
+              new OrangePose2d(0, -0.3, Rotation2d.k180deg)),
           new SimEvent(
               t += 0,
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.3, Rotation2d.k180deg)),
+              new OrangePose2d(0, 0.3, Rotation2d.k180deg)),
           new SimEvent(
               t += 0,
               "Shoot on the move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, -0.3, Rotation2d.k180deg)));
+              new OrangePose2d(0, -0.3, Rotation2d.k180deg)));
 
       case ZONES -> List.of(
           new SimEvent(
@@ -557,9 +548,9 @@ public class Simulator {
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 0.42, Rotation2d.kZero)),
+              new OrangePose2d(0, 0.42, Rotation2d.kZero)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Right Trench",
@@ -569,9 +560,9 @@ public class Simulator {
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.46, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.46, 0, Rotation2d.kZero)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Left Trench",
@@ -581,9 +572,9 @@ public class Simulator {
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0.46, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.46, 0, Rotation2d.kZero)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Fixed Pose",
@@ -621,24 +612,24 @@ public class Simulator {
               t += 0.1,
               "Move Left No Shoot",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, 1, Rotation2d.kZero)),
+              new OrangePose2d(0, 1, Rotation2d.kZero)),
           new SimEvent(
-              t += 3, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 3, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 2,
               "Move Right Shoot",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(0, -1, Rotation2d.kZero)),
+              new OrangePose2d(0, -1, Rotation2d.kZero)),
           new SimEvent(
-              t += 3.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 3.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 0.1,
               "Spin Shoot",
               EventType.MOVE_JOYSTICK_TURN,
-              new Pose2d(0, 1, Rotation2d.kZero)),
+              new OrangePose2d(0, 1, Rotation2d.kZero)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new Pose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.kZero)),
           new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       case TRENCHES -> List.of(
@@ -650,12 +641,12 @@ public class Simulator {
               t += 0.1,
               "Go through right blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Go back through right blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Left blue trench pose",
@@ -665,12 +656,12 @@ public class Simulator {
               t += 0.1,
               "Go through left blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Go back through left blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Right red trench pose",
@@ -680,12 +671,12 @@ public class Simulator {
               t += 0.1,
               "Go through right red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Go back through right red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Left red trench pose",
@@ -695,12 +686,12 @@ public class Simulator {
               t += 0.1,
               "Go through left red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.kZero)),
           new SimEvent(
               t += 5,
               "Go back through left red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new Pose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.kZero)),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
@@ -732,11 +723,11 @@ public class Simulator {
   private Alliance currentAlliance;
   private final Timer disabledTimer = new Timer();
   private final Timer matchTimer = new Timer();
-  XboxController hid = RobotContainer.controller.getHID(); // the real WPILib XboxController
+  NiDsXboxController hid = RobotContainer.controller.getHID(); // the real WPILib XboxController
   int hidPort = hid.getPort();
   int activeButtonBitmask;
   int momentaryButtonBitmask;
-  int activePOV;
+  POVDirection activePOV;
   boolean momentaryPOV;
 
   public Simulator() {
@@ -796,25 +787,25 @@ public class Simulator {
         Logger.recordOutput("Sim/EventType", currentEvent.eventType);
         switch (currentEvent.eventType) {
           case SET_POSE -> setPose(currentEvent.pose);
-          case PRESS_A -> pressButton(XboxController.Button.kA);
-          case HOLD_A -> holdButton(XboxController.Button.kA);
-          case RELEASE_A -> releaseButton(XboxController.Button.kA);
-          case PRESS_B -> pressButton(XboxController.Button.kB);
-          case HOLD_B -> holdButton(XboxController.Button.kB);
-          case RELEASE_B -> releaseButton(XboxController.Button.kB);
-          case PRESS_X -> pressButton(XboxController.Button.kX);
-          case HOLD_X -> holdButton(XboxController.Button.kX);
-          case RELEASE_X -> releaseButton(XboxController.Button.kX);
-          case PRESS_Y -> pressButton(XboxController.Button.kY);
-          case HOLD_Y -> holdButton(XboxController.Button.kY);
-          case RELEASE_Y -> releaseButton(XboxController.Button.kY);
-          case PRESS_LEFT_BUMPER -> pressButton(XboxController.Button.kLeftBumper);
-          case HOLD_LEFT_BUMPER -> holdButton(XboxController.Button.kLeftBumper);
-          case RELEASE_LEFT_BUMPER -> releaseButton(XboxController.Button.kLeftBumper);
-          case PRESS_RIGHT_BUMPER -> pressButton(XboxController.Button.kRightBumper);
-          case HOLD_RIGHT_BUMPER -> holdButton(XboxController.Button.kRightBumper);
-          case RELEASE_RIGHT_BUMPER -> releaseButton(XboxController.Button.kRightBumper);
-          case RELEASE_POV -> holdPOV(POVDirection.NONE);
+          case PRESS_A -> pressButton(NiDsXboxController.Button.kA);
+          case HOLD_A -> holdButton(NiDsXboxController.Button.kA);
+          case RELEASE_A -> releaseButton(NiDsXboxController.Button.kA);
+          case PRESS_B -> pressButton(NiDsXboxController.Button.kB);
+          case HOLD_B -> holdButton(NiDsXboxController.Button.kB);
+          case RELEASE_B -> releaseButton(NiDsXboxController.Button.kB);
+          case PRESS_X -> pressButton(NiDsXboxController.Button.kX);
+          case HOLD_X -> holdButton(NiDsXboxController.Button.kX);
+          case RELEASE_X -> releaseButton(NiDsXboxController.Button.kX);
+          case PRESS_Y -> pressButton(NiDsXboxController.Button.kY);
+          case HOLD_Y -> holdButton(NiDsXboxController.Button.kY);
+          case RELEASE_Y -> releaseButton(NiDsXboxController.Button.kY);
+          case PRESS_LEFT_BUMPER -> pressButton(NiDsXboxController.Button.kLeftBumper);
+          case HOLD_LEFT_BUMPER -> holdButton(NiDsXboxController.Button.kLeftBumper);
+          case RELEASE_LEFT_BUMPER -> releaseButton(NiDsXboxController.Button.kLeftBumper);
+          case PRESS_RIGHT_BUMPER -> pressButton(NiDsXboxController.Button.kRightBumper);
+          case HOLD_RIGHT_BUMPER -> holdButton(NiDsXboxController.Button.kRightBumper);
+          case RELEASE_RIGHT_BUMPER -> releaseButton(NiDsXboxController.Button.kRightBumper);
+          case RELEASE_POV -> holdPOV(POVDirection.CENTER);
           case PRESS_UP_POV -> pressPOV(POVDirection.UP);
           case HOLD_UP_POV -> holdPOV(POVDirection.UP);
           case PRESS_RIGHT_POV -> pressPOV(POVDirection.RIGHT);
@@ -827,12 +818,12 @@ public class Simulator {
           case RELEASE_LEFT_TRIGGER -> releaseTrigger(ControllerAxis.LEFT_TRIGGER);
           case HOLD_RIGHT_TRIGGER -> holdTrigger(ControllerAxis.RIGHT_TRIGGER);
           case RELEASE_RIGHT_TRIGGER -> releaseTrigger(ControllerAxis.RIGHT_TRIGGER);
-          case PRESS_LEFT_STICK -> pressButton(XboxController.Button.kLeftStick);
-          case HOLD_LEFT_STICK -> holdButton(XboxController.Button.kLeftStick);
-          case RELEASE_LEFT_STICK -> releaseButton(XboxController.Button.kLeftStick);
-          case PRESS_RIGHT_STICK -> pressButton(XboxController.Button.kRightStick);
-          case HOLD_RIGHT_STICK -> holdButton(XboxController.Button.kRightStick);
-          case RELEASE_RIGHT_STICK -> releaseButton(XboxController.Button.kRightStick);
+          case PRESS_LEFT_STICK -> pressButton(NiDsXboxController.Button.kLeftStick);
+          case HOLD_LEFT_STICK -> holdButton(NiDsXboxController.Button.kLeftStick);
+          case RELEASE_LEFT_STICK -> releaseButton(NiDsXboxController.Button.kLeftStick);
+          case PRESS_RIGHT_STICK -> pressButton(NiDsXboxController.Button.kRightStick);
+          case HOLD_RIGHT_STICK -> holdButton(NiDsXboxController.Button.kRightStick);
+          case RELEASE_RIGHT_STICK -> releaseButton(NiDsXboxController.Button.kRightStick);
           case MOVE_JOYSTICK_DRIVE -> {
             persistAxis(ControllerAxis.LEFT_X, -currentEvent.pose.getY());
             persistAxis(ControllerAxis.LEFT_Y, -currentEvent.pose.getX());
@@ -876,13 +867,15 @@ public class Simulator {
       for (Map.Entry<Integer, Double> entry : axisValues.entrySet()) {
         DriverStationSim.setJoystickAxis(hidPort, entry.getKey(), entry.getValue());
       }
-      DriverStationSim.setGameSpecificMessage(gameSpecificMessage);
+      DriverStationSim.setGameData(gameSpecificMessage);
       DriverStationSim.setJoystickPOV(hidPort, 0, activePOV);
-      DriverStationSim.setJoystickButtons(hidPort, activeButtonBitmask);
+      for (int i = 0; i < 10; i++) {
+        DriverStationSim.setJoystickButton(hidPort, i, (activeButtonBitmask & (1 << i)) != 0);
+      }
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
-    } while (DriverStation.getStickAxisCount(hidPort) != 6
-        || DriverStation.getStickButtonCount(hidPort) != 10);
+    } while (DriverStationBackend.getStickAxesAvailable(hidPort) != 6
+        || DriverStationBackend.getStickButtonsAvailable(hidPort) != 10);
     if (retry > 2) {
       System.out.println(
           "Warning: Xbox ontroller update required "
@@ -892,17 +885,17 @@ public class Simulator {
     }
     releaseMomentaryButtons();
     if (momentaryPOV) {
-      activePOV = POVDirection.NONE.value;
+      activePOV = POVDirection.CENTER;
       momentaryPOV = false;
     }
   }
 
   private void configureController() {
     // ensure controller has expected number of axes and buttons
-    DriverStationSim.setJoystickIsXbox(hidPort, true);
-    DriverStationSim.setJoystickAxisCount(hidPort, 6);
-    DriverStationSim.setJoystickButtonCount(hidPort, 10);
-    DriverStationSim.setJoystickPOVCount(hidPort, 1);
+    DriverStationSim.setJoystickIsGamepad(hidPort, true);
+    DriverStationSim.setJoystickAxesAvailable(hidPort, 6);
+    DriverStationSim.setJoystickButtonsAvailable(hidPort, 10);
+    DriverStationSim.setJoystickPOVsAvailable(hidPort, 1);
   }
 
   private void resetScenario() {
@@ -913,11 +906,15 @@ public class Simulator {
     Logger.recordOutput("Sim/EventName", "Disabled");
     Logger.recordOutput("Sim/EventType", "Disabled");
 
-    DriverStationSim.setAutonomous(events == autoEvents);
-    if (currentAlliance == Alliance.RED) {
-      DriverStationSim.setAllianceStationId(AllianceStationID.Red2);
+    if (events == autoEvents) {
+      DriverStationSim.setRobotMode(RobotMode.AUTONOMOUS);
     } else {
-      DriverStationSim.setAllianceStationId(AllianceStationID.Blue2);
+      DriverStationSim.setRobotMode(RobotMode.TELEOPERATED);
+    }
+    if (currentAlliance == Alliance.RED) {
+      DriverStationSim.setAllianceStationId(AllianceStationID.RED_2);
+    } else {
+      DriverStationSim.setAllianceStationId(AllianceStationID.BLUE_2);
     }
 
     eventIterator = events.iterator();
@@ -931,7 +928,7 @@ public class Simulator {
   private void setNextRegressTest() {
     // reset all controls
     // don't call DriverStationSim.resetData() because it creates race conditions
-    holdPOV(POVDirection.NONE);
+    holdPOV(POVDirection.CENTER);
     releaseTrigger(ControllerAxis.LEFT_TRIGGER);
     releaseTrigger(ControllerAxis.RIGHT_TRIGGER);
     stopJoystick();
@@ -957,24 +954,24 @@ public class Simulator {
     } else {
       events = teleopEvents;
     }
-    setPose(new Pose2d(0, 0, Rotation2d.kZero));
+    setPose(new OrangePose2d(0, 0, Rotation2d.kZero));
     resetScenario();
   }
 
-  private void setPose(Pose2d robotPose) {
-    RobotContainer.drive.setPose(robotPose);
-    RobotContainer.visionGlobalPose.setRobotPose(robotPose);
+  private void setPose(OrangePose2d robotPose) {
+    RobotContainer.drive.setPose(new Pose2d(robotPose.getX(), robotPose.getY(), robotPose.getRotation()));
+    RobotContainer.visionGlobalPose.setRobotPose(new Pose2d(robotPose.getX(), robotPose.getY(), robotPose.getRotation()));
   }
 
-  private void holdButton(XboxController.Button button) {
+  private void holdButton(NiDsXboxController.Button button) {
     activeButtonBitmask |= 1 << (button.value - 1);
   }
 
-  private void releaseButton(XboxController.Button button) {
+  private void releaseButton(NiDsXboxController.Button button) {
     activeButtonBitmask &= ~(1 << (button.value - 1));
   }
 
-  private void pressButton(XboxController.Button button) {
+  private void pressButton(NiDsXboxController.Button button) {
     activeButtonBitmask |= 1 << (button.value - 1);
     momentaryButtonBitmask |= 1 << (button.value - 1);
   }
@@ -985,7 +982,7 @@ public class Simulator {
   }
 
   private void holdPOV(POVDirection direction) {
-    activePOV = direction.value;
+    activePOV = direction;
   }
 
   private void pressPOV(POVDirection direction) {
