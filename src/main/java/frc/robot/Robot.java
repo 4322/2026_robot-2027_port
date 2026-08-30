@@ -102,6 +102,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath L_SINGLE_SWEEP_B_DEPOT;
 
   public Robot() {
+    /* 
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME); // Set a metadata value
     Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
     Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
@@ -117,7 +118,7 @@ public class Robot extends LoggedRobot {
       default:
         Logger.recordMetadata("GitDirty", "Unknown");
         break;
-    }
+    }*/
 
     switch (Constants.currentMode) {
       case REAL:
