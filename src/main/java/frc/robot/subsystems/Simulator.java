@@ -8,7 +8,7 @@ import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.Timer;
-import org.wpilib.driverstation.XboxController;
+import org.wpilib.driverstation.NiDsXboxController;
 import org.wpilib.simulation.DriverStationSim;
 import org.wpilib.command2.InstantCommand;
 import frc.robot.RobotContainer;

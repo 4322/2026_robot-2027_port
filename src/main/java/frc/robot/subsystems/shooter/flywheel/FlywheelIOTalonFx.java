@@ -17,7 +17,6 @@ import org.wpilib.units.measure.AngularVelocity;
 import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
-import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.util.Color;
 import frc.robot.constants.Constants;

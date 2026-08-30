@@ -26,6 +26,7 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Twist2d;
 import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
+import org.wpilib.math.interpolation.Interpolator;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.util.Units;
 import org.wpilib.smartdashboard.SmartDashboard;
@@ -312,11 +313,11 @@ public class ShotCalculator {
     double ay = (robotVel.vy - prevRobotVy) / 0.02;
     double aOmega = (robotVel.omega - prevRobotOmega) / 0.02;
     Pose2d compensatedPose =
-        rawPose.exp(
+        rawPose.plus(
             new Twist2d(
                 robotVel.vx * dt + 0.5 * ax * dt * dt,
                 robotVel.vy * dt + 0.5 * ay * dt * dt,
-                robotVel.omega * dt + 0.5 * aOmega * dt * dt));
+                robotVel.omega * dt + 0.5 * aOmega * dt * dt).exp());
     prevRobotVx = robotVel.vx;
     prevRobotVy = robotVel.vy;
     prevRobotOmega = robotVel.omega;
@@ -530,7 +531,7 @@ public class ShotCalculator {
         solverQuality = 1.0;
       } else {
         solverQuality =
-            MathUtil.interpolate(1.0, 0.1, (double) (iterationsUsed - 3) / (maxIter - 3));
+            Interpolator.forDouble().interpolate(1.0, 0.1, (double) (iterationsUsed - 3) / (maxIter - 3));
       }
     }
 
