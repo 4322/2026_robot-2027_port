@@ -20,7 +20,7 @@ public class LEDIOCANdle implements LEDIO {
   private String ledColor;
 
   public LEDIOCANdle() {
-    leds = new CANdle(Constants.LED.CANdleID);
+    leds = new CANdle(Constants.LED.CANdleID, Constants.SystemcoreBus.systemcore);
     config = new CANdleConfiguration();
     config.LED.StripType = Constants.LED.stripType;
     config.LED.BrightnessScalar = Constants.LED.brightnessScalar;

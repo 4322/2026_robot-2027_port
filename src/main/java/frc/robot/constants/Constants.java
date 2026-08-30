@@ -474,6 +474,9 @@ public final class Constants {
     }
   }
 
+  public static class SystemcoreBus {
+    public static final CANBus systemcore = CANBus.systemcore(0); // TODO set this
+  }
   public static class CANivore {
     public static final String canbusName = "Clockwork";
     public static final CANBus CANBus = new CANBus(Constants.CANivore.canbusName);

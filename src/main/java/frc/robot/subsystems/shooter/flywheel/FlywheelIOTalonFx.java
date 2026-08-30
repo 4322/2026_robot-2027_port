@@ -54,8 +54,8 @@ public class FlywheelIOTalonFx implements FlywheelIO {
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public FlywheelIOTalonFx() {
-    leaderMotor = new TalonFX(Constants.Flywheel.motorId);
-    followerMotor = new TalonFX(Constants.Flywheel.followerMotorId);
+    leaderMotor = new TalonFX(Constants.Flywheel.motorId, Constants.SystemcoreBus.systemcore);
+    followerMotor = new TalonFX(Constants.Flywheel.followerMotorId, Constants.SystemcoreBus.systemcore);
 
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
     config.HardwareLimitSwitch.ReverseLimitEnable = false;
