@@ -127,7 +127,7 @@ public class Turret {
         desiredDeg = calculateAngle(desiredDeg, inputs.turretDegs);
         if (needsToUnwind()) {
           desiredDeg =
-              MathUtil.clamp(
+              Math.clamp(
                   desiredDeg,
                   Constants.Turret.minPhysicalLimitDeg,
                   Constants.Turret.maxPhysicalLimitDeg);
@@ -149,12 +149,12 @@ public class Turret {
 
   private double getTargetUnjamAngle() {
     if (desiredDeg > inputs.turretDegs) {
-      return MathUtil.clamp(
+      return Math.clamp(
           inputs.turretDegs - Constants.Turret.unjamDeg,
           Constants.Turret.minUnwindLimitDeg,
           Constants.Turret.maxUnwindLimitDeg);
     } else if (desiredDeg < inputs.turretDegs) {
-      return MathUtil.clamp(
+      return Math.clamp(
           inputs.turretDegs + Constants.Turret.unjamDeg,
           Constants.Turret.minUnwindLimitDeg,
           Constants.Turret.maxUnwindLimitDeg);
@@ -265,7 +265,7 @@ public class Turret {
 
   public void requestTurretOverride(Double targetAngle) {
     desiredDeg =
-        MathUtil.clamp(
+        Math.clamp(
             targetAngle, Constants.Turret.minUnwindLimitDeg, Constants.Turret.maxUnwindLimitDeg);
     this.ffRadPerrSec = 0;
     updateAtGoalTimer();

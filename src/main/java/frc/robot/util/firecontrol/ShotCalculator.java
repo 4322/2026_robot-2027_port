@@ -451,7 +451,7 @@ public class ShotCalculator {
         }
 
         // Per-iteration clamp prevents runaway
-        tof = MathUtil.clamp(tof, config.tofMin, config.tofMax);
+        tof = Math.clamp(tof, config.tofMin, config.tofMax);
 
         iterationsUsed = i + 1;
 
@@ -586,25 +586,25 @@ public class ShotCalculator {
 
     // 2. Velocity stability: penalize rapid speed changes
     double speedDelta = Math.abs(currentSpeed - previousSpeed);
-    double velocityStability = MathUtil.clamp(1.0 - speedDelta / 0.5, 0, 1);
+    double velocityStability = Math.clamp(1.0 - speedDelta / 0.5, 0, 1);
 
     // 3. Vision confidence (0-1, from caller)
-    double visionConf = MathUtil.clamp(visionConfidence, 0, 1);
+    double visionConf = Math.clamp(visionConfidence, 0, 1);
 
     // 4. Heading accuracy with speed scaling and distance scaling.
     // Faster robot = tighter tolerance (because velocity errors compound).
     // Closer to hub = tighter tolerance (because small angles mean big misses).
-    double distanceScale = MathUtil.clamp(config.headingReferenceDistance / distance, 0.5, 2.0);
+    double distanceScale = Math.clamp(config.headingReferenceDistance / distance, 0.5, 2.0);
     double speedScale = 1.0 / (1.0 + config.headingSpeedScalar * currentSpeed);
     double scaledMaxError = config.headingMaxErrorRad * distanceScale * speedScale;
     double headingErr = Math.abs(headingErrorRad);
-    double headingAccuracy = MathUtil.clamp(1.0 - headingErr / scaledMaxError, 0, 1);
+    double headingAccuracy = Math.clamp(1.0 - headingErr / scaledMaxError, 0, 1);
 
     // 5. Distance in range: penalty for being near min/max scoring boundaries
     double rangeSpan = config.maxScoringDistance - config.minScoringDistance;
     double rangeFraction = (distance - config.minScoringDistance) / rangeSpan;
     double distInRange = 1.0 - 2.0 * Math.abs(rangeFraction - 0.5);
-    distInRange = MathUtil.clamp(distInRange, 0, 1);
+    distInRange = Math.clamp(distInRange, 0, 1);
 
     // Weighted geometric mean (one zero kills it)
     double[] c = {convergenceQuality, velocityStability, visionConf, headingAccuracy, distInRange};
@@ -626,7 +626,7 @@ public class ShotCalculator {
 
     if (sumW <= 0) return 0;
     double composite = Math.exp(logSum / sumW) * 100.0;
-    return MathUtil.clamp(composite, 0, 100);
+    return Math.clamp(composite, 0, 100);
   }
 
   /** Layer a per-distance RPM adjustment on top of the base LUT. Good for field tuning at comp. */
@@ -647,7 +647,7 @@ public class ShotCalculator {
 
   /** Bump the RPM offset by delta. Clamped to +/- 200. Bind this to copilot D-pad. */
   public void adjustOffset(double delta) {
-    rpmOffset = MathUtil.clamp(rpmOffset + delta, -200, 200);
+    rpmOffset = Math.clamp(rpmOffset + delta, -200, 200);
   }
 
   /** Reset the RPM offset to zero. Call this on mode transitions so trim doesn't carry over. */
