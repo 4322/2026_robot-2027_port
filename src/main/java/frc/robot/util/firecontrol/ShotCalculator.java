@@ -499,15 +499,6 @@ public class ShotCalculator {
     Rotation2d turretAngle =
         new Rotation2d(aimX, aimY).rotateBy(compensatedPose.getRotation().unaryMinus());
 
-    // TODO: Remove since not needed for turret
-    if (config.shooterAngleOffsetRad != 0.0) {
-      turretAngle = turretAngle.plus(new Rotation2d(config.shooterAngleOffsetRad));
-    }
-
-    // Heading error for confidence calculation
-    // TODO: Not accurate for turret, remove
-    double headingErrorRad = MathUtil.angleModulus(turretAngle.getRadians() - heading);
-
     // Angular velocity feedforward: rate of change of aim angle
     double turretAngularVelocityRad = 0;
     if (!velocityFiltered && distance > 0.1) {
@@ -537,7 +528,7 @@ public class ShotCalculator {
 
     double confidence =
         computeConfidence(
-            solverQuality, robotSpeed, headingErrorRad, distance, inputs.visionConfidence());
+            solverQuality, robotSpeed, 0, distance, inputs.visionConfidence());
 
     previousSpeed = robotSpeed;
 
