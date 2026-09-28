@@ -48,8 +48,8 @@ public class OrangePose2d
 
   /** Constructs a pose at the origin facing toward the positive X axis. */
   public OrangePose2d() {
-    m_translation = Translation2d.kZero;
-    m_rotation = Rotation2d.kZero;
+    m_translation = Translation2d.ZERO;
+    m_rotation = Rotation2d.ZERO;
   }
 
   /**

@@ -541,7 +541,7 @@ public class ShotCalculator {
     Logger.recordOutput(logPath + "warmStart", warmStartUsed);
     Logger.recordOutput(logPath + "normalDistToTarget", distance);
     Logger.recordOutput(logPath + "projDistToTarget", projDist);
-    Logger.recordOutput(logPath + "targetPosition", new Pose2d(hubCenter, Rotation2d.kZero));
+    Logger.recordOutput(logPath + "targetPosition", new Pose2d(hubCenter, Rotation2d.ZERO));
 
     if (Constants.firingManagerMode == SubsystemMode.TUNING) {
       SmartDashboard.putNumber("Tuning/distanceToTarget", distance);

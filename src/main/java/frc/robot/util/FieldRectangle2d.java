@@ -52,22 +52,22 @@ public class FieldRectangle2d extends OrangeRectangle2d {
         new Pose2d(
             getCenter().getMeasureX().plus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().plus(getMeasureYWidth().div(2.0)),
-            Rotation2d.kZero));
+            Rotation2d.ZERO));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().plus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().minus(getMeasureYWidth().div(2.0)),
-            Rotation2d.kZero));
+            Rotation2d.ZERO));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().minus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().minus(getMeasureYWidth().div(2.0)),
-            Rotation2d.kZero));
+            Rotation2d.ZERO));
     corners.add(
         new Pose2d(
             getCenter().getMeasureX().minus(getMeasureXWidth().div(2.0)),
             getCenter().getMeasureY().plus(getMeasureYWidth().div(2.0)),
-            Rotation2d.kZero));
+            Rotation2d.ZERO));
     return corners.toArray(new Pose2d[0]);
   }
 }

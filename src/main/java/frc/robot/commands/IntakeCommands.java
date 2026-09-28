@@ -6,17 +6,18 @@ import org.wpilib.command2.Commands;
 import org.wpilib.command2.ConditionalCommand;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.WaitCommand;
-import org.wpilib.command2.button.CommandNiDsXboxController;
+import org.wpilib.driverstation.XboxController;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
-  private static Command transitionToIntake(Intake intake, CommandNiDsXboxController controller) {
+  private static Command transitionToIntake(Intake intake, XboxController controller) {
     return intake(intake)
         .andThen(
             Commands.run(
                     () -> {
+                      
                       controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.5);
                     })
                 .withTimeout(0.25)
@@ -41,7 +42,7 @@ public class IntakeCommands {
         });
   }
 
-  public static Command toggleIntake(Intake intake, CommandNiDsXboxController controller) {
+  public static Command toggleIntake(Intake intake, XboxController controller) {
     return new ConditionalCommand(
         transitionToIntake(intake, controller)
             .onlyIf(

@@ -8,7 +8,7 @@ package frc.robot;
 
 import org.wpilib.driverstation.GenericHID;
 import org.wpilib.smartdashboard.Field2d;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.TelemetryTable;
 import org.wpilib.command2.Command;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -65,7 +65,9 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import org.wpilib.command2.button.CommandNiDsXboxController;
+import org.wpilib.driverstation.XboxController;
+import org.wpilib.command2.button.CommandGamepad;
+import org.wpilib.command2.button.CommandXboxController;
 import org.wpilib.command2.Commands;
 
 /**
@@ -108,9 +110,11 @@ public class RobotContainer {
     public static AutonomousSelector autonomousSelector;
 
     private static Field2d field;
+    private static TelemetryTable fieldLog;
 
     // Controller
-    public static final CommandNiDsXboxController controller = new CommandNiDsXboxController(0);
+    public static final XboxController controller = new XboxController(0);
+    public static final CommandXboxController commandController = new CommandXboxController(controller);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -237,7 +241,7 @@ public class RobotContainer {
         configureButtonBindings();
         if (Constants.enableElasticOdometry) {
             field = new Field2d();
-            SmartDashboard.putData("Field", field);
+            field.logTo(fieldLog);
         }
         if (Constants.debugZoneAreas) {
             FieldConstants.plotZones();
@@ -267,19 +271,19 @@ public class RobotContainer {
     Turret Unjam - right bumper while held (Driver)
     Intake Eject - 'x' on true (Driver)
     */
-        controller.b().whileTrue(ShooterCommands.unjam(shooter));
-        controller.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
+        commandController.b().whileTrue(ShooterCommands.unjam(shooter));
+        commandController.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
         if (Constants.turretLocked) {
-            controller.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
+            commandController.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
         } else {
-            controller.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
-            controller.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
+            commandController.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
+            commandController.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
         }
-        controller.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
-        controller.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
-        controller.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
-        controller.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
-        controller.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+        commandController.leftBumper().onTrue(IntakeCommands.toggleIntake(intake, controller));
+        commandController.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
+        commandController.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
+        commandController.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
+        commandController.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
     }
 
     /**

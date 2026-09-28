@@ -42,9 +42,9 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private final StatusSignal<Temperature> followerTemp;
 
   private final Debouncer leaderMotorConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
   private final Debouncer followerMotorConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 

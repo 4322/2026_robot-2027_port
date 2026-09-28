@@ -26,9 +26,9 @@ public class Region2d {
   public Region2d(Translation2d[] points, String id) {
     this.points = new Pose2d[points.length + 1];
     for (int i = 0; i < points.length; i++) {
-      this.points[i] = new Pose2d(points[i], Rotation2d.kZero);
+      this.points[i] = new Pose2d(points[i], Rotation2d.ZERO);
     }
-    this.points[points.length] = new Pose2d(points[0], Rotation2d.kZero); // Close the path
+    this.points[points.length] = new Pose2d(points[0], Rotation2d.ZERO); // Close the path
     this.id = id;
     this.shape = new Path2D.Double(Path2D.WIND_EVEN_ODD, points.length);
     this.shape.moveTo(points[0].getX(), points[0].getY());

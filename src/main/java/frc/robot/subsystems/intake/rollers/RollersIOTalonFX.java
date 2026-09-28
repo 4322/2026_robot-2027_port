@@ -40,9 +40,9 @@ public class RollersIOTalonFX implements RollersIO {
   private final StatusSignal<Temperature> followerTemp;
 
   private final Debouncer leaderConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
   private final Debouncer followerConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public RollersIOTalonFX() {
     leaderMotor = new TalonFX(Constants.Rollers.leaderMotorId, Constants.SystemcoreBus.systemcore);

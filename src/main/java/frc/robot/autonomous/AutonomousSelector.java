@@ -1,8 +1,11 @@
 package frc.robot.autonomous;
 
+import org.wpilib.command2.Command;
 import org.wpilib.command2.Commands;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.sysid.SysIdRoutine;
+import org.wpilib.tunable.Selectable;
+
 import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
@@ -30,12 +33,11 @@ import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.util.LoggedTunableNumber;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class AutonomousSelector {
 
-  private LoggedDashboardChooser<SequentialCommandGroup> autonomousSelector =
-      new LoggedDashboardChooser<SequentialCommandGroup>("Autonomous");
+  private Selectable<Command> autonomousSelector =
+      new Selectable<Command>();
 
   private static LoggedTunableNumber autoStartDelay =
       new LoggedTunableNumber("Auto Start Delay", 0, true);
@@ -103,25 +105,25 @@ public class AutonomousSelector {
                   AutoName.DRIVE_SYS_ID_QUASISTATIC_FORWARD,
                   new SequentialCommandGroup(
                       Commands.race(
-                          drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward),
+                          drive.sysIdQuasistatic(SysIdRoutine.Direction.FORWARD),
                           Commands.waitSeconds(6)))),
               new Auto(
                   AutoName.DRIVE_SYS_ID_QUASISTATIC_REVERSE,
                   new SequentialCommandGroup(
                       Commands.race(
-                          drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse),
+                          drive.sysIdQuasistatic(SysIdRoutine.Direction.REVERSE),
                           Commands.waitSeconds(6)))),
               new Auto(
                   AutoName.DRIVE_SYS_ID_DYNAMIC_FORWARD,
                   new SequentialCommandGroup(
                       Commands.race(
-                          drive.sysIdDynamic(SysIdRoutine.Direction.kForward),
+                          drive.sysIdDynamic(SysIdRoutine.Direction.FORWARD),
                           Commands.waitSeconds(6)))),
               new Auto(
                   AutoName.DRIVE_SYS_ID_DYNAMIC_REVERSE,
                   new SequentialCommandGroup(
                       Commands.race(
-                          drive.sysIdDynamic(SysIdRoutine.Direction.kReverse),
+                          drive.sysIdDynamic(SysIdRoutine.Direction.REVERSE),
                           Commands.waitSeconds(6)))));
     } else {
       autos =
@@ -165,14 +167,14 @@ public class AutonomousSelector {
 
     for (Auto nextAuto : autos) {
       if (nextAuto.name == defaultAuto) {
-        autonomousSelector.addDefaultOption(nextAuto.name.toString(), nextAuto.command);
+        autonomousSelector.addDefault(nextAuto.name.toString(), nextAuto.command);
       } else {
-        autonomousSelector.addOption(nextAuto.name.toString(), nextAuto.command);
+        autonomousSelector.add(nextAuto.name.toString(), nextAuto.command);
       }
     }
   }
 
-  public SequentialCommandGroup get() {
+  public Command get() {
     if (Constants.currentMode == Mode.SIM) {
       for (Auto nextAuto : autos) {
         if (nextAuto.name == Simulator.getAutoScenario()) {
@@ -183,6 +185,6 @@ public class AutonomousSelector {
       System.out.println("Simulated auto " + Simulator.getAutoScenario() + " not found");
       System.exit(1);
     }
-    return autonomousSelector.get();
+    return autonomousSelector.getSelected();
   }
 }

@@ -14,8 +14,6 @@ import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Transform2d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.geometry.proto.Rectangle2dProto;
-import org.wpilib.math.geometry.struct.Rectangle2dStruct;
 import org.wpilib.units.measure.Distance;
 import org.wpilib.util.protobuf.ProtobufSerializable;
 import org.wpilib.util.struct.StructSerializable;
@@ -66,7 +64,7 @@ public class OrangeRectangle2d implements ProtobufSerializable, StructSerializab
    */
   public OrangeRectangle2d(Translation2d cornerA, Translation2d cornerB) {
     this(
-        new Pose2d(cornerA.plus(cornerB).div(2.0), Rotation2d.kZero),
+        new Pose2d(cornerA.plus(cornerB).div(2.0), Rotation2d.ZERO),
         Math.abs(cornerA.getX() - cornerB.getX()),
         Math.abs(cornerA.getY() - cornerB.getY()));
   }
@@ -257,10 +255,4 @@ public class OrangeRectangle2d implements ProtobufSerializable, StructSerializab
   public int hashCode() {
     return Objects.hash(m_center, m_xWidth, m_yWidth);
   }
-
-  /** Rectangle2d protobuf for serialization. */
-  public static final Rectangle2dProto proto = new Rectangle2dProto();
-
-  /** Rectangle2d struct for serialization. */
-  public static final Rectangle2dStruct struct = new Rectangle2dStruct();
 }

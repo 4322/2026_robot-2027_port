@@ -41,9 +41,9 @@ public class DeployerIOTalonFX implements DeployerIO {
   private final StatusSignal<Temperature> temp;
 
   private final Debouncer motorConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
   private final Debouncer encoderConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public DeployerIOTalonFX() {
     deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);

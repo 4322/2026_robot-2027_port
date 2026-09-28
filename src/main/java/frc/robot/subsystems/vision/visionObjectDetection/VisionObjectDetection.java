@@ -43,7 +43,7 @@ public class VisionObjectDetection extends SubsystemBase {
       if (bestFuelPosition != null) {
         Logger.recordOutput(
             "VisionObjectDetection/bestFuelFieldPos",
-            new Pose2d(bestFuelPosition, Rotation2d.kZero));
+            new Pose2d(bestFuelPosition, Rotation2d.ZERO));
       }
     }
   }
@@ -64,7 +64,7 @@ public class VisionObjectDetection extends SubsystemBase {
       if (currentObjectDifference < bestObjectDifference
           && (!sameZone
               || AreaManager.isSameCompleteZone(
-                  new Pose2d(currentObjectTranslation, Rotation2d.kZero), drive.getRobotPose()))) {
+                  new Pose2d(currentObjectTranslation, Rotation2d.ZERO), drive.getRobotPose()))) {
         bestObjectTranslation = currentObjectTranslation;
       }
     }
@@ -84,7 +84,7 @@ public class VisionObjectDetection extends SubsystemBase {
       objectsPositionsOnField[i] = calculateObjectPositionFromRotation(visibleObjectsRotations[i]);
       Logger.recordOutput(
           "VisionObjectDetection/VisibleLemons",
-          new Pose2d(objectsPositionsOnField[i], Rotation2d.kZero));
+          new Pose2d(objectsPositionsOnField[i], Rotation2d.ZERO));
     }
 
     return objectsPositionsOnField;
@@ -135,7 +135,7 @@ public class VisionObjectDetection extends SubsystemBase {
     for (Translation2d objectPosition : objectPositions) {
       if (sameZone
           && !AreaManager.isSameCompleteZone(
-              new Pose2d(objectPosition, Rotation2d.kZero), drive.getRobotPose())) {
+              new Pose2d(objectPosition, Rotation2d.ZERO), drive.getRobotPose())) {
         continue;
       }
       sumX += objectPosition.getX();
@@ -147,9 +147,9 @@ public class VisionObjectDetection extends SubsystemBase {
 
     Translation2d centroid = new Translation2d(sumX / count, sumY / count);
     Logger.recordOutput(
-        "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, Rotation2d.kZero));
+        "VisionObjectDetection/TargetCentroid", new Pose2d(centroid, Rotation2d.ZERO));
     if ((!AreaManager.isSameCompleteZone(
-            new Pose2d(centroid, Rotation2d.kZero), drive.getRobotPose()))
+            new Pose2d(centroid, Rotation2d.ZERO), drive.getRobotPose()))
         && sameZone) {
       return null;
     } else {

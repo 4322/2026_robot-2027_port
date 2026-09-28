@@ -34,7 +34,7 @@ public class HoodIOTalonFx implements HoodIO {
   private final StatusSignal<Temperature> temp;
 
   private final Debouncer motorConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public HoodIOTalonFx() {
     hoodMotor = new TalonFX(Constants.Hood.motorId, Constants.SystemcoreBus.systemcore);

@@ -151,7 +151,7 @@ public class Simulator {
     public OrangePose2d flipPose() {
       double flippedX = Units.inchesToMeters(651.22) - getX();
       double flippedY = Units.inchesToMeters(317.69) - getY();
-      return new OrangePose2d(flippedX, flippedY, getRotation().plus(Rotation2d.kPi));
+      return new OrangePose2d(flippedX, flippedY, getRotation().plus(Rotation2d.PI));
     }
   }
 
@@ -269,7 +269,7 @@ public class Simulator {
 
     @SuppressWarnings("unused")
     SimEvent(double eventTime, String eventName, EventType eventType, Translation2d position) {
-      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.kZero));
+      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.ZERO));
     }
 
     SimEvent(
@@ -278,7 +278,7 @@ public class Simulator {
         EventType eventType,
         Translation2d position,
         EventStatus eventStatus) {
-      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.kZero), eventStatus);
+      this(eventTime, eventName, eventType, new OrangePose2d(position, Rotation2d.ZERO), eventStatus);
     }
 
     SimEvent(double eventTime, String eventName, EventType eventType, OrangePose2d pose) {
@@ -362,13 +362,13 @@ public class Simulator {
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(-0.3, 0.3, Rotation2d.kZero)),
+              new OrangePose2d(-0.3, 0.3, Rotation2d.ZERO)),
           // Turn X isn't used, setting it here to test controller data reset
           new SimEvent(
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_TURN,
-              new OrangePose2d(1, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(1, -0.3, Rotation2d.ZERO)),
           new SimEvent(t += 1.0, "Event " + eventNum++, EventType.HOLD_X),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
@@ -384,17 +384,17 @@ public class Simulator {
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0.4, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.4, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 1.0,
               "Event " + eventNum++,
               EventType.MOVE_JOYSTICK_TURN,
-              new OrangePose2d(0, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(0, -0.3, Rotation2d.ZERO)),
           new SimEvent(t += 1.0, "Final Movement", EventType.END_OF_SCENARIO));
 
       case SUBSYSTEM_TEST -> List.of(
           new SimEvent(
-              t, "Start Pose", EventType.SET_POSE, new FieldPose2d(4.44, 0.650, Rotation2d.kZero)),
+              t, "Start Pose", EventType.SET_POSE, new FieldPose2d(4.44, 0.650, Rotation2d.ZERO)),
           new SimEvent(t += 4.0, "Start Intake", EventType.PRESS_Y),
           new SimEvent(t += 1.0, "Stop Intake", EventType.PRESS_X),
           new SimEvent(
@@ -408,16 +408,16 @@ public class Simulator {
               EventType.MOVE_JOYSTICK_DRIVE,
               new OrangePose2d(0.5, 0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t, "Turn 1", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, -0.5, Rotation2d.kZero)),
+              t, "Turn 1", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, -0.5, Rotation2d.ZERO)),
           new SimEvent(
               t += 1.5,
               "Drive 3",
               EventType.MOVE_JOYSTICK_DRIVE,
               new OrangePose2d(0, -0.5, Rotation2d.k180deg)),
           new SimEvent(
-              t, "Turn 2", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0.5, Rotation2d.kZero)),
+              t, "Turn 2", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0.5, Rotation2d.ZERO)),
           new SimEvent(
-              t += 1.5, "Turn 3", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 1.5, "Turn 3", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.75,
               "Drive 4",
@@ -447,7 +447,7 @@ public class Simulator {
 
       case AUTO_ROTATE -> List.of(
           new SimEvent(
-              t += 1.0, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+              t += 1.0, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.ZERO)),
           new SimEvent(
               t += 1,
               "Drive to Neutral Zone",
@@ -504,19 +504,19 @@ public class Simulator {
           new SimEvent(t += 0.1, "Release button", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(t += 0.5, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
-              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
-              new OrangePose2d(0.0, 0.3, Rotation2d.kZero)),
+              new OrangePose2d(0.0, 0.3, Rotation2d.ZERO)),
           new SimEvent(t += 1.0, "Start unjam button", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5.0, "Start unjam button", EventType.RELEASE_RIGHT_BUMPER),
           new SimEvent(
               t += 20.0,
               "Spin",
               EventType.MOVE_JOYSTICK_TURN,
-              new OrangePose2d(0.0, -0.3, Rotation2d.kZero)),
+              new OrangePose2d(0.0, -0.3, Rotation2d.ZERO)),
           new SimEvent(t += 40.0, "Final Movement", EventType.END_OF_SCENARIO));
       case Slowly_Up_down -> List.of(
           new SimEvent(
@@ -542,48 +542,48 @@ public class Simulator {
 
       case ZONES -> List.of(
           new SimEvent(
-              t += 0, "Lateral", EventType.SET_POSE, new FieldPose2d(3.7, -0.5, Rotation2d.kZero)),
+              t += 0, "Lateral", EventType.SET_POSE, new FieldPose2d(3.7, -0.5, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0, 0.42, Rotation2d.kZero)),
+              new OrangePose2d(0, 0.42, Rotation2d.ZERO)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Right Trench",
               EventType.SET_POSE,
-              new FieldPose2d(-0.5, 0.5, Rotation2d.kZero)),
+              new FieldPose2d(-0.5, 0.5, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0.46, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.46, 0, Rotation2d.ZERO)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Left Trench",
               EventType.SET_POSE,
-              new FieldPose2d(-0.5, 7.5, Rotation2d.kZero)),
+              new FieldPose2d(-0.5, 7.5, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Move",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0.46, 0, Rotation2d.kZero)),
+              new OrangePose2d(0.46, 0, Rotation2d.ZERO)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Fixed Pose",
               EventType.SET_POSE,
-              new FieldPose2d(3.7, 6.5, Rotation2d.kZero)),
+              new FieldPose2d(3.7, 6.5, Rotation2d.ZERO)),
           new SimEvent(t += 0.1, "Fixed Shoot", EventType.HOLD_RIGHT_BUMPER),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       case INTAKE_TEST -> List.of(
           new SimEvent(
-              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.kZero)),
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(2, 2, Rotation2d.ZERO)),
           new SimEvent(t += 0.5, "Deploy/Intake", EventType.HOLD_LEFT_BUMPER),
           new SimEvent(t += 0.5, "Deploy/Intake Release", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(t += 0.5, "IntakeOff", EventType.HOLD_LEFT_BUMPER),
@@ -604,93 +604,93 @@ public class Simulator {
               t += 0.1,
               "Start pose",
               EventType.SET_POSE,
-              new FieldPose2d(3, 0.5, Rotation2d.kZero)),
+              new FieldPose2d(3, 0.5, Rotation2d.ZERO)),
           new SimEvent(t += 0.1, "Start intake button", EventType.HOLD_LEFT_BUMPER),
           new SimEvent(t += 0.1, "Release intake button", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(
               t += 0.1,
               "Move Left No Shoot",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0, 1, Rotation2d.kZero)),
+              new OrangePose2d(0, 1, Rotation2d.ZERO)),
           new SimEvent(
-              t += 3, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 3, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(t += 0.1, "Start shooting", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 2,
               "Move Right Shoot",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(0, -1, Rotation2d.kZero)),
+              new OrangePose2d(0, -1, Rotation2d.ZERO)),
           new SimEvent(
-              t += 3.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 3.5, "Stop", EventType.MOVE_JOYSTICK_DRIVE, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Spin Shoot",
               EventType.MOVE_JOYSTICK_TURN,
-              new OrangePose2d(0, 1, Rotation2d.kZero)),
+              new OrangePose2d(0, 1, Rotation2d.ZERO)),
           new SimEvent(
-              t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.kZero)),
+              t += 10, "Stop", EventType.MOVE_JOYSTICK_TURN, new OrangePose2d(0, 0, Rotation2d.ZERO)),
           new SimEvent(t += 0.1, "Stop shooting", EventType.RELEASE_RIGHT_TRIGGER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       case TRENCHES -> List.of(
           new SimEvent(
-              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(3, 1, Rotation2d.kZero)),
+              t += 0.1, "Start pose", EventType.SET_POSE, new FieldPose2d(3, 1, Rotation2d.ZERO)),
           new SimEvent(t += 0.1, "Deploy intake", EventType.HOLD_LEFT_BUMPER),
           new SimEvent(t += 3, "Shoot", EventType.HOLD_RIGHT_TRIGGER),
           new SimEvent(
               t += 0.1,
               "Go through right blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Go back through right blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Left blue trench pose",
               EventType.SET_POSE,
-              new FieldPose2d(3, 8, Rotation2d.kZero)),
+              new FieldPose2d(3, 8, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Go through left blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Go back through left blue trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Right red trench pose",
               EventType.SET_POSE,
-              new FieldPose2d(13, 1, Rotation2d.kZero)),
+              new FieldPose2d(13, 1, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Go through right red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Go back through right red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Left red trench pose",
               EventType.SET_POSE,
-              new FieldPose2d(13, 8, Rotation2d.kZero)),
+              new FieldPose2d(13, 8, Rotation2d.ZERO)),
           new SimEvent(
               t += 0.1,
               "Go through left red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(-1, 0, Rotation2d.kZero)),
+              new OrangePose2d(-1, 0, Rotation2d.ZERO)),
           new SimEvent(
               t += 5,
               "Go back through left red trench",
               EventType.MOVE_JOYSTICK_DRIVE,
-              new OrangePose2d(1, 0, Rotation2d.kZero)),
+              new OrangePose2d(1, 0, Rotation2d.ZERO)),
           new SimEvent(t += 5, "End", EventType.END_OF_SCENARIO));
       default -> List.of();
     };
@@ -953,7 +953,7 @@ public class Simulator {
     } else {
       events = teleopEvents;
     }
-    setPose(new OrangePose2d(0, 0, Rotation2d.kZero));
+    setPose(new OrangePose2d(0, 0, Rotation2d.ZERO));
     resetScenario();
   }
 

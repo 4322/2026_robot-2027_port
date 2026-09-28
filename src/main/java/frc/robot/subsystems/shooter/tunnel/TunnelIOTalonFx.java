@@ -33,7 +33,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   private final StatusSignal<Temperature> temp;
 
   private final Debouncer motorConnectedDebounce =
-      new Debouncer(0.5, Debouncer.DebounceType.kFalling);
+      new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 

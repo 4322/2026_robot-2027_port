@@ -86,6 +86,7 @@ public final class Constants {
   public static final int dioCoastButton = 8;
   public static final double coastButtonDelaySec = 10.0;
   public static final double brownoutVoltage = 5.75;
+  public static final double brownoutRecoveryVoltage = 7; // TODO
 
   // only set this if loop cycles are significantly below 20 ms
   // to avoid starvation of critical processes
@@ -475,7 +476,7 @@ public final class Constants {
   }
 
   public static class SystemcoreBus {
-    public static final CANBus systemcore = CANBus.systemcore(0); // TODO set this
+    public static final CANBus systemcore = new CANBus(); // TODO set this
   }
   public static class CANivore {
     public static final String canbusName = "Clockwork";

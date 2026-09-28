@@ -37,8 +37,8 @@ import org.wpilib.math.system.DCMotor;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.RobotState;
-import org.wpilib.driverstation.Alert.Level;
-import org.wpilib.driverstation.Alert;
+import org.wpilib.util.Alert.Level;
+import org.wpilib.util.Alert;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.SubsystemBase;
@@ -90,10 +90,10 @@ public class Drive extends SubsystemBase {
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
-      new Alert("Disconnected gyro, using kinematics as fallback.", Level.HIGH);
+      new Alert("Drive", "Disconnected gyro, using kinematics as fallback.", Level.HIGH);
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
-  private Rotation2d rawGyroRotation = Rotation2d.kZero;
+  private Rotation2d rawGyroRotation = Rotation2d.ZERO;
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
       new SwerveModulePosition[] {
         new SwerveModulePosition(),
@@ -102,7 +102,7 @@ public class Drive extends SubsystemBase {
         new SwerveModulePosition()
       };
   private SwerveDrivePoseEstimator poseEstimator =
-      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, Pose2d.kZero);
+      new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, Pose2d.ZERO);
 
   public Drive(
       GyroIO gyroIO,
@@ -342,7 +342,7 @@ public class Drive extends SubsystemBase {
   public Pose2d getTurretPose() {
     return poseEstimator
         .getEstimatedPosition()
-        .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.kZero));
+        .transformBy(new Transform2d(Constants.Turret.originToTurret, Rotation2d.ZERO));
   }
 
   /** Returns the current turret pose with a rotation */

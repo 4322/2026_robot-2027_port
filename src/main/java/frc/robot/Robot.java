@@ -204,7 +204,7 @@ public class Robot extends LoggedRobot {
             new WPILOGWriter(Constants.logPath)); // Log to a USB stick is ("/U/logs")
         Logger.addDataReceiver(new RLOGServer());
 
-        RobotController.setBrownoutVoltage(Constants.brownoutVoltage);
+        RobotController.setBrownoutVoltages(Constants.brownoutVoltage, Constants.brownoutRecoveryVoltage);
 
         break;
       case SIM:
