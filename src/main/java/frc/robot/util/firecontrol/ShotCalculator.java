@@ -29,7 +29,9 @@ import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
 import org.wpilib.math.interpolation.Interpolator;
 import org.wpilib.math.kinematics.ChassisVelocities;
 import org.wpilib.math.util.Units;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
+
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
 import org.littletonrobotics.junction.Logger;
@@ -333,7 +335,7 @@ public class ShotCalculator {
       hubCenter =
           hubCenter.plus(
               new Translation2d(Units.inchesToMeters(3), 0)
-                  .rotateBy(hubCenter.minus(compensatedPose.getTranslation()).getAngle()));
+                  .rotateBy(hubCenter.minus(compensatedPose.getTranslation()).getAngle().orElse(null)));
     }
 
     double hubX = hubCenter.getX();
@@ -544,7 +546,8 @@ public class ShotCalculator {
     Logger.recordOutput(logPath + "targetPosition", new Pose2d(hubCenter, Rotation2d.ZERO));
 
     if (Constants.firingManagerMode == SubsystemMode.TUNING) {
-      SmartDashboard.putNumber("Tuning/distanceToTarget", distance);
+      TelemetryTable shotCalculatorTelemetry = Telemetry.getTable("Shooter/ShotCalculator");
+      shotCalculatorTelemetry.log("Tuning/distanceToTarget", distance);
     }
 
     return new LaunchParameters(

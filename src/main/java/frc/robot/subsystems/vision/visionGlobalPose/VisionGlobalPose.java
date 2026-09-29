@@ -7,7 +7,8 @@ import org.wpilib.math.geometry.Pose3d;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.numbers.N1;
 import org.wpilib.math.numbers.N3;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 import org.wpilib.command2.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -32,6 +33,7 @@ public class VisionGlobalPose extends SubsystemBase {
   private static final LoggedTunableNumber maxAvgTagDistance =
       new LoggedTunableNumber(
           "GlobalPose/maxAvgTagDistance", Constants.VisionGlobalPose.maxAvgTagDistance);
+  private final TelemetryTable visionTelemetry = Telemetry.getTable("Vision");
 
   public VisionGlobalPose(Drive drive, VisionGlobalPoseIO... io) {
     this.drive = drive;
@@ -74,11 +76,11 @@ public class VisionGlobalPose extends SubsystemBase {
     }
 
     if (unstableCameras >= 2) {
-      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
+      visionTelemetry.log("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
       Logger.recordOutput("Vision/Stable", "No");
       Robot.stabilize();
     } else {
-      SmartDashboard.putString("Vision/Vision Stable", Constants.NetworkTables.green.toHexString());
+      visionTelemetry.log("Vision/Vision Stable", Constants.NetworkTables.green.toHexString());
       Logger.recordOutput("Vision/Stable", "Yes");
     }
 

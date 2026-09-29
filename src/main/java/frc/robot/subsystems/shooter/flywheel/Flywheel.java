@@ -1,7 +1,8 @@
 package frc.robot.subsystems.shooter.flywheel;
 
 import org.wpilib.system.Timer;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
@@ -11,6 +12,7 @@ public class Flywheel {
   private double requestedSetpoint = 0;
   private Timer atGoalTimer = new Timer();
   private boolean isScoring = false;
+  private final TelemetryTable flywheelTelemetry = Telemetry.getTable("Shooter/Flywheel");
 
   public Flywheel(FlywheelIO io) {
     this.io = io;
@@ -69,15 +71,15 @@ public class Flywheel {
     if (isAtGoal()) {
       if (Math.abs(inputs.leaderMechanismRPS - requestedSetpoint)
           < Constants.Flywheel.smallToleranceRPS) {
-        SmartDashboard.putString(
-            "Flywheel/FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
+        flywheelTelemetry.log(
+            "FlywheelAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString(
-            "Flywheel/FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
+        flywheelTelemetry.log(
+            "FlywheelAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString(
-          "Flywheel/FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
+      flywheelTelemetry.log(
+          "FlywheelAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 }

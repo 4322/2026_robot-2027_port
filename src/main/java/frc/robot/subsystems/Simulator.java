@@ -7,9 +7,11 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.Alliance;
+import org.wpilib.driverstation.GenericHID;
 import org.wpilib.system.Timer;
 import org.wpilib.driverstation.NiDsXboxController;
 import org.wpilib.driverstation.POVDirection;
+import org.wpilib.driverstation.XboxController;
 import org.wpilib.driverstation.internal.DriverStationBackend;
 import org.wpilib.simulation.DriverStationSim;
 import org.wpilib.command2.InstantCommand;
@@ -722,7 +724,7 @@ public class Simulator {
   private Alliance currentAlliance;
   private final Timer disabledTimer = new Timer();
   private final Timer matchTimer = new Timer();
-  NiDsXboxController hid = RobotContainer.controller.getHID(); // the real WPILib XboxController
+  NiDsXboxController hid = new NiDsXboxController(RobotContainer.controller.getHID()); // the real WPILib XboxController
   int hidPort = hid.getPort();
   int activeButtonBitmask;
   int momentaryButtonBitmask;
@@ -786,24 +788,24 @@ public class Simulator {
         Logger.recordOutput("Sim/EventType", currentEvent.eventType);
         switch (currentEvent.eventType) {
           case SET_POSE -> setPose(currentEvent.pose);
-          case PRESS_A -> pressButton(NiDsXboxController.Button.kA);
-          case HOLD_A -> holdButton(NiDsXboxController.Button.kA);
-          case RELEASE_A -> releaseButton(NiDsXboxController.Button.kA);
-          case PRESS_B -> pressButton(NiDsXboxController.Button.kB);
-          case HOLD_B -> holdButton(NiDsXboxController.Button.kB);
-          case RELEASE_B -> releaseButton(NiDsXboxController.Button.kB);
-          case PRESS_X -> pressButton(NiDsXboxController.Button.kX);
-          case HOLD_X -> holdButton(NiDsXboxController.Button.kX);
-          case RELEASE_X -> releaseButton(NiDsXboxController.Button.kX);
-          case PRESS_Y -> pressButton(NiDsXboxController.Button.kY);
-          case HOLD_Y -> holdButton(NiDsXboxController.Button.kY);
-          case RELEASE_Y -> releaseButton(NiDsXboxController.Button.kY);
-          case PRESS_LEFT_BUMPER -> pressButton(NiDsXboxController.Button.kLeftBumper);
-          case HOLD_LEFT_BUMPER -> holdButton(NiDsXboxController.Button.kLeftBumper);
-          case RELEASE_LEFT_BUMPER -> releaseButton(NiDsXboxController.Button.kLeftBumper);
-          case PRESS_RIGHT_BUMPER -> pressButton(NiDsXboxController.Button.kRightBumper);
-          case HOLD_RIGHT_BUMPER -> holdButton(NiDsXboxController.Button.kRightBumper);
-          case RELEASE_RIGHT_BUMPER -> releaseButton(NiDsXboxController.Button.kRightBumper);
+          case PRESS_A -> pressButton(NiDsXboxController.Button.A);
+          case HOLD_A -> holdButton(NiDsXboxController.Button.A);
+          case RELEASE_A -> releaseButton(NiDsXboxController.Button.A);
+          case PRESS_B -> pressButton(NiDsXboxController.Button.B);
+          case HOLD_B -> holdButton(NiDsXboxController.Button.B);
+          case RELEASE_B -> releaseButton(NiDsXboxController.Button.B);
+          case PRESS_X -> pressButton(NiDsXboxController.Button.X);
+          case HOLD_X -> holdButton(NiDsXboxController.Button.X);
+          case RELEASE_X -> releaseButton(NiDsXboxController.Button.X);
+          case PRESS_Y -> pressButton(NiDsXboxController.Button.Y);
+          case HOLD_Y -> holdButton(NiDsXboxController.Button.Y);
+          case RELEASE_Y -> releaseButton(NiDsXboxController.Button.Y);
+          case PRESS_LEFT_BUMPER -> pressButton(NiDsXboxController.Button.LEFT_BUMPER);
+          case HOLD_LEFT_BUMPER -> holdButton(NiDsXboxController.Button.LEFT_BUMPER);
+          case RELEASE_LEFT_BUMPER -> releaseButton(NiDsXboxController.Button.LEFT_BUMPER);
+          case PRESS_RIGHT_BUMPER -> pressButton(NiDsXboxController.Button.RIGHT_BUMPER);
+          case HOLD_RIGHT_BUMPER -> holdButton(NiDsXboxController.Button.RIGHT_BUMPER);
+          case RELEASE_RIGHT_BUMPER -> releaseButton(NiDsXboxController.Button.RIGHT_BUMPER);
           case RELEASE_POV -> holdPOV(POVDirection.CENTER);
           case PRESS_UP_POV -> pressPOV(POVDirection.UP);
           case HOLD_UP_POV -> holdPOV(POVDirection.UP);
@@ -817,12 +819,12 @@ public class Simulator {
           case RELEASE_LEFT_TRIGGER -> releaseTrigger(ControllerAxis.LEFT_TRIGGER);
           case HOLD_RIGHT_TRIGGER -> holdTrigger(ControllerAxis.RIGHT_TRIGGER);
           case RELEASE_RIGHT_TRIGGER -> releaseTrigger(ControllerAxis.RIGHT_TRIGGER);
-          case PRESS_LEFT_STICK -> pressButton(NiDsXboxController.Button.kLeftStick);
-          case HOLD_LEFT_STICK -> holdButton(NiDsXboxController.Button.kLeftStick);
-          case RELEASE_LEFT_STICK -> releaseButton(NiDsXboxController.Button.kLeftStick);
-          case PRESS_RIGHT_STICK -> pressButton(NiDsXboxController.Button.kRightStick);
-          case HOLD_RIGHT_STICK -> holdButton(NiDsXboxController.Button.kRightStick);
-          case RELEASE_RIGHT_STICK -> releaseButton(NiDsXboxController.Button.kRightStick);
+          case PRESS_LEFT_STICK -> pressButton(NiDsXboxController.Button.LEFT_STICK);
+          case HOLD_LEFT_STICK -> holdButton(NiDsXboxController.Button.LEFT_STICK);
+          case RELEASE_LEFT_STICK -> releaseButton(NiDsXboxController.Button.LEFT_STICK);
+          case PRESS_RIGHT_STICK -> pressButton(NiDsXboxController.Button.RIGHT_STICK);
+          case HOLD_RIGHT_STICK -> holdButton(NiDsXboxController.Button.RIGHT_STICK);
+          case RELEASE_RIGHT_STICK -> releaseButton(NiDsXboxController.Button.RIGHT_STICK);
           case MOVE_JOYSTICK_DRIVE -> {
             persistAxis(ControllerAxis.LEFT_X, -currentEvent.pose.getY());
             persistAxis(ControllerAxis.LEFT_Y, -currentEvent.pose.getX());
@@ -1017,84 +1019,84 @@ public class Simulator {
   }
 
   private void configureControllerTestBindings() {
-    RobotContainer.controller
+    RobotContainer.commandController
         .x()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Button X True");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .x()
         .onFalse(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Button X False");
                 }));
-    RobotContainer.controller
-        .povLeft()
+    RobotContainer.commandController
+        .dpadLeft()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left POV True");
                 }));
-    RobotContainer.controller
-        .povLeft()
+    RobotContainer.commandController
+        .dpadLeft()
         .onFalse(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left POV False");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .leftBumper()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left Bumper True");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .leftBumper()
         .onFalse(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left Bumper False");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .rightBumper()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Right Bumper True");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .rightBumper()
         .onFalse(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Right Bumper False");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .leftTrigger()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left Trigger True");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .leftTrigger()
         .onFalse(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Left Trigger False");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .rightTrigger()
         .onTrue(
             new InstantCommand(
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Right Trigger True");
                 }));
-    RobotContainer.controller
+    RobotContainer.commandController
         .rightTrigger()
         .onFalse(
             new InstantCommand(
