@@ -14,6 +14,7 @@ import org.wpilib.math.interpolation.InterpolatingTreeMap;
 import org.wpilib.math.interpolation.InverseInterpolator;
 import org.wpilib.math.util.Units;
 import org.wpilib.framework.RobotBase;
+import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.util.Color;
 import frc.robot.subsystems.shooter.FiringSolution;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection.ObjectDetectionType;
@@ -98,6 +99,7 @@ public final class Constants {
 
   public static class Drive {
     public static final int gyroID = 0;
+    public static final CANPort encoderCANPort = CANPort.CAN_D1;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
     public static double driveSupplyCurrentLimit = 45; // don't pop main breaker
     public static double driveSupplyCurrentLowerLimit = 35;
@@ -475,12 +477,12 @@ public final class Constants {
     }
   }
 
-  public static class SystemcoreBus {
-    public static final CANBus systemcore = new CANBus(); // TODO set this
-  }
-  public static class CANivore {
-    public static final String canbusName = "Clockwork";
-    public static final CANBus CANBus = new CANBus(Constants.CANivore.canbusName);
+  public static class Systemcore {
+    public static final CANBus bus0 = new CANBus(CANPort.CAN_D0);
+    public static final CANBus bus1 = new CANBus(CANPort.CAN_D1);
+    public static final CANBus bus2 = new CANBus(CANPort.CAN_D2);
+    public static final CANBus bus3 = new CANBus(CANPort.CAN_D3);
+    public static final CANBus bus4 = new CANBus(CANPort.CAN_D4);
   }
 
   public static class HubTracker {
