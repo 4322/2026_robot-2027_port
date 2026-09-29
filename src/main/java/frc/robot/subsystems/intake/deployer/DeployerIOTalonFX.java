@@ -46,8 +46,8 @@ public class DeployerIOTalonFX implements DeployerIO {
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public DeployerIOTalonFX() {
-    deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.CANivore.CANBus);
-    canCoder = new CANcoder(Constants.Deployer.CANCoderID, Constants.CANivore.CANBus);
+    deployerMotor = new TalonFX(Constants.Deployer.motorId, Constants.Systemcore.bus0);
+    canCoder = new CANcoder(Constants.Deployer.CANCoderID, Constants.Systemcore.bus0);
 
     motorConfigs.Feedback.FeedbackRemoteSensorID = canCoder.getDeviceID();
 

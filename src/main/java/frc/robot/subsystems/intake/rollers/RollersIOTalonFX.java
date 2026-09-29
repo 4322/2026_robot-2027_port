@@ -45,8 +45,8 @@ public class RollersIOTalonFX implements RollersIO {
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public RollersIOTalonFX() {
-    leftMotor = new TalonFX(Constants.Rollers.leftMotorId, Constants.SystemcoreBus.systemcore);
-    rightMotor = new TalonFX(Constants.Rollers.rightMotorId, Constants.SystemcoreBus.systemcore);
+    leftMotor = new TalonFX(Constants.Rollers.leftMotorId, Constants.Systemcore.bus2);
+    rightMotor = new TalonFX(Constants.Rollers.rightMotorId, Constants.Systemcore.bus3);
 
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
 

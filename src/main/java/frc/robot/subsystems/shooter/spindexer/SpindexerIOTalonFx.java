@@ -49,8 +49,8 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public SpindexerIOTalonFx() {
-    leaderMotor = new TalonFX(Constants.Spindexer.leaderMotorId, Constants.CANivore.CANBus);
-    followerMotor = new TalonFX(Constants.Spindexer.followerMotorId, Constants.CANivore.CANBus);
+    leaderMotor = new TalonFX(Constants.Spindexer.leaderMotorId, Constants.Systemcore.bus4);
+    followerMotor = new TalonFX(Constants.Spindexer.followerMotorId, Constants.Systemcore.bus4);
 
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
     config.HardwareLimitSwitch.ReverseLimitEnable = false;

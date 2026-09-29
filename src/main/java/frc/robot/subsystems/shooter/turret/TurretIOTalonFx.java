@@ -49,9 +49,9 @@ public class TurretIOTalonFx implements TurretIO {
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public TurretIOTalonFx() {
-    turretMotor = new TalonFX(Constants.Turret.motorId, Constants.CANivore.CANBus);
-    CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.CANivore.CANBus);
-    CANcoderTwo = new CANcoder(Constants.Turret.CANCoderTwoId, Constants.CANivore.CANBus);
+    turretMotor = new TalonFX(Constants.Turret.motorId, Constants.Systemcore.bus4);
+    CANcoderOne = new CANcoder(Constants.Turret.CANCoderOneId, Constants.Systemcore.bus4);
+    CANcoderTwo = new CANcoder(Constants.Turret.CANCoderTwoId, Constants.Systemcore.bus4);
 
     config.CurrentLimits.StatorCurrentLimit = Constants.Turret.statorCurrentLimit;
     config.CurrentLimits.SupplyCurrentLimit = Constants.Turret.supplyCurrentLimit;
