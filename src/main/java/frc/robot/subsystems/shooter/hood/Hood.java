@@ -3,7 +3,8 @@ package frc.robot.subsystems.shooter.hood;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.RobotState;
 import org.wpilib.system.Timer;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
 import frc.robot.util.LoggedTunableNumber;
@@ -23,6 +24,7 @@ public class Hood {
   private boolean homed = false;
   private boolean trenchOverride = false;
   private boolean isScoring = false;
+  private final TelemetryTable hoodTelemetry = Telemetry.getTable("Shooter/Hood");
 
   public Hood(HoodIO io) {
     this.io = io;
@@ -90,12 +92,12 @@ public class Hood {
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
       if (isWithinSmallTolerance()) {
-        SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.green.toHexString());
+        hoodTelemetry.log("Hood/HoodAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.yellow.toHexString());
+        hoodTelemetry.log("Hood/HoodAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
+      hoodTelemetry.log("Hood/HoodAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 

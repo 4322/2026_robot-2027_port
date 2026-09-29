@@ -8,7 +8,8 @@ import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.RobotState;
 import org.wpilib.system.Timer;
-import org.wpilib.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.util.ClockUtil;
@@ -27,6 +28,7 @@ public class Turret {
   private double ffRadPerrSec = 0;
   private boolean unjamOverride;
   private double unjamDeg = 0.0;
+  private final TelemetryTable turretTelemetry = Telemetry.getTable("Shooter/Turret");
 
   public enum turretState {
     DISABLED,
@@ -338,14 +340,14 @@ public class Turret {
   private void updateNetworkTableValues() {
     if (isAtGoal()) {
       if (Math.abs(inputs.turretDegs - desiredDeg) < Constants.Turret.smallToleranceDeg) {
-        SmartDashboard.putString(
+        turretTelemetry.log(
             "Turret/TurretAtGoal", Constants.NetworkTables.green.toHexString());
       } else {
-        SmartDashboard.putString(
+        turretTelemetry.log(
             "Turret/TurretAtGoal", Constants.NetworkTables.yellow.toHexString());
       }
     } else {
-      SmartDashboard.putString("Turret/TurretAtGoal", Constants.NetworkTables.red.toHexString());
+      turretTelemetry.log("Turret/TurretAtGoal", Constants.NetworkTables.red.toHexString());
     }
   }
 
