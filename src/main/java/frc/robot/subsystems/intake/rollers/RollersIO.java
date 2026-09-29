@@ -6,28 +6,29 @@ import org.littletonrobotics.junction.AutoLog;
 public interface RollersIO {
   @AutoLog
   public static class RollersIOInputs {
-    public boolean leaderConnected = false;
-    public double leaderStatorCurrentAmps = 0.0;
-    public double leaderSupplyCurrentAmps = 0.0;
-    public double leaderTempCelcius = 0.0;
-    public double leaderRotationsPerSec = 0.0;
-    public double leaderVolts = 0.0;
+    //left seperate motor boolean
+    public boolean leftConnected = false;
+    public double leftStatorCurrentAmps = 0.0;
+    public double leftSupplyCurrentAmps = 0.0;
+    public double leftTempCelcius = 0.0;
+    public double leftRotationsPerSec = 0.0;
+    public double leftVolts = 0.0;
 
-    public boolean followerConnected = false;
-    public double followerStatorCurrentAmps = 0.0;
-    public double followerSupplyCurrentAmps = 0.0;
-    public double followerTempCelcius = 0.0;
-    public double followerRotationsPerSec = 0.0;
-    public double followerVolts = 0.0;
+    //right seperate motor boolean
+    public boolean rightConnected = false;
+    public double rightStatorCurrentAmps = 0.0;
+    public double rightSupplyCurrentAmps = 0.0;
+    public double rightTempCelcius = 0.0;
+    public double rightRotationsPerSec = 0.0;
+    public double rightVolts = 0.0;
   }
-
+  
   public default void updateInputs(RollersIOInputs inputs) {}
 
-  public default void setVoltage(double voltage) {}
+  public default void setVoltage(double leftVolts, double rightVolts) {}
 
-  public default void stopMotor() {}
+  public default void stop() {}
 
-  public default TalonFX getTalonFX() {
-    return null;
-  }
+  public default TalonFX getLeftTalonFX() { return null; }
+  public default TalonFX getRightTalonFX() { return null; }
 }

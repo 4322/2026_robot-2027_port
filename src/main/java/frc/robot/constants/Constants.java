@@ -113,14 +113,14 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final int leaderMotorId = 4;
-    public static final int followerMotorId = 6;
+    public static final int leftMotorId = 4;
+    public static final int rightMotorId = 6;
 
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
     public static final double supplyCurrentLowerTime = 0.5; // fast start
     public static final double statorCurrentLimit = 120;
-    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.29;
     public static final double kV = 0.9;
@@ -158,7 +158,7 @@ public final class Constants {
 
   public static class Flywheel {
     public static final int motorId = 2;
-    public static final int followerMotorId = 3;
+    public static final int rightMotorId = 3;
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
@@ -274,12 +274,12 @@ public final class Constants {
     public static final double voltageDeploy = 0; // -1 to clear net, not good with extra top bar
     public static final double voltageIdle = 0;
     public static final double voltageSmoosh = 3;
-    public static final int leaderMotorId = 1;
-    public static final int followerMotorId = 5;
+    public static final int leftMotorId = 1;
+    public static final int rightMotorId = 5;
     public static final double statorCurrentLimit = 100;
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
-    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
   }
 
   public class Deployer {

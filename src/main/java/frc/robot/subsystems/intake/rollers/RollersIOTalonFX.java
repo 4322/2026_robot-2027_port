@@ -20,33 +20,33 @@ import org.wpilib.driverstation.DriverStationErrors;
 import frc.robot.constants.Constants;
 
 public class RollersIOTalonFX implements RollersIO {
-  private TalonFX leaderMotor;
-  private TalonFX followerMotor;
+  private TalonFX leftMotor;
+  private TalonFX rightMotor;
 
   private Double previousRequestedVoltage;
 
   private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
 
-  private final StatusSignal<AngularVelocity> leaderVelocity;
-  private final StatusSignal<Voltage> leaderAppliedVolts;
-  private final StatusSignal<Current> leaderSupplyCurrent;
-  private final StatusSignal<Current> leaderStatorCurrent;
-  private final StatusSignal<Temperature> leaderTemp;
+  private final StatusSignal<AngularVelocity> leftVelocity;
+  private final StatusSignal<Voltage> leftAppliedVolts;
+  private final StatusSignal<Current> leftSupplyCurrent;
+  private final StatusSignal<Current> leftStatorCurrent;
+  private final StatusSignal<Temperature> leftTemp;
 
-  private final StatusSignal<AngularVelocity> followerVelocity;
-  private final StatusSignal<Voltage> followerAppliedVolts;
-  private final StatusSignal<Current> followerSupplyCurrent;
-  private final StatusSignal<Current> followerStatorCurrent;
-  private final StatusSignal<Temperature> followerTemp;
+  private final StatusSignal<AngularVelocity> rightVelocity;
+  private final StatusSignal<Voltage> rightAppliedVolts;
+  private final StatusSignal<Current> rightSupplyCurrent;
+  private final StatusSignal<Current> rightStatorCurrent;
+  private final StatusSignal<Temperature> rightTemp;
 
-  private final Debouncer leaderConnectedDebounce =
+  private final Debouncer leftConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
-  private final Debouncer followerConnectedDebounce =
+  private final Debouncer rightConnectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
 
   public RollersIOTalonFX() {
-    leaderMotor = new TalonFX(Constants.Rollers.leaderMotorId, Constants.SystemcoreBus.systemcore);
-    followerMotor = new TalonFX(Constants.Rollers.followerMotorId, Constants.SystemcoreBus.systemcore);
+    leftMotor = new TalonFX(Constants.Rollers.leftMotorId, Constants.SystemcoreBus.systemcore);
+    rightMotor = new TalonFX(Constants.Rollers.rightMotorId, Constants.SystemcoreBus.systemcore);
 
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
 
@@ -60,116 +60,120 @@ public class RollersIOTalonFX implements RollersIO {
     motorConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
     motorConfigs.CurrentLimits.SupplyCurrentLowerTime = 0;
 
-    motorConfigs.MotorOutput.Inverted = Constants.Rollers.leaderMotorInvert;
+    motorConfigs.MotorOutput.Inverted = Constants.Rollers.leftMotorInvert;
     motorConfigs.MotorOutput.NeutralMode = Constants.Rollers.neutralMode;
-    StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(motorConfigs);
-    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(motorConfigs);
-    StatusCode followerMotorSetStatus =
-        followerMotor.setControl(
-            new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
+    StatusCode leftConfigStatus = leftMotor.getConfigurator().apply(motorConfigs);
+    StatusCode rightConfigStatus = rightMotor.getConfigurator().apply(motorConfigs);
+    StatusCode rightMotorSetStatus =
+        rightMotor.setControl(
+            new Follower(leftMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
-    if (leaderConfigStatus != StatusCode.OK) {
+    if (leftConfigStatus != StatusCode.OK) {
       DriverStationErrors.reportError(
           "Talon "
-              + leaderMotor.getDeviceID()
+              + leftMotor.getDeviceID()
               + " config error (Rollers Leader): "
-              + leaderConfigStatus.getDescription(),
+              + leftConfigStatus.getDescription(),
           false);
     }
-    if (followerConfigStatus != StatusCode.OK) {
+    if (rightConfigStatus != StatusCode.OK) {
       DriverStationErrors.reportError(
           "Talon "
-              + followerMotor.getDeviceID()
+              + rightMotor.getDeviceID()
               + " config error (Rollers Follower): "
-              + followerConfigStatus.getDescription(),
+              + rightConfigStatus.getDescription(),
           false);
     }
-    if (followerMotorSetStatus != StatusCode.OK) {
+    if (rightMotorSetStatus != StatusCode.OK) {
       DriverStationErrors.reportError(
           "Talon "
-              + followerMotor.getDeviceID()
+              + rightMotor.getDeviceID()
               + " set follower error (Rollers Follower): "
-              + followerMotorSetStatus.getDescription(),
+              + rightMotorSetStatus.getDescription(),
           false);
     }
 
-    leaderVelocity = leaderMotor.getVelocity();
-    leaderAppliedVolts = leaderMotor.getMotorVoltage();
-    leaderStatorCurrent = leaderMotor.getStatorCurrent();
-    leaderSupplyCurrent = leaderMotor.getSupplyCurrent();
-    leaderTemp = leaderMotor.getDeviceTemp();
+    leftVelocity = leftMotor.getVelocity();
+    leftAppliedVolts = leftMotor.getMotorVoltage();
+    leftStatorCurrent = leftMotor.getStatorCurrent();
+    leftSupplyCurrent = leftMotor.getSupplyCurrent();
+    leftTemp = leftMotor.getDeviceTemp();
 
-    followerVelocity = followerMotor.getVelocity();
-    followerAppliedVolts = followerMotor.getMotorVoltage();
-    followerStatorCurrent = followerMotor.getStatorCurrent();
-    followerSupplyCurrent = followerMotor.getSupplyCurrent();
-    followerTemp = followerMotor.getDeviceTemp();
+    rightVelocity = rightMotor.getVelocity();
+    rightAppliedVolts = rightMotor.getMotorVoltage();
+    rightStatorCurrent = rightMotor.getStatorCurrent();
+    rightSupplyCurrent = rightMotor.getSupplyCurrent();
+    rightTemp = rightMotor.getDeviceTemp();
 
     // Configure periodic frames
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0,
-        leaderVelocity,
-        leaderAppliedVolts,
-        leaderStatorCurrent,
-        leaderSupplyCurrent,
-        leaderTemp,
-        followerVelocity,
-        followerAppliedVolts,
-        followerStatorCurrent,
-        followerSupplyCurrent,
-        followerTemp);
-    ParentDevice.optimizeBusUtilizationForAll(leaderMotor, followerMotor);
+        leftVelocity,
+        leftAppliedVolts,
+        leftStatorCurrent,
+        leftSupplyCurrent,
+        leftTemp,
+        rightVelocity,
+        rightAppliedVolts,
+        rightStatorCurrent,
+        rightSupplyCurrent,
+        rightTemp);
+    ParentDevice.optimizeBusUtilizationForAll(leftMotor, rightMotor);
   }
 
   @Override
   public void updateInputs(RollersIOInputs inputs) {
-    var leaderMotorStatus =
+    var leftMotorStatus =
         BaseStatusSignal.refreshAll(
-            leaderVelocity,
-            leaderAppliedVolts,
-            leaderStatorCurrent,
-            leaderSupplyCurrent,
-            leaderTemp);
+            leftVelocity,
+            leftAppliedVolts,
+            leftStatorCurrent,
+            leftSupplyCurrent,
+            leftTemp);
 
-    var followerMotorStatus =
+    var rightMotorStatus =
         BaseStatusSignal.refreshAll(
-            followerVelocity,
-            followerAppliedVolts,
-            followerStatorCurrent,
-            followerSupplyCurrent,
-            followerTemp);
+            rightVelocity,
+            rightAppliedVolts,
+            rightStatorCurrent,
+            rightSupplyCurrent,
+            rightTemp);
 
-    inputs.leaderConnected = leaderConnectedDebounce.calculate(leaderMotorStatus.isOK());
-    inputs.leaderVolts = leaderAppliedVolts.getValueAsDouble();
-    inputs.leaderSupplyCurrentAmps = leaderSupplyCurrent.getValueAsDouble();
-    inputs.leaderStatorCurrentAmps = leaderStatorCurrent.getValueAsDouble();
-    inputs.leaderTempCelcius = leaderTemp.getValueAsDouble();
-    inputs.leaderRotationsPerSec = leaderVelocity.getValueAsDouble();
+    inputs.leftConnected = leftConnectedDebounce.calculate(leftMotorStatus.isOK());
+    inputs.leftVolts = leftAppliedVolts.getValueAsDouble();
+    inputs.leftSupplyCurrentAmps = leftSupplyCurrent.getValueAsDouble();
+    inputs.leftStatorCurrentAmps = leftStatorCurrent.getValueAsDouble();
+    inputs.leftTempCelcius = leftTemp.getValueAsDouble();
+    inputs.leftRotationsPerSec = leftVelocity.getValueAsDouble();
 
-    inputs.followerConnected = followerConnectedDebounce.calculate(followerMotorStatus.isOK());
-    inputs.followerVolts = followerAppliedVolts.getValueAsDouble();
-    inputs.followerSupplyCurrentAmps = followerSupplyCurrent.getValueAsDouble();
-    inputs.followerStatorCurrentAmps = followerStatorCurrent.getValueAsDouble();
-    inputs.followerTempCelcius = followerTemp.getValueAsDouble();
-    inputs.followerRotationsPerSec = followerVelocity.getValueAsDouble();
+    inputs.rightConnected = rightConnectedDebounce.calculate(rightMotorStatus.isOK());
+    inputs.rightVolts = rightAppliedVolts.getValueAsDouble();
+    inputs.rightSupplyCurrentAmps = rightSupplyCurrent.getValueAsDouble();
+    inputs.rightStatorCurrentAmps = rightStatorCurrent.getValueAsDouble();
+    inputs.rightTempCelcius = rightTemp.getValueAsDouble();
+    inputs.rightRotationsPerSec = rightVelocity.getValueAsDouble();
   }
 
   @Override
-  public void setVoltage(double voltage) {
-    if ((previousRequestedVoltage == null) || (previousRequestedVoltage != voltage)) {
-      previousRequestedVoltage = voltage;
-      leaderMotor.setControl(new VoltageOut(voltage));
-    }
+  public void setVoltage(double leftVolts, double rightVolts) {
+    leftMotor.setControl(new VoltageOut(leftVolts));
+    rightMotor.setControl(new VoltageOut(rightVolts));
   }
 
   @Override
-  public void stopMotor() {
-    leaderMotor.stopMotor();
+  public void stop() {
+    leftMotor.stopMotor();
+    rightMotor.stopMotor();
     previousRequestedVoltage = null;
   }
 
   @Override
-  public TalonFX getTalonFX() {
-    return leaderMotor;
+  public TalonFX getLeftTalonFX() {
+    return leftMotor;
+  }
+
+  @Override
+  public TalonFX getRightTalonFX() {
+    return rightMotor;
   }
 }
