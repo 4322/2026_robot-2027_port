@@ -29,18 +29,17 @@ public class Rollers {
     Logger.processInputs("Intake/Rollers", inputs);
   }
 
-  public void setState(RollersState leftState, RollersState righState) {
-    this.leftState = leftState;
-    // this.rightState = rightState; not doing anything so i'll put it in a comment
-    Logger.recordOutput("Intake/Rollers/LeftState", leftState);
-    Logger.recordOutput("Intake/Rollers/RightState", rightState);
-    }
-
   // Called at end of command processing in intake
   public void outputsPeriodic() {
     // Nothing here currently
-    // Moved below for organizing since its doing nothing
   }
+
+  public void setState(RollersState leftState, RollersState righState) {
+    this.leftState = leftState;
+    this.rightState = rightState;
+    Logger.recordOutput("Intake/Rollers/LeftState", leftState);
+    Logger.recordOutput("Intake/Rollers/RightState", rightState);
+    }
 
    /* code here previously before, above is a wip
 
