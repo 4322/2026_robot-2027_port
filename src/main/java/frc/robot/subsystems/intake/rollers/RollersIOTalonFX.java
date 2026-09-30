@@ -72,7 +72,7 @@ public class RollersIOTalonFX implements RollersIO {
       DriverStationErrors.reportError(
           "Talon "
               + leftMotor.getDeviceID()
-              + " config error (Rollers Leader): "
+              + " config error (Rollers Left): "
               + leftConfigStatus.getDescription(),
           false);
     }
@@ -80,7 +80,7 @@ public class RollersIOTalonFX implements RollersIO {
       DriverStationErrors.reportError(
           "Talon "
               + rightMotor.getDeviceID()
-              + " config error (Rollers Follower): "
+              + " config error (Rollers Right): "
               + rightConfigStatus.getDescription(),
           false);
     }
@@ -88,7 +88,7 @@ public class RollersIOTalonFX implements RollersIO {
       DriverStationErrors.reportError(
           "Talon "
               + rightMotor.getDeviceID()
-              + " set follower error (Rollers Follower): "
+              + " set right error (Rollers Right): "
               + rightMotorSetStatus.getDescription(),
           false);
     }
