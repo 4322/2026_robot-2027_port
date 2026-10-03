@@ -38,7 +38,7 @@ public class TunnelIOTalonFx implements TunnelIO {
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public TunnelIOTalonFx() {
-    motor = new TalonFX(Constants.Tunnel.tunnelMotorId, Constants.Systemcore.bus4);
+    motor = new TalonFX(Constants.Tunnel.motorId, Constants.Systemcore.bus4);
 
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
     config.HardwareLimitSwitch.ReverseLimitEnable = false;

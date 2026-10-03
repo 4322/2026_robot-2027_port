@@ -115,14 +115,14 @@ public final class Constants {
   }
 
   public static class Spindexer {
-    public static final int leftMotorId = 4;
-    public static final int rightMotorId = 6;
+    public static final int leaderMotorId = 4;
+    public static final int followerMotorId = 6;
 
     public static final double supplyCurrentLimit = 60;
     public static final double supplyCurrentLowerLimit = 40;
     public static final double supplyCurrentLowerTime = 0.5; // fast start
     public static final double statorCurrentLimit = 120;
-    public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue leaderMotorInvert = InvertedValue.Clockwise_Positive;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Brake;
     public static final double kS = 0.29;
     public static final double kV = 0.9;
@@ -139,7 +139,7 @@ public final class Constants {
   }
 
   public static class Tunnel {
-    public static final int tunnelMotorId = 20;
+    public static final int motorId = 20;
     public static final double statorCurrentLimit = 80;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.CounterClockwise_Positive;
@@ -159,8 +159,8 @@ public final class Constants {
   }
 
   public static class Flywheel {
-    public static final int motorId = 2;
-    public static final int rightMotorId = 3;
+    public static final int leaderMotorId = 2;
+    public static final int followerMotorId = 3;
     public static final double statorCurrentLimit = 120;
     public static final double supplyCurrentLimit = 40;
     public static final InvertedValue motorInvert = InvertedValue.Clockwise_Positive;
@@ -282,6 +282,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final boolean enableLeftMotor = true;
+    public static final boolean enableRightMotor = true;
   }
 
   public class Deployer {
