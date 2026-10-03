@@ -44,16 +44,16 @@ public class Module {
     this.constants = constants;
     driveDisconnectedAlert =
         new Alert(
-            "DriveModule",
+            "Module" + index + "DriveDisconnected",
           "Disconnected drive motor on module " + Integer.toString(index) + ".",
             Level.HIGH);
     turnDisconnectedAlert =
         new Alert(
-            "DriveModule",
+            "Module" + index + "TurnDisconnected",
             "Disconnected turn motor on module " + Integer.toString(index) + ".", Level.HIGH);
     turnEncoderDisconnectedAlert =
         new Alert(
-            "DriveModule",
+            "Module" + index + "TurnEncoderDisconnected",
             "Disconnected turn encoder on module " + Integer.toString(index) + ".",
             Level.HIGH);
   }

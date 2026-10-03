@@ -8,6 +8,7 @@ package frc.robot;
 
 import org.wpilib.driverstation.GenericHID;
 import org.wpilib.smartdashboard.Field2d;
+import org.wpilib.telemetry.Telemetry;
 import org.wpilib.telemetry.TelemetryTable;
 import org.wpilib.command2.Command;
 import frc.robot.autonomous.AutonomousSelector;
@@ -110,7 +111,7 @@ public class RobotContainer {
     public static AutonomousSelector autonomousSelector;
 
     private static Field2d field;
-    private static TelemetryTable fieldLog;
+    private static TelemetryTable fieldLog = Telemetry.getTable("Field");
 
     // Controller
     public static final XboxController controller = new XboxController(0);
