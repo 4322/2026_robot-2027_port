@@ -84,7 +84,7 @@ public final class Constants {
   public static final boolean buzz = false;
   public static final String logPath = "/home/lvuser/logs";
   public static final long minFreeSpace = 1000000000; // 1 GB
-  public static final int dioCoastButton = 8;
+  public static final int dioCoastButton = 0;
   public static final double coastButtonDelaySec = 10.0;
   public static final double brownoutVoltage = 5.75;
   public static final double brownoutRecoveryVoltage = 7; // TODO

@@ -6,12 +6,13 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStationErrors;
+import org.wpilib.hardware.bus.CANPort;
 
 import frc.robot.constants.Constants;
 import java.util.Queue;
 
 public class GyroIOBoron implements GyroIO {
-  private final Canandgyro gyro = new Canandgyro(Constants.Drive.gyroID);
+  private final Canandgyro gyro = new Canandgyro(Constants.Drive.gyroID, CANPort.CAN_D1);
   public double yaw = gyro.getYaw();
   private final Queue<Double> yawPositionQueue;
   private final Queue<Double> yawTimestampQueue;
