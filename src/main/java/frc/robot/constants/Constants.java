@@ -282,6 +282,8 @@ public final class Constants {
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
+    public static final boolean enableLeftMotor = true;
+    public static final boolean enableRightMotor = true;
   }
 
   public class Deployer {
