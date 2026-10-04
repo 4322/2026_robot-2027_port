@@ -405,22 +405,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    if (Constants.currentMode != Constants.Mode.SIM) {
-      if (!coastButton.get()) {
-        // button is pressed in
-        DriverStationErrors.reportWarning("Activating Coast Mode", false);
-        coastButtonTimer.start();
-      }
-      if (coastButtonTimer.hasElapsed(0.1)) {
-        robotContainer.setBrakeMode(false);
-      }
-      if (coastButtonTimer.hasElapsed(10)) {
-        DriverStationErrors.reportWarning("Activating Brake Mode", false);
-        robotContainer.setBrakeMode(true);
-        coastButtonTimer.stop();
-        coastButtonTimer.reset();
-      }
-    }
+    // switching between brake/coast modes is broken
   }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */

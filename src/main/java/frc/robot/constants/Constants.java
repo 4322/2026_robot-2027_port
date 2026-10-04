@@ -46,17 +46,17 @@ public final class Constants {
   }
 
   public static SubsystemMode driveMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode flywheelMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode hoodMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode spindexerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
-  public static SubsystemMode turretMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode flywheelMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode hoodMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode spindexerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode tunnelMode = SubsystemMode.DISABLED;
+  public static SubsystemMode turretMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode deployerMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerMode = SubsystemMode.DISABLED;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
-  public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
+  public static final SubsystemMode visionGlobalPose = SubsystemMode.DISABLED;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
-  public static final SubsystemMode firingManagerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode firingManagerMode = SubsystemMode.DISABLED;
   public static final boolean turretLocked = false;
   public static final boolean frontRightCameraEnable = true;
   public static final boolean frontLeftCameraEnable = true;
@@ -99,7 +99,7 @@ public final class Constants {
 
   public static class Drive {
     public static final int gyroID = 0;
-    public static final CANPort encoderCANPort = CANPort.CAN_D1;
+    public static final CANPort encoderCANPort = CANPort.CAN_S1;
     public static boolean zeroTurnEncoders = false; // for initial swerve homing only
     public static double driveSupplyCurrentLimit = 45; // don't pop main breaker
     public static double driveSupplyCurrentLowerLimit = 35;
@@ -480,11 +480,11 @@ public final class Constants {
   }
 
   public static class Systemcore {
-    public static final CANBus bus0 = new CANBus(CANPort.CAN_D0);
-    public static final CANBus bus1 = new CANBus(CANPort.CAN_D1);
-    public static final CANBus bus2 = new CANBus(CANPort.CAN_D2);
-    public static final CANBus bus3 = new CANBus(CANPort.CAN_D3);
-    public static final CANBus bus4 = new CANBus(CANPort.CAN_D4);
+    public static final CANBus bus0 = new CANBus(CANPort.CAN_S0);
+    public static final CANBus bus1 = new CANBus(CANPort.CAN_S1);
+    public static final CANBus bus2 = new CANBus(CANPort.CAN_S2);
+    public static final CANBus bus3 = new CANBus(CANPort.CAN_S3);
+    public static final CANBus bus4 = new CANBus(CANPort.CAN_S4);
   }
 
   public static class HubTracker {
