@@ -361,13 +361,6 @@ public class Robot extends LoggedRobot {
     }
     Logger.recordOutput("Robot/Paused", "No");
 
-    // Optionally switch the thread to high priority to improve loop
-    // timing (see the template project documentation for details).
-    // Don't do this when there are issues causing the CPU to be maxed out for any reason.
-    if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(99);
-    }
-
     // insure that the sim runs before everything else
     if (RobotContainer.simulator != null) {
       RobotContainer.simulator.periodic();
@@ -383,11 +376,6 @@ public class Robot extends LoggedRobot {
     RobotContainer.shooter.outputsPeriodic();
 
     RobotContainer.intake.periodicOutputs();
-
-    // Return to non-RT thread priority (do not modify the first argument)
-    if (Constants.realTimeCommandScheduler) {
-      Threads.setCurrentThreadPriority(10);
-    }
 
     if (allianceUpdateTimer.hasElapsed(1)) {
       Optional<Alliance> allianceOptional = MatchState.getAlliance();
