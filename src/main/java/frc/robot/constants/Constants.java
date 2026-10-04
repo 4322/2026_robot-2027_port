@@ -230,8 +230,8 @@ public final class Constants {
     // 7. Remove lock bolt
     //    CANCoderOne = Encoder 9
     //    CANCoderTwo = Encoder 4.73
-    public static final double CANCoderOneOffsetRot = 0.25 - 0.0828;
-    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.1478;
+    public static final double CANCoderOneOffsetRot = 0.25 - 0.08;
+    public static final double CANCoderTwoOffsetRot = 0.8157 - 0.3996;
 
     // Derivation of above values:
     // 290 degrees * 90/10 = encoder 1 should have rotated 7.25 rotations ->
