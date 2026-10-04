@@ -157,8 +157,9 @@ public class RobotContainer {
                     turret = Constants.turretMode == Constants.SubsystemMode.DISABLED ? new Turret(new TurretIO() {
                     }) : new Turret(new TurretIOTalonFx());
                     shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
-                    rollers = Constants.rollerMode == Constants.SubsystemMode.DISABLED ? new Rollers(new RollersIO() {
-                    }) : new Rollers(new RollersIOTalonFX());
+                    rollers = new Rollers(Constants.rollerLeftMode == Constants.SubsystemMode.DISABLED ? new RollersIO() {
+                    } : new RollersIOTalonFX(true), Constants.rollerRightMode == Constants.SubsystemMode.DISABLED ? new RollersIO() {
+                    } : new RollersIOTalonFX(false));
                     deployer = Constants.deployerMode == Constants.SubsystemMode.DISABLED ? new Deployer(new DeployerIO() {
                     }) : new Deployer(new DeployerIOTalonFX());
                     intake = new Intake(deployer, rollers);
@@ -197,8 +198,9 @@ public class RobotContainer {
                     shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
                     deployer = Constants.deployerMode == Constants.SubsystemMode.DISABLED ? new Deployer(new DeployerIO() {
                     }) : new Deployer(new DeployerIOSim());
-                    rollers = Constants.rollerMode == Constants.SubsystemMode.DISABLED ? new Rollers(new RollersIO() {
-                    }) : new Rollers(new RollersIOSim());
+                    rollers = new Rollers(Constants.rollerLeftMode == Constants.SubsystemMode.DISABLED ? new RollersIO() {
+                    } : new RollersIOSim(true), Constants.rollerRightMode == Constants.SubsystemMode.DISABLED ? new RollersIO() {
+                    } : new RollersIOSim(false));
                     intake = new Intake(deployer, rollers);
                     simulator = new Simulator();
                 }
@@ -231,8 +233,7 @@ public class RobotContainer {
                     turret = new Turret(new TurretIO() {
                     });
                     shooter = new Shooter(flywheel, hood, spindexer, tunnel, turret, visionGlobalPose, drive);
-                    rollers = new Rollers(new RollersIO() {
-                    });
+                    rollers = new Rollers(new RollersIO() {}, new RollersIO() {});
                     deployer = new Deployer(new DeployerIO() {
                     });
                     intake = new Intake(deployer, rollers);

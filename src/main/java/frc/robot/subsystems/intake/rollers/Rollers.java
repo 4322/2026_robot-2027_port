@@ -4,8 +4,10 @@ import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class Rollers {
-  private RollersIO rollersIO;
-  private RollersIOInputsAutoLogged inputs = new RollersIOInputsAutoLogged();
+  private RollersIO leftRollersIO;
+    private RollersIO rightRollersIO;
+  private RollersIOInputsAutoLogged leftInputs = new RollersIOInputsAutoLogged();
+  private RollersIOInputsAutoLogged rightInputs = new RollersIOInputsAutoLogged();
 
   public enum RollersState {
     IDLE,
@@ -16,37 +18,36 @@ public class Rollers {
     DISABLED
   }
 
-  public RollersState leftState = RollersState.DISABLED;
-  public RollersState rightState = RollersState.DISABLED;
+  public RollersState state = RollersState.DISABLED;
 
-
-  public Rollers(RollersIO rollersIO) {
-    this.rollersIO = rollersIO;
+  public Rollers(RollersIO leftRollersIO, RollersIO rightRollersIO) {
+    this.leftRollersIO = leftRollersIO;
+    this.rightRollersIO = rightRollersIO;
   }
 
   public void inputsPeriodic() {
-    rollersIO.updateInputs(inputs);
-    Logger.processInputs("Intake/Rollers", inputs);
+    leftRollersIO.updateInputs(leftInputs);
+    rightRollersIO.updateInputs(rightInputs);
+    Logger.processInputs("Intake/Rollers/Left", leftInputs);
+    Logger.processInputs("Intake/Rollers/Right", rightInputs);
   }
 
   public void setState(RollersState state) {
-    this.leftState = Constants.Rollers.enableLeftMotor ? state : RollersState.DISABLED;
-    this.rightState = Constants.Rollers.enableRightMotor ? state : RollersState.DISABLED;
-    Logger.recordOutput("Intake/Rollers/LeftState", leftState);
-    Logger.recordOutput("Intake/Rollers/RightState", rightState);
+    this.state = state;
+    Logger.recordOutput("Intake/Rollers/state", state);
     }
 
     // Called at end of command processing in intake
     public void outputsPeriodic() {
-      Logger.recordOutput("Intake/Rollers/LeftState", leftState);
-      Logger.recordOutput("Intake/Rollers/RightState", rightState);
-
-      rollersIO.setVoltage(calculateSideVoltage(leftState), calculateSideVoltage(rightState));
+      Logger.recordOutput("Intake/Rollers/state", state);
+      leftRollersIO.setVoltage(calculateSideVoltage(state));
+      rightRollersIO.setVoltage(calculateSideVoltage(state));
     }
 
     private double calculateSideVoltage(RollersState state) {
         return switch (state) {
-          case INTAKE -> Constants.Rollers.voltageIntake;
+          case INTAKE -> (Constants.rollerLeftMode == Constants.SubsystemMode.DISABLED || Constants.rollerRightMode == Constants.SubsystemMode.DISABLED) 
+            ? 12.0 : Constants.Rollers.voltageIntake;
           case DEPLOY -> Constants.Rollers.voltageDeploy;
           case EJECT -> Constants.Rollers.voltageEject;
           case SMOOSH -> Constants.Rollers.voltageSmoosh;

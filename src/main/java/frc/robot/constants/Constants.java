@@ -52,7 +52,8 @@ public final class Constants {
   public static final SubsystemMode tunnelMode = SubsystemMode.NORMAL;
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerLeftMode = SubsystemMode.NORMAL;
+  public static final SubsystemMode rollerRightMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
@@ -282,8 +283,7 @@ public final class Constants {
     public static final double supplyCurrentLimit = 30;
     public static final NeutralModeValue neutralMode = NeutralModeValue.Coast;
     public static final InvertedValue leftMotorInvert = InvertedValue.Clockwise_Positive;
-    public static final boolean enableLeftMotor = true;
-    public static final boolean enableRightMotor = true;
+    public static final InvertedValue rightMotorInvert = InvertedValue.CounterClockwise_Positive;
   }
 
   public class Deployer {
