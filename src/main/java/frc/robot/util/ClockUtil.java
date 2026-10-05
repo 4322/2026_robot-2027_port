@@ -3,7 +3,6 @@ package frc.robot.util;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.geometry.Translation3d;
-import org.wpilib.system.RobotController;
 
 public class ClockUtil {
 
@@ -40,11 +39,6 @@ public class ClockUtil {
   // Returns the dot product of two translation2ds
   public static double dot(Translation2d u, Translation2d v) {
     return u.getX() * v.getX() + u.getY() * v.getY();
-  }
-
-  // Returns the FPGA timestamp in seconds
-  public static double getFPGATimeSeconds() {
-    return RobotController.getTime() / 1.0E6;
   }
 
   // At reference method
