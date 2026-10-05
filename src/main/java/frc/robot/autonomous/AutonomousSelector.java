@@ -35,7 +35,7 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class AutonomousSelector {
-
+    Command hardCoded;
   private Selectable<Command> autonomousSelector =
       new Selectable<Command>();
 
@@ -72,6 +72,7 @@ public class AutonomousSelector {
     AutoName name;
     SequentialCommandGroup command;
 
+
     private Auto(AutoName name, SequentialCommandGroup command) {
       this.name = name;
       this.command = command;
@@ -88,6 +89,7 @@ public class AutonomousSelector {
       Shooter shooter,
       VisionObjectDetection visionObjectDetection,
       Intake intake) {
+    this.hardCoded = new L2Sweep(drive, intake, shooter, autoStartDelay);
     if (Constants.enableCharacterizationAutos) {
       autos =
           List.of(
@@ -175,16 +177,6 @@ public class AutonomousSelector {
   }
 
   public Command get() {
-    if (Constants.currentMode == Mode.SIM) {
-      for (Auto nextAuto : autos) {
-        if (nextAuto.name == Simulator.getAutoScenario()) {
-          Logger.recordOutput("AutoName", Simulator.getAutoScenario());
-          return nextAuto.command;
-        }
-      }
-      System.out.println("Simulated auto " + Simulator.getAutoScenario() + " not found");
-      System.exit(1);
-    }
-    return autonomousSelector.getSelected();
+    return hardCoded; //autonomousSelector.getSelected();
   }
 }
