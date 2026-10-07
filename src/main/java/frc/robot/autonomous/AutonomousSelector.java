@@ -5,6 +5,7 @@ import org.wpilib.command2.Commands;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import org.wpilib.tunable.Selectable;
+import org.wpilib.tunable.Tunables;
 
 import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
@@ -172,6 +173,7 @@ public class AutonomousSelector {
         autonomousSelector.add(nextAuto.name.toString(), nextAuto.command);
       }
     }
+    Tunables.publish("auto", autonomousSelector);
   }
 
   public Command get() {
