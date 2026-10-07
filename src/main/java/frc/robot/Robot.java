@@ -53,35 +53,19 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath R_2SWEEP_CG;
   public static PathPlannerPath R_2SWEEP_DE;
   public static PathPlannerPath R_2SWEEP_F;
-  public static PathPlannerPath R_2SWEEP_H;
-
-  public static PathPlannerPath R_2SWEEP_A_OUT;
 
   public static PathPlannerPath L_2SWEEP_A;
   public static PathPlannerPath L_2SWEEP_B;
   public static PathPlannerPath L_2SWEEP_CG;
   public static PathPlannerPath L_2SWEEP_DE;
   public static PathPlannerPath L_2SWEEP_F;
-  public static PathPlannerPath L_2SWEEP_H;
 
-  public static PathPlannerPath L_2SWEEP_A_OUT;
-  public static PathPlannerPath L_2SWEEP_DEPOT;
-
-  public static PathPlannerPath R_2056_A;
-  public static PathPlannerPath R_2056_B;
   public static PathPlannerPath R_2056_C;
-  public static PathPlannerPath R_2056_D;
   public static PathPlannerPath R_2056_G;
 
-  public static PathPlannerPath R_2056_A_OUT;
-
-  public static PathPlannerPath L_2056_A;
-  public static PathPlannerPath L_2056_B;
   public static PathPlannerPath L_2056_C;
-  public static PathPlannerPath L_2056_D;
   public static PathPlannerPath L_2056_G;
 
-  public static PathPlannerPath L_2056_A_OUT;
 
   public static PathPlannerPath R_SECOND_SHALLOW_BUMP_A;
   public static PathPlannerPath R_SECOND_SHALLOW_BUMP_B;
@@ -235,15 +219,8 @@ public class Robot extends LoggedRobot {
       R_2SWEEP_DE = PathPlannerPath.fromPathFile("R_2Sweep_DE");
       R_2SWEEP_F = PathPlannerPath.fromPathFile("R_2Sweep_F");
 
-      R_2SWEEP_A_OUT = PathPlannerPath.fromPathFile("R_2Sweep_A_Out");
-
-      R_2056_A = PathPlannerPath.fromPathFile("R_2056_A");
-      R_2056_B = PathPlannerPath.fromPathFile("R_2056_B");
       R_2056_C = PathPlannerPath.fromPathFile("R_2056_C");
-      R_2056_D = PathPlannerPath.fromPathFile("R_2056_D");
       R_2056_G = PathPlannerPath.fromPathFile("R_2056_G");
-
-      R_2056_A_OUT = PathPlannerPath.fromPathFile("R_2056_A_Out");
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
       C_PRELOAD = PathPlannerPath.fromPathFile("C_Preload");
@@ -270,16 +247,9 @@ public class Robot extends LoggedRobot {
       L_2SWEEP_DE = R_2SWEEP_DE.mirrorPath();
       L_2SWEEP_F = R_2SWEEP_F.mirrorPath();
 
-      L_2SWEEP_A_OUT = R_2SWEEP_A_OUT.mirrorPath();
-      L_2SWEEP_DEPOT = PathPlannerPath.fromPathFile("R_2Sweep_Depot").mirrorPath();
 
-      L_2056_A = R_2056_A.mirrorPath();
-      L_2056_B = R_2056_B.mirrorPath();
       L_2056_C = R_2056_C.mirrorPath();
-      L_2056_D = R_2056_D.mirrorPath();
       L_2056_G = R_2056_G.mirrorPath();
-
-      L_2056_A_OUT = R_2056_A_OUT.mirrorPath();
 
       L_SINGLE_SWEEP_A = R_SINGLE_SWEEP_A.mirrorPath();
       L_SINGLE_SWEEP_B = R_SINGLE_SWEEP_B.mirrorPath();

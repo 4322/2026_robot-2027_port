@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 6.1289205219454335,
-        "y": 2.1790391459074727
+        "y": 2.179039145907473
       },
       "isLocked": false,
       "linkedName": "R.2Sweep_Mid"
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.2877442273534615,
-      "rotationDegrees": -135.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.2,
-        "y": 2.7
+        "x": 8.306299668874171,
+        "y": 2.278096026490067
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.979857346647646,
-        "y": 2.6052781740370903
+        "x": 6.086157015521818,
+        "y": 2.1833742005271572
       },
       "isLocked": false,
       "linkedName": "R.2Sweep_B"
@@ -31,11 +31,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.23153526970954336,
-      "rotationDegrees": -135.0
+      "rotationDegrees": 135.0
     },
     {
       "waypointRelativePos": 0.8976545842217432,
-      "rotationDegrees": -135.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [],
@@ -51,13 +51,13 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -135.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 90.0
+    "rotation": 51.118822273755484
   },
   "useDefaultConstraints": false
 }
