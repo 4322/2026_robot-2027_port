@@ -17,7 +17,9 @@ import frc.robot.subsystems.shooter.spindexer.Spindexer;
 import frc.robot.subsystems.shooter.tunnel.Tunnel;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPose;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
+
 import frc.robot.util.firecontrol.ShotCalculator;
 import frc.robot.util.firecontrol.ShotLUT;
 import org.littletonrobotics.junction.Logger;
@@ -37,14 +39,14 @@ public class Shooter extends SubsystemBase {
   private ShooterState state = ShooterState.STARTING_CONFIG;
   private ShooterState requestedState = ShooterState.STARTING_CONFIG;
 
-  private static final LoggedTunableNumber tunableFlywheelSpeedRPS =
-      new LoggedTunableNumber("FiringManager/flywheelSpeedRPS", 0.0);
-  private static final LoggedTunableNumber tunableHoodAngle =
-      new LoggedTunableNumber("FiringManager/hoodAngle", 0.0);
-  private static final LoggedTunableNumber tunableTunnelSpeedRPS =
-      new LoggedTunableNumber("FiringManager/tunnelSpeedRPS", 0.0);
-  private static final LoggedTunableNumber tunableIndexerSpeedRPS =
-      new LoggedTunableNumber("FiringManager/indexerSpeedRPS", 0.0);
+  private static final TunableDouble tunableFlywheelSpeedRPS =
+      Tunables.addDouble("FiringManager/flywheelSpeedRPS", 0.0);
+  private static final TunableDouble tunableHoodAngle =
+      Tunables.addDouble("FiringManager/hoodAngle", 0.0);
+  private static final TunableDouble tunableTunnelSpeedRPS =
+      Tunables.addDouble("FiringManager/tunnelSpeedRPS", 0.0);
+  private static final TunableDouble tunableIndexerSpeedRPS =
+      Tunables.addDouble("FiringManager/indexerSpeedRPS", 0.0);
 
   private Flywheel flywheel;
   private Hood hood;

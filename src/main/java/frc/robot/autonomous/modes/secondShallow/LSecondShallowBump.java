@@ -3,6 +3,7 @@ package frc.robot.autonomous.modes.secondShallow;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import org.wpilib.math.geometry.Pose2d;
+import org.wpilib.tunable.TunableDouble;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.command2.InstantCommand;
 import org.wpilib.command2.ParallelDeadlineGroup;
@@ -15,13 +16,12 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.util.LoggedTunableNumber;
 
 public class LSecondShallowBump extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
   public LSecondShallowBump(
-      Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+      Drive drive, Intake intake, Shooter shooter, TunableDouble autoStartDelay) {
     firstPath = Robot.L_SECOND_SHALLOW_BUMP_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();

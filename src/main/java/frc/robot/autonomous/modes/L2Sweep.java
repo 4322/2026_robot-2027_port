@@ -16,12 +16,12 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
 
 public class L2Sweep extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
-  public L2Sweep(Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+  public L2Sweep(Drive drive, Intake intake, Shooter shooter, TunableDouble autoStartDelay) {
     firstPath = Robot.L_2SWEEP_A;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
