@@ -10,6 +10,9 @@ import org.wpilib.driverstation.GenericHID;
 import org.wpilib.smartdashboard.Field2d;
 import org.wpilib.telemetry.Telemetry;
 import org.wpilib.telemetry.TelemetryTable;
+
+import java.util.function.BooleanSupplier;
+
 import org.wpilib.command2.Command;
 import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.commands.DriveCommands;
@@ -116,6 +119,8 @@ public class RobotContainer {
     // Controller
     public static final XboxController controller = new XboxController(0);
     public static final CommandXboxController commandController = new CommandXboxController(controller);
+
+    public static BooleanSupplier alternatePass;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -286,6 +291,7 @@ public class RobotContainer {
         commandController.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
         commandController.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
         commandController.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+        alternatePass = () -> commandController.a().getAsBoolean();
     }
 
     /**

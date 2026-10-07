@@ -4,6 +4,7 @@ import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.driverstation.Alliance;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.shooter.areaManager.AreaManager;
 import frc.robot.subsystems.shooter.areaManager.AreaManager.Zone;
@@ -29,11 +30,21 @@ public class FiringManager {
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Blue.hubTranslation;
         case PASS_RIGHT:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+          if (RobotContainer.alternatePass.getAsBoolean()) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
           return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+          }
         case PASS_LEFT:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
+          if (RobotContainer.alternatePass.getAsBoolean()) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+            return Constants.FiringTargetTranslations.Blue.allianceLeftTranslation;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Blue.allianceRightTranslation;
+          }
         case RIGHT_OPPOSITION:
           if (Constants.FiringManager.alwaysTargetAllianceZone) {
             Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
@@ -60,11 +71,21 @@ public class FiringManager {
           Logger.recordOutput("FiringManager/targetZone", "Hub");
           return Constants.FiringTargetTranslations.Red.hubTranslation;
         case PASS_RIGHT:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
-          return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
+          if (RobotContainer.alternatePass.getAsBoolean()) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+            return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
+          }
         case PASS_LEFT:
-          Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
-          return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
+          if (RobotContainer.alternatePass.getAsBoolean()) {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
+            return Constants.FiringTargetTranslations.Red.allianceRightTranslation;
+          } else {
+            Logger.recordOutput("FiringManager/targetZone", "Alliance Left");
+            return Constants.FiringTargetTranslations.Red.allianceLeftTranslation;
+          }
         case RIGHT_OPPOSITION:
           if (Constants.FiringManager.alwaysTargetAllianceZone) {
             Logger.recordOutput("FiringManager/targetZone", "Alliance Right");
