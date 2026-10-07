@@ -291,7 +291,6 @@ public class RobotContainer {
         commandController.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
         commandController.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
         commandController.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
-        alternatePass = () -> commandController.a().getAsBoolean();
     }
 
     /**
