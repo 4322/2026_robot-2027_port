@@ -39,7 +39,8 @@ public class IntakeCommands {
     return Commands.runOnce(
         () -> {
           intake.setState(IntakeState.INTAKING);
-        });
+        })
+        .onlyIf(() -> intake.hasExtended());
   }
 
   public static Command toggleIntake(Intake intake, XboxController controller) {
