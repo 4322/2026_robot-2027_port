@@ -19,6 +19,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "R_Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "R_Return"
           }
         },
@@ -32,6 +38,12 @@
           "type": "path",
           "data": {
             "pathName": "R_Sweep_Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Shoot"
           }
         },
         {

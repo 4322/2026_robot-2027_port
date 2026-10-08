@@ -7,11 +7,9 @@ import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.math.geometry.Translation2d;
 import org.wpilib.math.util.Units;
 import org.wpilib.driverstation.Alliance;
-import org.wpilib.driverstation.GenericHID;
 import org.wpilib.system.Timer;
 import org.wpilib.driverstation.NiDsXboxController;
 import org.wpilib.driverstation.POVDirection;
-import org.wpilib.driverstation.XboxController;
 import org.wpilib.driverstation.internal.DriverStationBackend;
 import org.wpilib.simulation.DriverStationSim;
 import org.wpilib.command2.InstantCommand;
@@ -26,7 +24,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.AUTO;
+  private static final RegressTests regressTest = RegressTests.TWO_SWEEP_AUTOS;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -47,6 +45,7 @@ public class Simulator {
     AUTO,
     TURRET,
     ALL_AUTOS,
+    TWO_SWEEP_AUTOS,
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
@@ -222,7 +221,16 @@ public class Simulator {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_2_SWEEP, Alliance.BLUE));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE));
+      case TWO_SWEEP_AUTOS -> List.of(
+          new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_HUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
+        new RegressionTest("AggressivieHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.RED),
+      new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.RED),
+    new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_HUNGRY, Alliance.RED),
+    new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.RED));
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.BLUE));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.BLUE));
@@ -231,7 +239,7 @@ public class Simulator {
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.BLUE));
       case SUBSYSTEM_TEST_BOTH -> List.of(
           new RegressionTest(
-              "Auto test", AutoName.R_2_SWEEP, TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
+              "Auto test", AutoName.R_AGGRESSIVE_HUNGRY, TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.BLUE),
           new RegressionTest("Shooting Test", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
