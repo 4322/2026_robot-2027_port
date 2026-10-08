@@ -102,4 +102,8 @@ public class Tunnel {
   public double getVelocity() {
     return inputs.mechanismRPS;
   }
+
+  public boolean fuelDetected() {
+    return inputs.fuelDetected;
+  }
 }

@@ -68,6 +68,8 @@ public class Shooter extends SubsystemBase {
   private Timer idleTimer = new Timer();
   private boolean resetIdleTimeout = false;
   private boolean hasBeenScoring = false;
+  private boolean isShooting = false;
+  private Timer shootingTimeoutTimer = new Timer();
 
   private ShotCalculator scoreCalc;
   private ShotCalculator passCalc;
@@ -133,6 +135,8 @@ public class Shooter extends SubsystemBase {
           params.timeOfFlightSec());
     }
     passCalc.loadShotLUT(passLUT);
+    shootingTimeoutTimer.stop();
+    shootingTimeoutTimer.reset();
   }
 
   public double getTargetTurretAngleDeg() {
@@ -281,6 +285,20 @@ public class Shooter extends SubsystemBase {
         tunnel.requestIdle();
       }
       case SHOOT -> {
+        if (tunnel.fuelDetected()) {
+          if (shootingTimeoutTimer.isRunning()) {
+            shootingTimeoutTimer.reset();
+          } else {
+            shootingTimeoutTimer.start();
+            isShooting = true;
+          }
+          
+        }
+        if (shootingTimeoutTimer.hasElapsed(Constants.Tunnel.shootingTimeout) && !tunnel.fuelDetected()) {
+          shootingTimeoutTimer.stop();
+          shootingTimeoutTimer.reset();
+          isShooting = false; 
+        }
         resetIdleTimeout = true;
         flywheel.requestGoal(targetFlywheelSpeedRPS, isScoring);
         hood.requestGoal(targetHoodAngleDeg, isScoring);
@@ -456,5 +474,13 @@ public class Shooter extends SubsystemBase {
 
   public void turretUnjamOverride(boolean override) {
     turret.unjamOverride(override);
+  }
+
+  public boolean isFuelDetected() {
+    return tunnel.fuelDetected();
+  }
+
+  public boolean isShooting() {
+    return isShooting;
   }
 }

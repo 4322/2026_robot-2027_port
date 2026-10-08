@@ -8,12 +8,14 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.reduxrobotics.canandcolor.Canandcolor;
+import com.reduxrobotics.canandcolor.CanandcolorSettings;
+
 import org.wpilib.math.filter.Debouncer;
 import org.wpilib.units.measure.AngularVelocity;
 import org.wpilib.units.measure.Current;
 import org.wpilib.units.measure.Temperature;
 import org.wpilib.units.measure.Voltage;
-import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStationErrors;
 
 import frc.robot.constants.Constants;
@@ -21,6 +23,8 @@ import frc.robot.util.AverageStat;
 
 public class TunnelIOTalonFx implements TunnelIO {
   private TalonFX motor;
+  private Canandcolor canandcolor;
+  private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
@@ -38,6 +42,19 @@ public class TunnelIOTalonFx implements TunnelIO {
   private AverageStat supplyAmpsAvgStat = new AverageStat(50);
 
   public TunnelIOTalonFx() {
+    canandcolor = new Canandcolor(Constants.Tunnel.canandcolorID);
+    
+    canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
+      CanandcolorSettings canandcolorConfigStatus =
+          canandcolor.setSettings(canandcolorConfig, 1.0, 5);
+      if (!canandcolorConfigStatus.isEmpty()) {
+        DriverStationErrors.reportError(
+            "Canandcolor "
+                + canandcolor.getAddress()
+                + " error (Tunnel Sensor): "
+                + canandcolorConfigStatus,
+            false);
+      }
     motor = new TalonFX(Constants.Tunnel.motorId, Constants.Systemcore.bus0);
 
     config.HardwareLimitSwitch.ForwardLimitEnable = false;
@@ -95,6 +112,8 @@ public class TunnelIOTalonFx implements TunnelIO {
     inputs.supplyAmps = supplyCurrent.getValueAsDouble();
     inputs.statorAmps = statorCurrent.getValueAsDouble();
     inputs.motorTempC = temp.getValueAsDouble();
+
+    inputs.fuelDetected = canandcolor.getProximity() < Constants.Tunnel.minFuelDetection;
 
     supplyAmpsAvgStat.addSample(Math.abs(inputs.supplyAmps));
     inputs.supplyAmpsAbsAvg = supplyAmpsAvgStat.getAverage();

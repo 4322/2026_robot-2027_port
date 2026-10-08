@@ -13,6 +13,8 @@ public interface TunnelIO {
     public double supplyAmpsAbsAvg = 0.0;
     public double statorAmps = 0.0;
     public double motorTempC = 0.0;
+
+    public boolean fuelDetected = false;
   }
 
   public default void updateInputs(TunnelIOInputs inputs) {}
@@ -22,4 +24,5 @@ public interface TunnelIO {
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}
+
 }
