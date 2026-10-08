@@ -26,8 +26,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
   private TalonFX leaderMotor;
   private TalonFX followerMotor;
-  private Canandcolor canandcolor;
-  private CanandcolorSettings canandcolorConfig = new CanandcolorSettings();
   private double lastRequestedVelocity = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
@@ -94,21 +92,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
         followerMotor.setControl(
             new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
 
-    canandcolorConfig.setColorFramePeriod(10); // Set color frame period to 10ms
 
-    if (Constants.Flywheel.canAndColorEnabled) {
-      canandcolor = new Canandcolor(Constants.Flywheel.canandcolorId);
-      CanandcolorSettings canandcolorConfigStatus =
-          canandcolor.setSettings(canandcolorConfig, 1.0, 5);
-      if (!canandcolorConfigStatus.isEmpty()) {
-        DriverStationErrors.reportError(
-            "Canandcolor "
-                + canandcolor.getAddress()
-                + " error (Flywheel Sensor): "
-                + canandcolorConfigStatus,
-            false);
-      }
-    }
 
     if (leaderConfigStatus != StatusCode.OK) {
       DriverStationErrors.reportError(
@@ -196,16 +180,6 @@ public class FlywheelIOTalonFx implements FlywheelIO {
 
     supplyAmpsAvgStat.addSample(inputs.leaderSupplyAmps + inputs.followerSupplyAmps);
     inputs.supplyAmpsAvg = supplyAmpsAvgStat.getAverage();
-
-    if (Constants.Flywheel.canAndColorEnabled) {
-      inputs.color = new Color(canandcolor.getRed(), canandcolor.getGreen(), canandcolor.getBlue());
-      inputs.proximity = canandcolor.getProximity();
-
-      inputs.proximity = canandcolor.getProximity();
-      inputs.sensorConnected = canandcolor.isConnected();
-
-      inputs.fuelDetected = inputs.proximity < Constants.Flywheel.minFuelDetectionProximity;
-    }
   }
 
   @Override
