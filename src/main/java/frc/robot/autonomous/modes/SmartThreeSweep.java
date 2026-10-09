@@ -97,7 +97,10 @@ public class SmartThreeSweep extends SequentialCommandGroup {
                         ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
                     ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10) // Timeout just to make sure it doesn't cause any issues
                 ),
-                AutoBuilder.followPath(isRightSide ? Robot.RSweepOut : Robot.LSweepOut),
+                new ParallelCommandGroup(
+                    AutoBuilder.followPath(isRightSide ? Robot.RSweepOut : Robot.LSweepOut),
+                    IntakeCommands.intake(intake)
+                ),
                 () -> MatchState.getMatchTime() > Constants.Autonomous.thirdSweepTimeMin
             )
         );

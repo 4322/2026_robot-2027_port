@@ -24,7 +24,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.INFINITE;
+  private static final RegressTests regressTest = RegressTests.SWEEP_AUTOS;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -45,7 +45,7 @@ public class Simulator {
     AUTO,
     TURRET,
     ALL_AUTOS,
-    TWO_SWEEP_AUTOS,
+    SWEEP_AUTOS,
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
@@ -225,7 +225,7 @@ public class Simulator {
     return switch (regressTest) {
       case INFINITE -> List.of(new RegressionTest("Infinite", TeleopScenario.INFINITE, Alliance.BLUE));
       case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE));
-      case TWO_SWEEP_AUTOS -> List.of(
+      case SWEEP_AUTOS -> List.of(
           new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE),
           new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
           new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_HUNGRY, Alliance.BLUE),

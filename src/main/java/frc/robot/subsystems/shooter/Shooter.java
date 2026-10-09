@@ -289,23 +289,23 @@ public class Shooter extends SubsystemBase {
       case SHOOT -> {
         if (Constants.currentMode == Mode.REAL) {
           if (tunnel.fuelDetected()) {
-          if (shootingTimeoutTimer.isRunning()) {
-            shootingTimeoutTimer.reset();
-          } else {
-            shootingTimeoutTimer.start();
+            if (shootingTimeoutTimer.isRunning()) {
+              shootingTimeoutTimer.reset();
+            } else {
+              shootingTimeoutTimer.start();
+              isShooting = true;
+            }
+          }
+        } else {
+          if (!simShootingTimer.isRunning()) {
+            simShootingTimer.reset();
+            simShootingTimer.start();
             isShooting = true;
           }
+          if (simShootingTimer.hasElapsed(Constants.Tunnel.simShootingTime)) {
+            isShooting = false;
+          }
         }
-      } else {
-        if (!simShootingTimer.isRunning()) {
-          simShootingTimer.reset();
-          simShootingTimer.start();
-          isShooting = true;
-        }
-        if (simShootingTimer.hasElapsed(Constants.Tunnel.simShootingTime)) {
-          isShooting = false;
-        }
-      }
         
         if (shootingTimeoutTimer.hasElapsed(Constants.Tunnel.shootingTimeout) && !tunnel.fuelDetected()) {
           shootingTimeoutTimer.stop();
@@ -337,6 +337,8 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
     Logger.recordOutput("Shooter/Turret/poseRotated", drive.getTurretPose(turret.getAngle()));
+    Logger.recordOutput("Shooter/IsShooting", isShooting);
+    Logger.recordOutput("Shooter/Tunnel/IsFuelDetected", isFuelDetected());
   }
 
   private void calculateFiringSolution() {
@@ -494,7 +496,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isFuelDetected() {
-    return tunnel.fuelDetected();
+    return Constants.currentMode == Mode.REAL ? tunnel.fuelDetected() : isShooting;
   }
 
   public boolean isShooting() {

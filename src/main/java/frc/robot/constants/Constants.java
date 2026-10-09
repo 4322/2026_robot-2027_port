@@ -162,7 +162,7 @@ public final class Constants {
     public static final int canandcolorID = 0; // TODO
     public static final double shootingTimeout = 0.5; // Amount of time that can pass without ball detected before declaring we are not shooting
     public static final double minFuelDetection = 0; // For canandcolor
-    public static final double simShootingTime = 5.0; // Amount of time to shoot for before "empty"
+    public static final double simShootingTime = 0.01; // Amount of time to shoot for before "empty", needs to be > 0
   }
 
   public static class Flywheel {

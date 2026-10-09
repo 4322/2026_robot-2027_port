@@ -131,7 +131,10 @@ public class AutonomousSelector {
       autos =
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-              new Auto(AutoName.R_AGGRESSIVE_HUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepHungry, Robot.RSweepHungry, true)),
+              new Auto(AutoName.R_AGGRESSIVE_HUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepHungry, Robot.RSweepNotHungry, true)),
+              new Auto(AutoName.R_AGGRESSIVE_NOTHUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, Robot.RSweepNotHungry, true)),
+              new Auto(AutoName.L_AGGRESSIVE_HUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepHungry, Robot.LSweepNotHungry, false)),
+              new Auto(AutoName.L_AGGRESSIVE_NOTHUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, Robot.LSweepNotHungry, false)),
               new Auto(
                   AutoName.C_START_TO_DEPOT,
                   new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
