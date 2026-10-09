@@ -8,6 +8,7 @@ import org.wpilib.system.Timer;
 import org.wpilib.command2.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.Constants.ShotCalculatorParameters;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.firingManager.FiringManager;
@@ -70,6 +71,7 @@ public class Shooter extends SubsystemBase {
   private boolean hasBeenScoring = false;
   private boolean isShooting = false;
   private Timer shootingTimeoutTimer = new Timer();
+  private Timer simShootingTimer = new Timer();
 
   private ShotCalculator scoreCalc;
   private ShotCalculator passCalc;
@@ -285,15 +287,26 @@ public class Shooter extends SubsystemBase {
         tunnel.requestIdle();
       }
       case SHOOT -> {
-        if (tunnel.fuelDetected()) {
+        if (Constants.currentMode == Mode.REAL) {
+          if (tunnel.fuelDetected()) {
           if (shootingTimeoutTimer.isRunning()) {
             shootingTimeoutTimer.reset();
           } else {
             shootingTimeoutTimer.start();
             isShooting = true;
           }
-          
         }
+      } else {
+        if (!simShootingTimer.isRunning()) {
+          simShootingTimer.reset();
+          simShootingTimer.start();
+          isShooting = true;
+        }
+        if (simShootingTimer.hasElapsed(Constants.Tunnel.simShootingTime)) {
+          isShooting = false;
+        }
+      }
+        
         if (shootingTimeoutTimer.hasElapsed(Constants.Tunnel.shootingTimeout) && !tunnel.fuelDetected()) {
           shootingTimeoutTimer.stop();
           shootingTimeoutTimer.reset();
@@ -428,6 +441,10 @@ public class Shooter extends SubsystemBase {
     if (state != ShooterState.SHOOT) {
       if (state == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
+          if (Constants.currentMode == Mode.SIM) {
+            simShootingTimer.stop();
+            simShootingTimer.reset();
+          }
           state = ShooterState.SHOOT;
         }
       } else {
