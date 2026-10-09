@@ -12,6 +12,7 @@ import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
 import frc.robot.autonomous.modes.LSingleSweep;
+import frc.robot.autonomous.modes.SmartThreeSweep;
 import frc.robot.autonomous.modes.TwoSweep;
 import frc.robot.autonomous.modes.RSingleSweep;
 import frc.robot.autonomous.modes.secondShallow.LSecondShallowBump;
@@ -130,10 +131,7 @@ public class AutonomousSelector {
       autos =
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-              new Auto(AutoName.R_AGGRESSIVE_HUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepHungry, true)),
-              new Auto(AutoName.R_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, true)),
-              new Auto(AutoName.L_AGGRESSIVE_HUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepHungry, false)),
-              new Auto(AutoName.L_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, false)),
+              new Auto(AutoName.R_AGGRESSIVE_HUNGRY, new SmartThreeSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepHungry, Robot.RSweepHungry, true)),
               new Auto(
                   AutoName.C_START_TO_DEPOT,
                   new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),

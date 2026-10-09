@@ -590,6 +590,7 @@ public final class Constants {
     public static final double smooshDelayFirst2056 = 1.0;
     public static final double smooshDelaySecond2056 = 1.0;
     public static final double intakeDelay = 0.5;
+    public static final double thirdSweepTimeMin = 6;
   }
 
   public static class LED {

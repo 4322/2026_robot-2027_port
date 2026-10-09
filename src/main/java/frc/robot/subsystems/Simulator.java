@@ -24,7 +24,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TWO_SWEEP_AUTOS;
+  private static final RegressTests regressTest = RegressTests.INFINITE;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -49,7 +49,8 @@ public class Simulator {
     ZONES,
     INTAKE_TEST,
     DRIVE_WHILE_SHOOTING,
-    TRENCHES
+    TRENCHES,
+    INFINITE
   }
 
   private enum TeleAnomaly {
@@ -72,7 +73,8 @@ public class Simulator {
     Slowly_Up_down,
     ZONES,
     INTAKE_TEST,
-    TRENCHES
+    TRENCHES,
+    INFINITE
   }
 
   private enum EventType {
@@ -221,6 +223,7 @@ public class Simulator {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
+      case INFINITE -> List.of(new RegressionTest("Infinite", TeleopScenario.INFINITE, Alliance.BLUE));
       case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE));
       case TWO_SWEEP_AUTOS -> List.of(
           new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE),
@@ -331,6 +334,9 @@ public class Simulator {
     int eventNum = 1;
 
     return switch (teleopScenario) {
+      case INFINITE -> List.of(
+        new SimEvent(t, "Set pose", EventType.SET_POSE, new FieldPose2d(0, 0, Rotation2d.ZERO)),
+        new SimEvent(t += 999.0, "End of scenario", EventType.END_OF_SCENARIO));
       case CONTROLLER_TEST1 -> List.of(
           new SimEvent(
               t += 1.0,
