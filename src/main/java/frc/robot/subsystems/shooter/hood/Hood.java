@@ -7,14 +7,15 @@ import org.wpilib.telemetry.Telemetry;
 import org.wpilib.telemetry.TelemetryTable;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.SubsystemMode;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
 import org.littletonrobotics.junction.Logger;
 
 public class Hood {
-  private static final LoggedTunableNumber largeToleranceDeg =
-      new LoggedTunableNumber("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
-  private static final LoggedTunableNumber smallToleranceDeg =
-      new LoggedTunableNumber("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
+  private static final TunableDouble largeToleranceDeg =
+      Tunables.addDouble("Hood/largeToleranceDeg", Constants.Hood.largeToleranceDeg);
+  private static final TunableDouble smallToleranceDeg =
+      Tunables.addDouble("Hood/smallToleranceDeg", Constants.Hood.smallToleranceDeg);
 
   private HoodIO io;
   private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();

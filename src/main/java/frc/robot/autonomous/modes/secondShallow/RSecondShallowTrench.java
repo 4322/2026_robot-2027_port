@@ -15,13 +15,13 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
 
 public class RSecondShallowTrench extends SequentialCommandGroup {
   private PathPlannerPath firstPath;
 
   public RSecondShallowTrench(
-      Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+      Drive drive, Intake intake, Shooter shooter, TunableDouble autoStartDelay) {
     firstPath = Robot.R_SECOND_SHALLOW_TRENCH;
     Pose2d startPoseBlue = firstPath.getStartingHolonomicPose().get();
     Pose2d startPoseRed = firstPath.flipPath().getStartingHolonomicPose().get();
