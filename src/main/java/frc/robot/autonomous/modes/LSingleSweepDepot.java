@@ -37,7 +37,7 @@ public class LSingleSweepDepot extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.autoIntake(intake),
+        IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelCommandGroup(
             AutoBuilder.followPath(Robot.L_SINGLE_SWEEP_B_DEPOT),

@@ -33,7 +33,7 @@ public class CenterPreload extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.autoIntake(intake),
+        IntakeCommands.intake(intake),
         AutoBuilder.followPath(Robot.C_PRELOAD),
         ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake).withTimeout(10.0));
   }

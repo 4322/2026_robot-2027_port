@@ -282,7 +282,7 @@ public class RobotContainer {
             commandController.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
         }
         commandController.leftTrigger()
-            .onTrue(IntakeCommands.manualIntake(intake))
+            .onTrue(IntakeCommands.intake(intake))
             .onFalse(IntakeCommands.idle(intake));
         commandController.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
         commandController.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));

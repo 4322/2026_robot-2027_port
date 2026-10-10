@@ -38,7 +38,7 @@ public class L2SweepDepot extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.autoIntake(intake),
+        IntakeCommands.intake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.L_2SWEEP_B),
@@ -51,7 +51,7 @@ public class L2SweepDepot extends SequentialCommandGroup {
                 intake,
                 Constants.Autonomous.twoSweepSmooshDelayFirstPass,
                 Constants.Autonomous.twoSweepShootTimeFirstPass)),
-        IntakeCommands.autoIntake(intake),
+        IntakeCommands.intake(intake),
         new WaitUntilCommand(() -> shooter.isHoodLowered()),
         AutoBuilder.followPath(Robot.L_2SWEEP_DE),
         new ParallelDeadlineGroup(
