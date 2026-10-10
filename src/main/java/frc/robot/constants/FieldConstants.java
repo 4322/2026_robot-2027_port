@@ -232,10 +232,10 @@ public class FieldConstants {
         new Region2d(
             new Translation2d[] {
               new Translation2d(
-                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+                  redLineX - hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
               new Translation2d(
                   blueLineX + hubOffset,
-                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength),
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength),
               new Translation2d(blueLineX + hubOffset, fieldWidth + fieldEdgeTolerance),
               new Translation2d(redLineX - hubOffset, fieldWidth + fieldEdgeTolerance)
             },
@@ -246,10 +246,10 @@ public class FieldConstants {
         new Region2d(
             new Translation2d[] {
               new Translation2d(
-                  redLineX - hubOffset, centerLineY + Units.inchesToMeters(47.00 / 2)),
+                  redLineX - hubOffset, centerLineY - Units.inchesToMeters(47.00 / 2)),
               new Translation2d(
                   blueLineX + hubOffset,
-                  centerLineY - Units.inchesToMeters(47.00 / 2) - bumpLength),
+                  centerLineY + Units.inchesToMeters(47.00 / 2) + bumpLength),
               new Translation2d(blueLineX + hubOffset, -fieldEdgeTolerance),
               new Translation2d(redLineX - hubOffset, -fieldEdgeTolerance)
             },
