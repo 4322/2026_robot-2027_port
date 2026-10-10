@@ -25,7 +25,9 @@ import org.wpilib.command2.Command;
 import org.wpilib.command2.Commands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.Drive;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -41,14 +43,14 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-  private static final LoggedTunableNumber rotateKp =
-      new LoggedTunableNumber("DriveCommands/rotateKp", 3.0);
-  private static final LoggedTunableNumber rotateKd =
-      new LoggedTunableNumber("DriveCommands/rotateKd", 0.0);
-  private static final LoggedTunableNumber rotateMaxVelocity =
-      new LoggedTunableNumber("DriveCommands/rotateMaxVelocity", 8.0);
-  private static final LoggedTunableNumber rotateMaxAcceleration =
-      new LoggedTunableNumber("DriveCommands/rotateMaxAcceleration", 20.0);
+  private static final TunableDouble rotateKp =
+      Tunables.addDouble("DriveCommands/rotateKp", 3.0);
+  private static final TunableDouble rotateKd =
+      Tunables.addDouble("DriveCommands/rotateKd", 0.0);
+  private static final TunableDouble rotateMaxVelocity =
+      Tunables.addDouble("DriveCommands/rotateMaxVelocity", 8.0);
+  private static final TunableDouble rotateMaxAcceleration =
+      Tunables.addDouble("DriveCommands/rotateMaxAcceleration", 20.0);
 
   private DriveCommands() {}
 

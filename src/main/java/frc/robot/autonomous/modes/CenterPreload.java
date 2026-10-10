@@ -13,11 +13,11 @@ import frc.robot.commands.UtilityCommands;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
 
 public class CenterPreload extends SequentialCommandGroup {
   public CenterPreload(
-      Drive drive, Intake intake, Shooter shooter, LoggedTunableNumber autoStartDelay) {
+      Drive drive, Intake intake, Shooter shooter, TunableDouble autoStartDelay) {
     PathPlannerPath path = Robot.C_To_Depot;
     Pose2d startPoseBlue = path.getStartingHolonomicPose().get();
     Pose2d startPoseRed = path.flipPath().getStartingHolonomicPose().get();
