@@ -40,7 +40,10 @@ public class IntakeCommands {
         () -> {
           intake.setState(IntakeState.INTAKING);
         })
-        .onlyIf(() -> intake.hasExtended());
+            .onlyIf(
+                () ->
+                    intake.getState() == IntakeState.IDLE
+                        || intake.getState() == IntakeState.STARING_CONFIG);
   }
 
   public static Command toggleIntake(Intake intake, XboxController controller) {
