@@ -37,7 +37,7 @@ public class LSecondShallowTrench extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        IntakeCommands.autoIntake(intake),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(firstPath),
             ShooterCommands.idle(shooter, intake, 0.0, 40.0, null),

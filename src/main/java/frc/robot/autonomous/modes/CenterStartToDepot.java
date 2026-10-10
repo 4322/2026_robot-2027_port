@@ -39,7 +39,7 @@ public class CenterStartToDepot extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        IntakeCommands.autoIntake(intake),
         new WaitUntilCommand(() -> intake.hasExtended()),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.C_To_Depot),

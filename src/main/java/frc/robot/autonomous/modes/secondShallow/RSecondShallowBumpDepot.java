@@ -38,7 +38,7 @@ public class RSecondShallowBumpDepot extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        IntakeCommands.autoIntake(intake),
         AutoBuilder.followPath(firstPath),
         new ParallelDeadlineGroup(
             AutoBuilder.followPath(Robot.R_SECOND_SHALLOW_BUMP_B_DEPOT),

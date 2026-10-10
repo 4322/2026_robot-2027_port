@@ -1,31 +1,14 @@
 package frc.robot.commands;
 
-import org.wpilib.driverstation.GenericHID;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.Commands;
-import org.wpilib.command2.ConditionalCommand;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.WaitCommand;
-import org.wpilib.driverstation.XboxController;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
-  private static Command transitionToIntake(Intake intake, XboxController controller) {
-    return intake(intake)
-        .andThen(
-            Commands.run(
-                    () -> {
-                      
-                      controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.5);
-                    })
-                .withTimeout(0.25)
-                .finallyDo(
-                    () -> {
-                      controller.setRumble(GenericHID.RumbleType.LEFT_RUMBLE, 0.0);
-                    }));
-  }
 
   public static Command idle(Intake intake) {
     return Commands.runOnce(
@@ -35,7 +18,14 @@ public class IntakeCommands {
         .onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command intake(Intake intake) {
+  public static Command autoIntake(Intake intake) {
+    return Commands.runOnce(
+        () -> {
+          intake.setState(IntakeState.INTAKING);
+        });
+  }
+
+ public static Command manualIntake(Intake intake) {
     return Commands.runOnce(
         () -> {
           intake.setState(IntakeState.INTAKING);
@@ -46,16 +36,6 @@ public class IntakeCommands {
                         || intake.getState() == IntakeState.STARING_CONFIG);
   }
 
-  public static Command toggleIntake(Intake intake, XboxController controller) {
-    return new ConditionalCommand(
-        transitionToIntake(intake, controller)
-            .onlyIf(
-                () ->
-                    intake.getState() == IntakeState.IDLE
-                        || intake.getState() == IntakeState.STARING_CONFIG),
-        idle(intake),
-        () -> intake.getState() != IntakeState.INTAKING);
-  }
 
   public static Command eject(Intake intake) {
     return Commands.runOnce(

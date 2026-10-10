@@ -37,7 +37,7 @@ public class LSingleSweep extends SequentialCommandGroup {
               }
             }),
         new UtilityCommands.WaitSupplierCommand(autoStartDelay),
-        IntakeCommands.intake(intake),
+        IntakeCommands.autoIntake(intake),
         AutoBuilder.followPath(firstPath),
         AutoBuilder.followPath(Robot.L_SINGLE_SWEEP_B),
         ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec),
