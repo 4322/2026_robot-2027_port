@@ -120,7 +120,7 @@ public class RobotContainer {
     public static final XboxController controller = new XboxController(0);
     public static final CommandXboxController commandController = new CommandXboxController(controller);
 
-    public static BooleanSupplier alternatePass;
+    public final static boolean alternatePass = true;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
