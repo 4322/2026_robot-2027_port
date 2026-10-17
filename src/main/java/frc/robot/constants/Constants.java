@@ -13,6 +13,7 @@ import org.wpilib.math.interpolation.InterpolatingDoubleTreeMap;
 import org.wpilib.math.interpolation.InterpolatingTreeMap;
 import org.wpilib.math.interpolation.InverseInterpolator;
 import org.wpilib.math.util.Units;
+import org.wpilib.units.measure.Time;
 import org.wpilib.framework.RobotBase;
 import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.util.Color;
@@ -588,6 +589,7 @@ public final class Constants {
     public static final double outpostWaitTime = 4.0;
     public static final double smooshDelayFirst2056 = 1.0;
     public static final double smooshDelaySecond2056 = 1.0;
+    public static final double intakeDelay = 0.5;
   }
 
   public static class LED {

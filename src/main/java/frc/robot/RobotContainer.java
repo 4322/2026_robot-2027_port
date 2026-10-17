@@ -66,8 +66,9 @@ import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIOSim;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIO;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetectionIOPhoton;
-import org.wpilib.driverstation.XboxController;
+import org.wpilib.driverstation.NiDsXboxController;
 import org.wpilib.command2.button.CommandGamepad;
+import org.wpilib.command2.button.CommandNiDsXboxController;
 import org.wpilib.command2.button.CommandXboxController;
 import org.wpilib.command2.Commands;
 
@@ -114,8 +115,8 @@ public class RobotContainer {
     private static TelemetryTable fieldLog = Telemetry.getTable("Field");
 
     // Controller
-    public static final XboxController controller = new XboxController(0);
-    public static final CommandXboxController commandController = new CommandXboxController(controller);
+    public static final NiDsXboxController controller = new NiDsXboxController(0);
+    public static final CommandNiDsXboxController commandController = new CommandNiDsXboxController(0);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -257,7 +258,7 @@ public class RobotContainer {
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
-     * org.wpilib.driverstation.Joystick} or {@link XboxController}), and then passing it to a {@link
+     * org.wpilib.driverstation.Joystick} or {@link NiDsXboxController}), and then passing it to a {@link
      * org.wpilib.command2.button.JoystickButton}.
      */
     private void configureButtonBindings() {

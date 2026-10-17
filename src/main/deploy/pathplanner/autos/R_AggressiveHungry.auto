@@ -7,43 +7,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_A"
+            "pathName": "R_Sweep_Aggressive"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_B"
+            "pathName": "R_Sweep_Bump"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_C"
+            "pathName": "R_Shoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_D"
+            "pathName": "R_Return"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_B"
+            "pathName": "R_Sweep_Hungry"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_C"
+            "pathName": "R_Sweep_Bump"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_2056_G"
+            "pathName": "R_Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Return"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep_Out"
           }
         }
       ]

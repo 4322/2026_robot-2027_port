@@ -3,70 +3,66 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.440156918687589,
-        "y": 0.65
+        "x": 4.436754966887417,
+        "y": 0.37599337748344397
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.845850877192982,
-        "y": 0.574078947368422
+        "x": 6.122182596291013,
+        "y": 0.392767475035663
       },
       "isLocked": false,
       "linkedName": "R.Trench.Start"
     },
     {
       "anchor": {
-        "x": 7.760807017543858,
-        "y": 1.6481578947368427
+        "x": 7.805364238410595,
+        "y": 2.4595943708609265
       },
       "prevControl": {
-        "x": 7.695438255807819,
-        "y": 0.6722956659631286
+        "x": 7.856183774834438,
+        "y": 1.2834850993377473
       },
       "nextControl": {
-        "x": 7.87219298245614,
-        "y": 3.310991228070177
+        "x": 7.780153024912834,
+        "y": 3.043053883237667
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.267526315789473,
-        "y": 3.3905526315789483
+        "x": 6.730894039735099,
+        "y": 3.1928476821192056
       },
       "prevControl": {
-        "x": 7.569859649122805,
-        "y": 3.374640350877195
+        "x": 7.2746481644022865,
+        "y": 3.7366018067863926
       },
       "nextControl": {
-        "x": 6.842513314795171,
-        "y": 3.412921736894436
+        "x": 6.382417218543046,
+        "y": 2.8443708609271527
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.759900142653351,
-        "y": 2.6570328102710414
+        "x": 5.380546357615895,
+        "y": 2.4595943708609265
       },
       "prevControl": {
-        "x": 6.380955777460769,
-        "y": 3.148701854493581
+        "x": 6.513096026490066,
+        "y": 2.568493377483443
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2056.A"
+      "linkedName": "R.Sweep_End"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8763326226012768,
-      "rotationDegrees": 90.0
-    },
-    {
-      "waypointRelativePos": 1.3891951488423384,
+      "waypointRelativePos": 0.897094430992728,
       "rotationDegrees": 90.0
     }
   ],
@@ -82,11 +78,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 4.0,
-    "rotation": -153.434948822922
+    "velocity": 5.0,
+    "rotation": 125.32664456759645
   },
   "reversed": false,
-  "folder": "R_2056",
+  "folder": "R_2Sweep",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

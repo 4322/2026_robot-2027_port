@@ -6,13 +6,13 @@ import org.wpilib.command2.Commands;
 import org.wpilib.command2.ConditionalCommand;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.WaitCommand;
-import org.wpilib.driverstation.XboxController;
+import org.wpilib.driverstation.NiDsXboxController;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
-  private static Command transitionToIntake(Intake intake, XboxController controller) {
+  private static Command transitionToIntake(Intake intake, NiDsXboxController controller) {
     return intake(intake)
         .andThen(
             Commands.run(
@@ -42,7 +42,7 @@ public class IntakeCommands {
         });
   }
 
-  public static Command toggleIntake(Intake intake, XboxController controller) {
+  public static Command toggleIntake(Intake intake, NiDsXboxController controller) {
     return new ConditionalCommand(
         transitionToIntake(intake, controller)
             .onlyIf(
@@ -97,7 +97,13 @@ public class IntakeCommands {
                   intake.setState(IntakeState.SMOOSH);
                 }),
             new WaitCommand(timeout))
-        .finallyDo(() -> toggleOff(intake))
+        .finallyDo(() -> {
+              if (intake.getPrevState() == Intake.IntakeState.INTAKING) {
+                intake.setState(IntakeState.INTAKING);
+              } else {
+                intake.setState(IntakeState.IDLE);
+              }
+            })
         .onlyIf(() -> intake.hasExtended());
   }
 }

@@ -8,13 +8,12 @@ import org.wpilib.tunable.Selectable;
 import org.wpilib.tunable.TunableDouble;
 import org.wpilib.tunable.Tunables;
 
+import frc.robot.Robot;
 import frc.robot.autonomous.modes.CenterPreload;
 import frc.robot.autonomous.modes.CenterStartToDepot;
 import frc.robot.autonomous.modes.DoNothing;
-import frc.robot.autonomous.modes.L2Sweep;
-import frc.robot.autonomous.modes.L2SweepDepot;
 import frc.robot.autonomous.modes.LSingleSweep;
-import frc.robot.autonomous.modes.R2Sweep;
+import frc.robot.autonomous.modes.TwoSweep;
 import frc.robot.autonomous.modes.RSingleSweep;
 import frc.robot.autonomous.modes.secondShallow.LSecondShallowBump;
 import frc.robot.autonomous.modes.secondShallow.LSecondShallowTrench;
@@ -44,9 +43,10 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
-    R_2_SWEEP,
-    L_2_SWEEP,
-    L_2_SWEEP_DEPOT,
+    R_AGGRESSIVE_FULL,
+    R_AGGRESSIVE_NOTHUNGRY,
+    L_AGGRESSIVE_FULL,
+    L_AGGRESSIVE_NOTHUNGRY,
     L_SINGLE_SWEEP,
     R_SINGLE_SWEEP,
 
@@ -129,11 +129,10 @@ public class AutonomousSelector {
       autos =
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-              new Auto(AutoName.R_2_SWEEP, new R2Sweep(drive, intake, shooter, autoStartDelay)),
-              new Auto(AutoName.L_2_SWEEP, new L2Sweep(drive, intake, shooter, autoStartDelay)),
-              new Auto(
-                  AutoName.L_2_SWEEP_DEPOT,
-                  new L2SweepDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(AutoName.R_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepFull, true)),
+              new Auto(AutoName.R_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, true)),
+              new Auto(AutoName.L_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepFull, false)),
+              new Auto(AutoName.L_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, false)),
               new Auto(
                   AutoName.C_START_TO_DEPOT,
                   new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),

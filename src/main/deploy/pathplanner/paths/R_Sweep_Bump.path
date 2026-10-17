@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.6130842230130495,
-        "y": 3.7176037959667845
+        "x": 5.380546357615895,
+        "y": 2.4595943708609265
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.634602609727166,
-        "y": 4.158730723606168
+        "x": 5.130546357615895,
+        "y": 2.4595943708609265
       },
       "isLocked": false,
-      "linkedName": "R.2Sweep_E"
+      "linkedName": "R.Sweep_End"
     },
     {
       "anchor": {
-        "x": 6.0213285883748515,
-        "y": 3.7176037959667845
+        "x": 3.3477649006622516,
+        "y": 2.4595943708609265
       },
       "prevControl": {
-        "x": 6.053606168446026,
-        "y": 4.191008303677343
+        "x": 3.645776118117643,
+        "y": 2.4595943708609265
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.2Sweep_F"
+      "linkedName": "R.Return"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 180.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -46,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 1.0,
+    "rotation": 125.00000000000001
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0.1,
-    "rotation": 90.0
+    "velocity": 5.0,
+    "rotation": 125.32664456759645
   },
   "useDefaultConstraints": true
 }
