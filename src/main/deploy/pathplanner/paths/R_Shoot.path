@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 3.348,
-        "y": 1.4940231788079472
+        "x": 3.0302728351126933,
+        "y": 1.8670225385527872
       },
       "prevControl": {
-        "x": 3.348,
-        "y": 1.9072857821112774
+        "x": 3.0302728351126933,
+        "y": 2.280285141856117
       },
       "nextControl": {
-        "x": 3.348,
-        "y": 1.0207334015428198
+        "x": 3.0302728351126933,
+        "y": 1.3937327612876598
       },
       "isLocked": false,
       "linkedName": null
@@ -56,7 +56,7 @@
       "minWaypointRelativePos": 0.0,
       "maxWaypointRelativePos": 1.5911552346570355,
       "constraints": {
-        "maxVelocity": 0.5,
+        "maxVelocity": 0.4,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 180.0,
         "maxAngularAcceleration": 720.0,
@@ -82,7 +82,7 @@
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 1.0,
     "rotation": 125.00000000000001
   },
   "useDefaultConstraints": true
