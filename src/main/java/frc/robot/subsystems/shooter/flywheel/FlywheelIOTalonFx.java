@@ -89,7 +89,7 @@ public class FlywheelIOTalonFx implements FlywheelIO {
     config.Slot1.kD = 0;
 
     StatusCode leaderConfigStatus = leaderMotor.getConfigurator().apply(config);
-    StatusCode followerConfigStatus = leaderMotor.getConfigurator().apply(config);
+    StatusCode followerConfigStatus = followerMotor.getConfigurator().apply(config);
     StatusCode followerMotorSetStatus =
         followerMotor.setControl(
             new Follower(leaderMotor.getDeviceID(), MotorAlignmentValue.Opposed));
