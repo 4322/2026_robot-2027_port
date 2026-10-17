@@ -221,15 +221,15 @@ public class Simulator {
 
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_FULL, Alliance.BLUE));
       case TWO_SWEEP_AUTOS -> List.of(
-          new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_FULL, Alliance.BLUE),
           new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
-          new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_HUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_FULL, Alliance.BLUE),
           new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
-        new RegressionTest("AggressivieHungry", AutoName.R_AGGRESSIVE_HUNGRY, Alliance.RED),
+        new RegressionTest("AggressivieHungry", AutoName.R_AGGRESSIVE_FULL, Alliance.RED),
       new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.RED),
-    new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_HUNGRY, Alliance.RED),
+    new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_FULL, Alliance.RED),
     new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.RED));
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.BLUE));
       case DO_NOTHING -> List.of(
@@ -239,7 +239,7 @@ public class Simulator {
           new RegressionTest("Controller Test 2", TeleopScenario.CONTROLLER_TEST2, Alliance.BLUE));
       case SUBSYSTEM_TEST_BOTH -> List.of(
           new RegressionTest(
-              "Auto test", AutoName.R_AGGRESSIVE_HUNGRY, TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
+              "Auto test", AutoName.R_AGGRESSIVE_FULL, TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));
       case SUBSYSTEM_TEST_TELE -> List.of(
           new RegressionTest("Intake Test", TeleopScenario.INTAKE_TEST, Alliance.BLUE),
           new RegressionTest("Shooting Test", TeleopScenario.DRIVE_WHILE_SHOOTING, Alliance.BLUE));

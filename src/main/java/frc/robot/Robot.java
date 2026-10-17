@@ -52,6 +52,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath RSweepNotHungry;
   public static PathPlannerPath RSweepHungry;
   public static PathPlannerPath RSweepAggressive;
+  public static PathPlannerPath RSweepFull;
   public static PathPlannerPath RSweepOut;
   public static PathPlannerPath RSweepBump;
   public static PathPlannerPath RShoot;
@@ -60,6 +61,7 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath LSweepCalm;
   public static PathPlannerPath LSweepNotHungry;
   public static PathPlannerPath LSweepHungry;
+  public static PathPlannerPath LSweepFull;
   public static PathPlannerPath LSweepAggressive;
   public static PathPlannerPath LSweepOut;
   public static PathPlannerPath LSweepBump;
@@ -215,6 +217,7 @@ public class Robot extends LoggedRobot {
     try {
       RSweepNotHungry = PathPlannerPath.fromPathFile("R_Sweep_NotHungry");
       RSweepHungry = PathPlannerPath.fromPathFile("R_Sweep_Hungry");
+      RSweepFull = PathPlannerPath.fromPathFile("R_Sweep_Full");
       RSweepAggressive = PathPlannerPath.fromPathFile("R_Sweep_Aggressive");
       RSweepOut = PathPlannerPath.fromPathFile("R_Sweep_Out");
       RSweepBump = PathPlannerPath.fromPathFile("R_Sweep_Bump");
@@ -224,6 +227,7 @@ public class Robot extends LoggedRobot {
       LSweepNotHungry = RSweepNotHungry.mirrorPath();
       LSweepHungry = RSweepHungry.mirrorPath();
       LSweepAggressive = RSweepAggressive.mirrorPath();
+      LSweepFull = RSweepFull.mirrorPath();
       LSweepOut = RSweepOut.mirrorPath();
       LSweepBump = RSweepBump.mirrorPath();
       LShoot = RShoot.mirrorPath();
