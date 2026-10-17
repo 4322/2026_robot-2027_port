@@ -10,7 +10,8 @@ import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.system.Timer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
 
 public class BabyTunerX {
   private static boolean init;
@@ -20,22 +21,22 @@ public class BabyTunerX {
   private static TalonFXConfiguration config = new TalonFXConfiguration();
   private static StatusCode status;
 
-  private static final LoggedTunableNumber kP = new LoggedTunableNumber("kP");
-  private static final LoggedTunableNumber kI = new LoggedTunableNumber("kI");
-  private static final LoggedTunableNumber iSat = new LoggedTunableNumber("iSat");
-  private static final LoggedTunableNumber iZone = new LoggedTunableNumber("iZone");
-  private static final LoggedTunableNumber kD = new LoggedTunableNumber("kD");
-  private static final LoggedTunableNumber kG = new LoggedTunableNumber("kG");
-  private static final LoggedTunableNumber kV = new LoggedTunableNumber("kV");
-  private static final LoggedTunableNumber kS = new LoggedTunableNumber("kS");
-  private static final LoggedTunableNumber acc = new LoggedTunableNumber("max acc");
-  private static final LoggedTunableNumber dec = new LoggedTunableNumber("max dec");
-  private static final LoggedTunableNumber vel = new LoggedTunableNumber("max vel");
-  private static final LoggedTunableNumber setpoint = new LoggedTunableNumber("PID setpoint");
-  private static final LoggedTunableNumber voltage1 =
-      new LoggedTunableNumber("Set voltage motor 1");
-  private static final LoggedTunableNumber voltage2 =
-      new LoggedTunableNumber("Set voltage motor 2");
+  private static final TunableDouble kP = Tunables.addDouble("kP", 0.0);
+  private static final TunableDouble kI = Tunables.addDouble("kI",0.0);
+  private static final TunableDouble iSat = Tunables.addDouble("iSat", 0.0);
+  private static final TunableDouble iZone = Tunables.addDouble("iZone", 0.0);
+  private static final TunableDouble kD = Tunables.addDouble("kD", 0.0);
+  private static final TunableDouble kG = Tunables.addDouble("kG", 0.0);
+  private static final TunableDouble kV = Tunables.addDouble("kV", 0.0);
+  private static final TunableDouble kS = Tunables.addDouble("kS", 0.0);
+  private static final TunableDouble acc = Tunables.addDouble("max acc", 0.0);
+  private static final TunableDouble dec = Tunables.addDouble("max dec", 0.0);
+  private static final TunableDouble vel = Tunables.addDouble("max vel", 0.0);
+  private static final TunableDouble setpoint = Tunables.addDouble("PID setpoint", 0.0);
+  private static final TunableDouble voltage1 =
+      Tunables.addDouble("Set voltage motor 1", 0.0);
+  private static final TunableDouble voltage2 =
+      Tunables.addDouble("Set voltage motor 2", 0.0);
   private static String subsystemKey = "/Tuning/Subsystem";
   private static String currentValueKey = "/Tuning/Current Value";
   private static String feedbackErrorKey = "/Tuning/Error";
@@ -115,49 +116,49 @@ public class BabyTunerX {
       }
     }
 
-    if (kP.hasChanged(motorIdx)) {
+    if (kP.hasChanged()) {
       config.Slot0.kP = kP.get();
       configChanged = true;
     }
-    if (kI.hasChanged(motorIdx)) {
+    if (kI.hasChanged()) {
       config.Slot0.kI = kI.get();
       configChanged = true;
     }
-    if (kD.hasChanged(motorIdx)) {
+    if (kD.hasChanged()) {
       config.Slot0.kD = kD.get();
       configChanged = true;
     }
-    if (kG.hasChanged(motorIdx)) {
+    if (kG.hasChanged()) {
       config.Slot0.kG = kG.get();
       configChanged = true;
     }
-    if (kV.hasChanged(motorIdx)) {
+    if (kV.hasChanged()) {
       config.Slot0.kV = kV.get();
       configChanged = true;
     }
-    if (kS.hasChanged(motorIdx)) {
+    if (kS.hasChanged()) {
       config.Slot0.kS = kS.get();
       configChanged = true;
     }
-    if (acc.hasChanged(motorIdx)) {
+    if (acc.hasChanged()) {
       config.MotionMagic.MotionMagicAcceleration = acc.get();
       configChanged = true;
     }
-    if (vel.hasChanged(motorIdx)) {
+    if (vel.hasChanged()) {
       config.MotionMagic.MotionMagicCruiseVelocity = vel.get();
       configChanged = true;
     }
-    if (setpoint.hasChanged(motorIdx)) {
+    if (setpoint.hasChanged()) {
       newPos = setpoint.get();
       pidMode = true;
     }
-    if (motorIdx == 0 && voltage1.hasChanged(motorIdx)) {
+    if (motorIdx == 0 && voltage1.hasChanged()) {
       if (talonFX != null) {
         talonFX.setVoltage(voltage1.get());
       }
       pidMode = false;
     }
-    if (motorIdx == 1 && voltage2.hasChanged(motorIdx)) {
+    if (motorIdx == 1 && voltage2.hasChanged()) {
       if (talonFX != null) {
         talonFX.setVoltage(voltage2.get());
       }
@@ -179,10 +180,10 @@ public class BabyTunerX {
     return newPos;
   }
 
-  private static void setDefault(int motorIdx, LoggedTunableNumber tunable, double val) {
-    tunable.initDefault(val);
+  private static void setDefault(int motorIdx, TunableDouble tunable, double val) {
+    tunable.set(val);
     // throw away initial settings change
-    if (!tunable.hasChanged(motorIdx)) {
+    if (!tunable.hasChanged()) {
       DriverStationErrors.reportError("This should never happen", true);
       System.exit(0);
     }

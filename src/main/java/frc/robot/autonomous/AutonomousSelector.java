@@ -5,6 +5,7 @@ import org.wpilib.command2.Commands;
 import org.wpilib.command2.SequentialCommandGroup;
 import org.wpilib.command2.sysid.SysIdRoutine;
 import org.wpilib.tunable.Selectable;
+import org.wpilib.tunable.TunableDouble;
 import org.wpilib.tunable.Tunables;
 
 import frc.robot.Robot;
@@ -30,7 +31,6 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
-import frc.robot.util.LoggedTunableNumber;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
@@ -39,8 +39,7 @@ public class AutonomousSelector {
   private Selectable<Command> autonomousSelector =
       new Selectable<Command>();
 
-  private static LoggedTunableNumber autoStartDelay =
-      new LoggedTunableNumber("Auto Start Delay", 0, true);
+  private final TunableDouble autoStartDelay = Tunables.addDouble("autonomous/autoStartDelay", 0.0);
 
   public enum AutoName {
     DO_NOTHING,
@@ -188,4 +187,5 @@ public class AutonomousSelector {
     }
     return autonomousSelector.getSelected();
   }
+
 }

@@ -15,7 +15,9 @@ import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.visionGlobalPose.VisionGlobalPoseIO.GlobalPoseObservation;
-import frc.robot.util.LoggedTunableNumber;
+import org.wpilib.tunable.TunableDouble;
+import org.wpilib.tunable.Tunables;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
@@ -25,13 +27,13 @@ public class VisionGlobalPose extends SubsystemBase {
   private final VisionGlobalPoseIO[] io;
   private final VisionGlobalPoseIOInputsAutoLogged[] inputs;
   private final Drive drive;
-  private static final LoggedTunableNumber baseStdDev =
-      new LoggedTunableNumber("GlobalPose/baseStdDev", Constants.VisionGlobalPose.stdDevBaseline);
-  private static final LoggedTunableNumber singleTagStdDev =
-      new LoggedTunableNumber(
+  private static final TunableDouble baseStdDev =
+      Tunables.addDouble("GlobalPose/baseStdDev", Constants.VisionGlobalPose.stdDevBaseline);
+  private static final TunableDouble singleTagStdDev =
+      Tunables.addDouble(
           "GlobalPose/singleTagStdDev", Constants.VisionGlobalPose.singleTagStdDevAdjuster);
-  private static final LoggedTunableNumber maxAvgTagDistance =
-      new LoggedTunableNumber(
+  private static final TunableDouble maxAvgTagDistance =
+      Tunables.addDouble(
           "GlobalPose/maxAvgTagDistance", Constants.VisionGlobalPose.maxAvgTagDistance);
   private final TelemetryTable visionTelemetry = Telemetry.getTable("Vision");
 
