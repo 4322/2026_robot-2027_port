@@ -116,7 +116,7 @@ public class RobotContainer {
 
     // Controller
     public static final NiDsXboxController controller = new NiDsXboxController(0);
-    public static final CommandXboxController commandController = new CommandXboxController(0);
+    public static final CommandNiDsXboxController commandController = new CommandNiDsXboxController(0);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.

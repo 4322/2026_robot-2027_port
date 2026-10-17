@@ -1042,20 +1042,7 @@ public class Simulator {
                 () -> {
                   Logger.recordOutput("Sim/Debug", "Button X False");
                 }));
-    RobotContainer.commandController
-        .dpadLeft()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  Logger.recordOutput("Sim/Debug", "Left POV True");
-                }));
-    RobotContainer.commandController
-        .dpadLeft()
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  Logger.recordOutput("Sim/Debug", "Left POV False");
-                }));
+    
     RobotContainer.commandController
         .leftBumper()
         .onTrue(
