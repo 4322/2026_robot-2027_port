@@ -40,7 +40,6 @@ public class Robot extends LoggedRobot {
   private Timer allianceUpdateTimer = new Timer();
   private DigitalInput coastButton = new DigitalInput(Constants.dioCoastButton);
   private Timer coastButtonTimer = new Timer();
-  private static Timer stabilizeCamerasTimer = new Timer();
 
   public static Alliance alliance = Alliance.BLUE;
 
@@ -347,20 +346,6 @@ public class Robot extends LoggedRobot {
       power cycle the RIO
     */
 
-    // Reduce CPU usage to stop camera reconnect thrashing after an upset.
-    // Activate for 2 seconds, but not more often than every 15 seconds.
-    if (stabilizeCamerasTimer.isRunning()) {
-      if (!stabilizeCamerasTimer.hasElapsed(2)) {
-        RobotContainer.drive.stop();
-        Logger.recordOutput("Robot/Paused", "Yes");
-        return;
-      }
-      if (stabilizeCamerasTimer.hasElapsed(15)) {
-        stabilizeCamerasTimer.stop();
-        stabilizeCamerasTimer.reset();
-      }
-    }
-    Logger.recordOutput("Robot/Paused", "No");
 
     // insure that the sim runs before everything else
     if (RobotContainer.simulator != null) {
@@ -435,8 +420,4 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
-
-  public static void stabilize() {
-    stabilizeCamerasTimer.start();
-  }
 }

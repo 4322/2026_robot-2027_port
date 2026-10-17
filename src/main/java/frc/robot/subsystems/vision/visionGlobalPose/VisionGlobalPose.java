@@ -68,23 +68,6 @@ public class VisionGlobalPose extends SubsystemBase {
 
   @Override
   public void periodic() {
-    int unstableCameras = 0;
-    for (int i = 0; i < io.length; i++) {
-      io[i].updateInputs(inputs[i]);
-      Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
-      if (inputs[i].unstable) {
-        unstableCameras++;
-      }
-    }
-
-    if (unstableCameras >= 2) {
-      visionTelemetry.log("Vision/Vision Stable", Constants.NetworkTables.red.toHexString());
-      Logger.recordOutput("Vision/Stable", "No");
-      Robot.stabilize();
-    } else {
-      visionTelemetry.log("Vision/Vision Stable", Constants.NetworkTables.green.toHexString());
-      Logger.recordOutput("Vision/Stable", "Yes");
-    }
 
     // Initialize logging values
     allRobotPoses.clear();

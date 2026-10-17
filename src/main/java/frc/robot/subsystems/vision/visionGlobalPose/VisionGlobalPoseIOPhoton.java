@@ -32,18 +32,7 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
   @Override
   public void updateInputs(VisionGlobalPoseIOInputs inputs) {
 
-    // Detect connection instability
-    boolean isNowConnected = camera.isConnected();
-    if (isNowConnected && !inputs.connected) {
-      connectTime.restart();
-    } else if (!isNowConnected && inputs.connected) {
-      disconnectTime.restart();
-      inputs.unstable = true;
-    }
-    if (connectTime.hasElapsed(3) || disconnectTime.hasElapsed(3)) {
-      inputs.unstable = false;
-    }
-    inputs.connected = isNowConnected;
+    inputs.connected = camera.isConnected();
 
     // Read new camera observations
     List<GlobalPoseObservation> globalPoseObservations = new LinkedList<>();
