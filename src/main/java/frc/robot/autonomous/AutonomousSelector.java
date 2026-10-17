@@ -43,9 +43,9 @@ public class AutonomousSelector {
 
   public enum AutoName {
     DO_NOTHING,
-    R_AGGRESSIVE_HUNGRY,
+    R_AGGRESSIVE_FULL,
     R_AGGRESSIVE_NOTHUNGRY,
-    L_AGGRESSIVE_HUNGRY,
+    L_AGGRESSIVE_FULL,
     L_AGGRESSIVE_NOTHUNGRY,
     L_SINGLE_SWEEP,
     R_SINGLE_SWEEP,
@@ -129,9 +129,9 @@ public class AutonomousSelector {
       autos =
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
-              new Auto(AutoName.R_AGGRESSIVE_HUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepHungry, true)),
+              new Auto(AutoName.R_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepFull, true)),
               new Auto(AutoName.R_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, true)),
-              new Auto(AutoName.L_AGGRESSIVE_HUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepHungry, false)),
+              new Auto(AutoName.L_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepFull, false)),
               new Auto(AutoName.L_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, false)),
               new Auto(
                   AutoName.C_START_TO_DEPOT,
