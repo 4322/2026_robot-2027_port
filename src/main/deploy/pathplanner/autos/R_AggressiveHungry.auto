@@ -37,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_Sweep_Bump"
+            "pathName": "R_Sweep2_Bump"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "R_Shoot"
+            "pathName": "R_Shoot2"
           }
         },
         {

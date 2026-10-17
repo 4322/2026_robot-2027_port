@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.436754966887417,
-        "y": 0.37599337748344397
+        "x": 4.42896797153025,
+        "y": 0.4898457888493476
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.709916963226573,
-        "y": 0.5974377224199281
+        "x": 6.702129967869406,
+        "y": 0.7112901337858317
       },
       "isLocked": false,
       "linkedName": "R.Trench.Start"
@@ -52,12 +52,12 @@
         "y": 2.4595943708609265
       },
       "prevControl": {
-        "x": 6.44093712930012,
+        "x": 6.440937129300121,
         "y": 2.049928825622776
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "R.Sweep_End"
+      "linkedName": "R.Sweep2_End"
     }
   ],
   "rotationTargets": [
@@ -83,7 +83,7 @@
   },
   "goalEndState": {
     "velocity": 5.0,
-    "rotation": 125.32664456759645
+    "rotation": -125.00000000000001
   },
   "reversed": false,
   "folder": "R_2Sweep",
