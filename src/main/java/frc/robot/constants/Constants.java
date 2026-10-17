@@ -54,7 +54,7 @@ public final class Constants {
   public static SubsystemMode turretMode = SubsystemMode.NORMAL;
   public static final SubsystemMode deployerMode = SubsystemMode.NORMAL;
   public static final SubsystemMode rollerLeftMode = SubsystemMode.NORMAL;
-  public static final SubsystemMode rollerRightMode = SubsystemMode.DISABLED;
+  public static final SubsystemMode rollerRightMode = SubsystemMode.NORMAL;
   public static final SubsystemMode ledMode = SubsystemMode.DISABLED;
   public static final SubsystemMode visionGlobalPose = SubsystemMode.NORMAL;
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
