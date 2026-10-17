@@ -73,7 +73,7 @@ public final class Constants {
   public static final double scoringDoubleToleranceTime = 0.5;
   public static final double passingDoubleToleranceTime = 0.25;
 
-  { // set dependent operational modes
+  static { // set dependent operational modes
     if (turretLocked) {
       turretMode = SubsystemMode.DISABLED;
     }
