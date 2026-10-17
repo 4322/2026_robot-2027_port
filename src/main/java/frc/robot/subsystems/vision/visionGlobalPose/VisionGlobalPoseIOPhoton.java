@@ -15,8 +15,6 @@ public class VisionGlobalPoseIOPhoton implements VisionGlobalPoseIO {
 
   protected final PhotonCamera camera;
   protected final Transform3d robotToCamera;
-  private Timer connectTime = new Timer();
-  private Timer disconnectTime = new Timer();
 
   /**
    * Creates a new VisionIOPhotonVision.

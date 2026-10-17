@@ -68,6 +68,10 @@ public class VisionGlobalPose extends SubsystemBase {
 
   @Override
   public void periodic() {
+    for (int i = 0; i < io.length; i++) {
+      io[i].updateInputs(inputs[i]);
+      Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+    }
 
     // Initialize logging values
     allRobotPoses.clear();
