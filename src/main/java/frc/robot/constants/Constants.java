@@ -60,10 +60,10 @@ public final class Constants {
   public static final SubsystemMode visionObjectDetection = SubsystemMode.DISABLED;
   public static final SubsystemMode firingManagerMode = SubsystemMode.DISABLED;
   public static final boolean turretLocked = false;
-  public static final boolean frontRightCameraEnable = true;
-  public static final boolean frontLeftCameraEnable = true;
-  public static final boolean backRightCameraEnable = true;
-  public static final boolean backLeftCameraEnable = true;
+  public static final boolean frontRightCameraEnable = true; // Camera 0
+  public static final boolean frontLeftCameraEnable = true; // Camera 1
+  public static final boolean backRightCameraEnable = true; // Camera 2
+  public static final boolean backLeftCameraEnable = true; // Camera 3
   public static final boolean enableCharacterizationAutos = false;
   public static final boolean tuningWithLoggableNumbers =
       (driveMode == SubsystemMode.TUNING
