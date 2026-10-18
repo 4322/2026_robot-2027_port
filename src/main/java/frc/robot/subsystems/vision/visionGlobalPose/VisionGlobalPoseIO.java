@@ -9,7 +9,6 @@ public interface VisionGlobalPoseIO {
   @AutoLog
   public static class VisionGlobalPoseIOInputs {
     public boolean connected = false;
-    public boolean unstable = false;
     public TargetObservation latestTargetObservation =
         new TargetObservation(Rotation2d.ZERO, Rotation2d.ZERO);
     public GlobalPoseObservation[] globalPoseObservations = new GlobalPoseObservation[0];
