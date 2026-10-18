@@ -62,11 +62,11 @@ public class TwoSweep extends SequentialCommandGroup {
             AutoBuilder.followPath(isRightSide ? Robot.RReturn : Robot.LReturn),
             AutoBuilder.followPath(secondPath),
             new ParallelDeadlineGroup(
-            AutoBuilder.followPath(isRightSide ? Robot.RSweepBump : Robot.LSweepBump),
+            AutoBuilder.followPath(isRightSide ? Robot.RSweep2Bump : Robot.LSweep2Bump),
             ShooterCommands.idle(shooter, intake, 15.0, 40.0, 95.0),
             ShooterCommands.autoUnjam(shooter, Constants.Autonomous.unjamTimeSec)),
             new ParallelDeadlineGroup(
-            AutoBuilder.followPath(isRightSide ? Robot.RShoot : Robot.LShoot),
+            AutoBuilder.followPath(isRightSide ? Robot.RShoot2 : Robot.LShoot2),
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,

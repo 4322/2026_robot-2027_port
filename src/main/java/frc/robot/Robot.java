@@ -56,6 +56,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath RSweepBump;
   public static PathPlannerPath RShoot;
   public static PathPlannerPath RReturn;
+  public static PathPlannerPath RSweep2Bump;
+  public static PathPlannerPath RShoot2;
 
   public static PathPlannerPath LSweepCalm;
   public static PathPlannerPath LSweepNotHungry;
@@ -66,6 +68,8 @@ public class Robot extends LoggedRobot {
   public static PathPlannerPath LSweepBump;
   public static PathPlannerPath LShoot;
   public static PathPlannerPath LReturn;
+  public static PathPlannerPath LSweep2Bump;
+  public static PathPlannerPath LShoot2;
 
 
   public static PathPlannerPath R_SECOND_SHALLOW_BUMP_A;
@@ -222,6 +226,8 @@ public class Robot extends LoggedRobot {
       RSweepBump = PathPlannerPath.fromPathFile("R_Sweep_Bump");
       RShoot = PathPlannerPath.fromPathFile("R_Shoot");
       RReturn = PathPlannerPath.fromPathFile("R_Return");
+      RSweep2Bump = PathPlannerPath.fromPathFile("R_Sweep2_Bump");
+      RShoot2 = PathPlannerPath.fromPathFile("R_Shoot2");
 
       LSweepNotHungry = RSweepNotHungry.mirrorPath();
       LSweepHungry = RSweepHungry.mirrorPath();
@@ -231,6 +237,9 @@ public class Robot extends LoggedRobot {
       LSweepBump = RSweepBump.mirrorPath();
       LShoot = RShoot.mirrorPath();
       LReturn = RReturn.mirrorPath();
+
+      LSweep2Bump = RSweep2Bump.mirrorPath();
+      LShoot2 = RShoot2.mirrorPath();
 
       C_To_Depot = PathPlannerPath.fromPathFile("Start_To_Depot");
       C_PRELOAD = PathPlannerPath.fromPathFile("C_Preload");

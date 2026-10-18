@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep_Aggressive"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep_Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Return"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep_Full"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep2_Bump"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Shoot2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Return"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "R",
+  "choreoAuto": false
+}
