@@ -51,6 +51,12 @@
           "data": {
             "pathName": "R_Return"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_Sweep_Out"
+          }
         }
       ]
     }
