@@ -157,7 +157,7 @@ public final class Constants {
     public static final double minPercentVelocity = 0.95;
     // Normally 37 RPS for shooting
     public static final double unjamRPS = -25.0;
-    public static final double shootRPS = 49.5;
+    public static final double shootRPS = 45;
   }
 
   public static class Flywheel {
