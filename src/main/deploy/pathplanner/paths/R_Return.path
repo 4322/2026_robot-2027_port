@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5789916963226576,
-        "y": 0.4898457888493476
+        "x": 3.686583629896786,
+        "y": 0.5328825622790623
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8289916963226576,
-        "y": 0.4898457888493476
+        "x": 3.936583629896786,
+        "y": 0.5328825622790623
       },
       "isLocked": false,
       "linkedName": "R.ShootEnd"
@@ -41,13 +41,13 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 2.0,
+    "velocity": 1.0,
     "rotation": 90.0
   },
   "reversed": false,
   "folder": "R_2Sweep",
   "idealStartingState": {
-    "velocity": 2.0,
+    "velocity": 1.0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
