@@ -579,13 +579,10 @@ public final class Constants {
     public static final double pathPlannerDrivekP = 5; // TODO probably increase
     public static final double pathPlannerRotationkP = 4;
     public static final double unjamTimeSec = 0.5;
-    public static final double twoSweepSmooshDelayFirstPass = 1.5;
-    public static final double smooshDelaySecondPass = 2.5;
-    public static final double smooshDelaySinglePass = 1.5;
-
-    public static final double twoSweepShootTimeFirstPass = 3.0;
-    public static final double shootTimeSecondPass = 2.0;
-    public static final double shootTimeSinglePass = 3.0;
+    public static final double twoSweepSmooshDelayFirstPass = 3.0;
+    public static final double twoSweepSmooshTimeFirstPass = 2.34;
+    public static final double twoSweepSmooshDelaySecondPass = 2.0;
+    public static final double twoSweepSmooshTimeSecondPass = 2.0;
     public static final double outpostWaitTime = 4.0;
     public static final double smooshDelayFirst2056 = 1.0;
     public static final double smooshDelaySecond2056 = 1.0;

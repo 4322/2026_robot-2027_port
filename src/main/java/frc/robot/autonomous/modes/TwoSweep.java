@@ -57,7 +57,7 @@ public class TwoSweep extends SequentialCommandGroup {
             IntakeCommands.autoSmoosh(
                 intake,
                 Constants.Autonomous.twoSweepSmooshDelayFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)),
+                Constants.Autonomous.twoSweepSmooshTimeFirstPass)),
             new WaitUntilCommand(() -> shooter.isHoodLowered()),
             AutoBuilder.followPath(isRightSide ? Robot.RReturn : Robot.LReturn),
             AutoBuilder.followPath(secondPath),
@@ -70,8 +70,8 @@ public class TwoSweep extends SequentialCommandGroup {
             ShooterCommands.autoShootNoAreaCheck(shooter, drive, intake),
             IntakeCommands.autoSmoosh(
                 intake,
-                Constants.Autonomous.twoSweepShootTimeFirstPass,
-                Constants.Autonomous.twoSweepShootTimeFirstPass)),
+                Constants.Autonomous.twoSweepSmooshDelaySecondPass,
+                Constants.Autonomous.twoSweepSmooshTimeSecondPass)),
             new WaitUntilCommand(() -> shooter.isHoodLowered()),
             AutoBuilder.followPath(isRightSide ? Robot.RReturn : Robot.LReturn),
             AutoBuilder.followPath(isRightSide ? Robot.RSweepOut : Robot.LSweepOut)
