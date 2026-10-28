@@ -18,6 +18,7 @@ import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -130,16 +131,24 @@ public class Robot extends LoggedRobot {
         }
 
         // ensure that there is enough space on the roboRIO to log data
-        // delete Redux logs first
+        // delete boot logs first
         if (directory.getFreeSpace() < Constants.minFreeSpace) {
-          files = directory.listFiles();
+          DriverStationErrors.reportError("Cleaning up .boot logs", false);
+          try {
+          files = Files.walk(directory.toPath())
+              .filter(Files::isRegularFile)
+              .map(Path::toFile)
+              .toArray(File[]::new);
+          } catch (IOException e) {
+            DriverStationErrors.reportError(e.getMessage(), false);
+        }
           if (files != null) {
             // Sorting the files by name will ensure that the oldest files are deleted first
             files = Arrays.stream(files).sorted().toArray(File[]::new);
             long bytesToDelete = Constants.minFreeSpace - directory.getFreeSpace();
 
             for (File file : files) {
-              if (file.getName().endsWith(".rdxlog")) {
+              if (file.getName().endsWith(".boot")) {
                 try {
                   bytesToDelete -= Files.size(file.toPath());
                 } catch (IOException e) {
