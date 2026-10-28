@@ -5,12 +5,10 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.revrobotics.util.StatusLogger;
 import org.wpilib.hardware.discrete.DigitalInput;
-import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.Alliance;
 import org.wpilib.system.RobotController;
-import org.wpilib.system.Threads;
 import org.wpilib.system.Timer;
 import org.wpilib.command2.Command;
 import org.wpilib.command2.CommandScheduler;
@@ -18,14 +16,12 @@ import frc.robot.constants.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Optional;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.rlog.RLOGServer;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
@@ -113,53 +109,53 @@ public class Robot extends LoggedRobot {
 
     switch (Constants.currentMode) {
       case REAL:
-        var directory = new File(Constants.logPath);
+        File directory = new File(Constants.logPath);
         if (!directory.exists()) {
           directory.mkdir();
         }
-        var files = directory.listFiles();
 
-        // delete all garbage hoot files and wpilogs not connected to ds before good wpilogs
+        // delete all garbage wpilogs from not being connected to ds before good wpilogs
+        File[] files = directory.listFiles();
         if (files != null) {
           for (File file : files) {
-            if (file.getName().endsWith(".hoot")
-                || (!file.getName().contains("-") && file.getName().endsWith(".wpilog"))) {
+            if (!file.getName().contains("-") && file.getName().endsWith(".wpilog")) {
               file.delete();
-              DriverStationErrors.reportWarning("Deleted " + file.getName() + " to free up space", false);
+              System.out.println("Deleted " + file.getName() + " to free up space");
             }
           }
         }
 
+        System.out.println("Free space: " + directory.getFreeSpace());
+
         // ensure that there is enough space on the roboRIO to log data
-        // delete boot logs first
+        // delete .hoot logs first
         if (directory.getFreeSpace() < Constants.minFreeSpace) {
-          DriverStationErrors.reportError("Cleaning up .boot logs", false);
+          System.out.println("Cleaning up .hoot logs...");
           try {
           files = Files.walk(directory.toPath())
               .filter(Files::isRegularFile)
-              .map(Path::toFile)
+              .map(path -> path.toFile())
               .toArray(File[]::new);
           } catch (IOException e) {
-            DriverStationErrors.reportError(e.getMessage(), false);
-        }
+            System.out.println(e.getMessage());
+          }
           if (files != null) {
             // Sorting the files by name will ensure that the oldest files are deleted first
             files = Arrays.stream(files).sorted().toArray(File[]::new);
             long bytesToDelete = Constants.minFreeSpace - directory.getFreeSpace();
 
             for (File file : files) {
-              if (file.getName().endsWith(".boot")) {
+              if (file.getName().endsWith(".hoot")) {
                 try {
                   bytesToDelete -= Files.size(file.toPath());
                 } catch (IOException e) {
-                  DriverStationErrors.reportError("Failed to get size of file " + file.getName(), false);
+                  System.out.println("Failed to get size of file " + file.getName());
                   continue;
                 }
                 if (file.delete()) {
-                  DriverStationErrors.reportWarning(
-                      "Deleted " + file.getName() + " to free up space", false);
+                  System.out.println("Deleted " + file.getName() + " to free up space");
                 } else {
-                  DriverStationErrors.reportError("Failed to delete " + file.getName(), false);
+                  System.out.println("Failed to delete " + file.getName());
                 }
                 if (bytesToDelete <= 0) {
                   break;
@@ -182,14 +178,13 @@ public class Robot extends LoggedRobot {
                 try {
                   bytesToDelete -= Files.size(file.toPath());
                 } catch (IOException e) {
-                  DriverStationErrors.reportError("Failed to get size of file " + file.getName(), false);
+                  System.out.println("Failed to get size of file " + file.getName());
                   continue;
                 }
                 if (file.delete()) {
-                  DriverStationErrors.reportWarning(
-                      "Deleted " + file.getName() + " to free up space", false);
+                  System.out.println("Deleted " + file.getName() + " to free up space");
                 } else {
-                  DriverStationErrors.reportError("Failed to delete " + file.getName(), false);
+                  System.out.println("Failed to delete " + file.getName());
                 }
                 if (bytesToDelete <= 0) {
                   break;
