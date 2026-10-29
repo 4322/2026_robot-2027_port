@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter.spindexer;
 
 import org.wpilib.driverstation.DriverStation;
 import org.wpilib.driverstation.RobotState;
+import frc.robot.constants.Constants.Mode;
 
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -116,5 +117,11 @@ public class Spindexer {
 
   public double getVelocity() {
     return inputs.leaderMechanismRPS;
+  }
+  
+  public void simStall(boolean stall) {
+    if (Constants.currentMode == Mode.SIM) {
+      io.simStall(stall);
+    }
   }
 }

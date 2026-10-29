@@ -26,7 +26,7 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private TalonFX leaderMotor;
   private TalonFX followerMotor;
   private double lastRequestedVelocity = -1;
-  private double lastRequestedVoltage = -999;
+  private double lastRequestedVoltage = -1;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage leaderVelocityRequest = new VelocityVoltage(0).withSlot(0);

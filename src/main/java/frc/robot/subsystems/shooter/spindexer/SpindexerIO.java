@@ -32,4 +32,6 @@ public interface SpindexerIO {
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}
+
+  public default void simStall(boolean stall) {}
 }

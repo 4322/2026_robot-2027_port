@@ -91,7 +91,7 @@ public class RobotContainer {
 
     private static Hood hood;
 
-    private static Spindexer spindexer;
+    public static Spindexer spindexer;
 
     private static Tunnel tunnel;
 
