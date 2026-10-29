@@ -132,7 +132,7 @@ public final class Constants {
     public static final double kI = 0;
     public static final double kD = 0;
     public static final double stoppedMechanismRotationsPerSec = 0.1;
-    public static final double stopTreshold = 0.75;
+    public static final double stopThreshold = 0.75;
 
     public static final double motorToMechanismRatio = 36 / 12.0 * (90 / 35.0); // 10 inch wheel
     // Normally 7 RPS for shooting
@@ -148,7 +148,7 @@ public final class Constants {
     // Amount of time for spindexer to stall before identifying as jam
     public static final double stallTime = 0.5;
     // If spindexer hits this speed during unjam for unjammedTime seconds, stop the autounjam
-    public static final double maxAutounjamRPS = 2;
+    public static final double maxAutoUnjamRPS = -2;
     public static final double unjammedTime = 0.2;
 
     public static final double maxJamRPS = 1;

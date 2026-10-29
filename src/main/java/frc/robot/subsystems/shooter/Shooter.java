@@ -22,6 +22,9 @@ import org.wpilib.tunable.Tunables;
 
 import frc.robot.util.firecontrol.ShotCalculator;
 import frc.robot.util.firecontrol.ShotLUT;
+
+import java.io.Console;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -76,8 +79,9 @@ public class Shooter extends SubsystemBase {
 
   private Timer jamStartTimerNormal; // For detection going from Preshoot -> Shoot
   private Timer jamStartTimerUnjam; // For detection after exiting unjam
-  private Timer spindexerStallTimer;
-  private Timer autoUnjamTimer;
+  private Timer spindexerStallTimer; // For how long spindexer has been below stall threshold for
+  private Timer autoUnjamTimer; // For how long auto unjam has been running
+  private Timer autoUnjamFreeTimer; // For how long RPS has been above threshold while auto unjam is running.
   private boolean isUnjamming;
   private boolean hasExitedUnjam;
   private boolean isSpindexerStalled;
@@ -326,6 +330,27 @@ public class Shooter extends SubsystemBase {
             autoUnjamTimer.reset();
             autoUnjamTimer.start();
             unjamOverride(true);
+          }
+        }
+
+        // Check if we are above min RPS threshold to stop unjamming
+        if (autoUnjamTimer.isRunning()) {
+          if (spindexer.getVelocity() < Constants.Spindexer.maxAutoUnjamRPS) {
+            if (!autoUnjamFreeTimer.isRunning()) {
+              autoUnjamFreeTimer.start();
+            }
+          } else {
+            autoUnjamFreeTimer.stop();
+            autoUnjamFreeTimer.reset();
+          }
+
+          // If autoUnjamFreeTimer has passed unjammed time, stop unjamming
+          if (autoUnjamFreeTimer.hasElapsed(Constants.Spindexer.unjammedTime)) {
+            autoUnjamFreeTimer.stop();
+            autoUnjamFreeTimer.reset();
+            autoUnjamTimer.stop();
+            autoUnjamTimer.reset();
+            unjamOverride(false);
           }
         }
 
