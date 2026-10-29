@@ -138,14 +138,18 @@ public final class Constants {
     // Normally 7 RPS for shooting
     public static final double unjamRPS = -4.0;
     public static final double shootRPS = 9.0;
+    public static final double unjamVoltage = -8;
 
     // Delay to wait once we start shooting before assuming spindexer is jammed if spindexer speed is low
     public static final double jamDelayAfterUnjam = 0.750;
     public static final double jamDelay = 0.25;
     // Amount of time that spindexer will unjam for before shooting again when a jam is automatically detected
-    public static final double autoUnjamTime = 0.25;
+    public static final double autoUnjamTime = 0.5;
     // Amount of time for spindexer to stall before identifying as jam
     public static final double stallTime = 0.5;
+    // If spindexer hits this speed during unjam for unjammedTime seconds, stop the autounjam
+    public static final double maxAutounjamRPS = 2;
+    public static final double unjammedTime = 0.2;
 
     public static final double maxJamRPS = 1;
   }

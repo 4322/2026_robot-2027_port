@@ -6,6 +6,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.ParentDevice;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -25,9 +26,11 @@ public class SpindexerIOTalonFx implements SpindexerIO {
   private TalonFX leaderMotor;
   private TalonFX followerMotor;
   private double lastRequestedVelocity = -1;
+  private double lastRequestedVoltage = -999;
 
   private TalonFXConfiguration config = new TalonFXConfiguration();
   private VelocityVoltage leaderVelocityRequest = new VelocityVoltage(0).withSlot(0);
+  private VoltageOut leaderVoltageRequest = new VoltageOut(0);
 
   private final StatusSignal<AngularVelocity> leaderVelocity;
   private final StatusSignal<Voltage> leaderAppliedVolts;
@@ -185,6 +188,17 @@ public class SpindexerIOTalonFx implements SpindexerIO {
     }
 
     lastRequestedVelocity = velocity;
+  }
+
+  @Override
+  public void setTargetVoltage(double voltage) {
+    if (voltage != lastRequestedVoltage) {
+      if (voltage == 0) {
+        leaderMotor.stopMotor();
+      } else {
+        leaderMotor.setControl(leaderVoltageRequest.withOutput(voltage).withEnableFOC(true));
+      }
+    }
   }
 
   @Override

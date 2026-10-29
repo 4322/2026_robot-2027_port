@@ -61,7 +61,7 @@ public class Spindexer {
             io.setTargetMechanismRotations(requestedSpeed);
           }
           case UNJAM -> {
-            io.setTargetMechanismRotations(Constants.Spindexer.unjamRPS);
+            io.setTargetVoltage(Constants.Spindexer.unjamVoltage);
           }
         }
       }

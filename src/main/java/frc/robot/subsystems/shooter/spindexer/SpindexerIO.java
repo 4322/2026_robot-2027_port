@@ -27,6 +27,8 @@ public interface SpindexerIO {
 
   public default void setTargetMechanismRotations(double velocity) {}
 
+  public default void setTargetVoltage(double voltage) {}
+
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}
