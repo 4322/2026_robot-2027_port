@@ -74,6 +74,14 @@ public class Shooter extends SubsystemBase {
   private ShotCalculator scoreCalc;
   private ShotCalculator passCalc;
 
+  private Timer jamStartTimerNormal; // For detection going from Preshoot -> Shoot
+  private Timer jamStartTimerUnjam; // For detection after exiting unjam
+  private Timer spindexerStallTimer;
+  private Timer autoUnjamTimer;
+  private boolean isUnjamming;
+  private boolean hasExitedUnjam;
+  private boolean isSpindexerStalled;
+
   public Shooter(
       Flywheel flywheel,
       Hood hood,
@@ -289,6 +297,44 @@ public class Shooter extends SubsystemBase {
         turret.requestAngle(targetTurretAngleDeg, isScoring, targetFFRadPerSec);
         tunnel.requestGoal(targetTunnelSpeedRPS);
         spindexer.requestGoal(targetSpindexerSpeedRPS);
+
+        // When we exit unjam, start the jamStartTimerUnjam
+        if (hasExitedUnjam) {
+          jamStartTimerUnjam.reset();
+          jamStartTimerUnjam.start();
+          hasExitedUnjam = false;
+        }
+
+        // If the min time (either post-unjam time or post-preshoot time) has passed, if spindexer is below speed threshold, start the stall timer (if it isn't already running)
+        if (!isUnjamming && (jamStartTimerUnjam.hasElapsed(Constants.Spindexer.jamDelayAfterUnjam) || jamStartTimerNormal.hasElapsed(Constants.Spindexer.jamDelay))) {
+          if (Math.abs(spindexer.getVelocity()) < Constants.Spindexer.maxJamRPS) {
+            if (!spindexerStallTimer.isRunning()) {
+              spindexerStallTimer.reset();
+              spindexerStallTimer.start();
+            }
+          } else {
+            spindexerStallTimer.stop();
+            spindexerStallTimer.reset();
+          }
+          jamStartTimerUnjam.stop();
+          jamStartTimerNormal.stop();
+        }
+
+        // Check if spindexer has been stalled for long enough
+        if (spindexerStallTimer.hasElapsed(Constants.Spindexer.stallTime)) {
+          if (!autoUnjamTimer.isRunning()) {
+            autoUnjamTimer.reset();
+            autoUnjamTimer.start();
+            unjamOverride(true);
+          }
+        }
+
+        if (autoUnjamTimer.hasElapsed(Constants.Spindexer.autoUnjamTime)) {
+          autoUnjamTimer.stop();
+          autoUnjamTimer.reset();
+          unjamOverride(false);
+        }
+
       }
     }
 
@@ -413,6 +459,8 @@ public class Shooter extends SubsystemBase {
       if (state == ShooterState.PRESHOOT) {
         if (hood.isAtGoal() && flywheel.isAtGoal() && turret.isAtGoal()) {
           state = ShooterState.SHOOT;
+          jamStartTimerNormal.reset();
+          jamStartTimerNormal.start();
         }
       } else {
         // Never set requested state to SHOOT to ensure after turret unwinds
@@ -442,6 +490,23 @@ public class Shooter extends SubsystemBase {
   public void unjamOverride(boolean unjamOverride) {
     tunnel.unjamOverride(unjamOverride);
     spindexer.unjamOverride(unjamOverride);
+
+    /*
+    The way the flags work:
+    isUnjamming is meant to be true for whenever we're unjamming
+    hasExitedUnjam will be set to true if we're unjamming and then stop (this flag will be reset next loop in the main Shooter state machine)
+      - hasExitedUnjam is used to determine when we've exited an unjam for the purposes of detecting jams (since we want to use a longer startup timer after exiting unjamming)
+    */
+    if (unjamOverride) {
+      jamStartTimerUnjam.stop();
+      jamStartTimerUnjam.reset();
+      hasExitedUnjam = false;
+    } else {
+      if (isUnjamming) {
+        hasExitedUnjam = true;
+      }
+    }
+    isUnjamming = unjamOverride;
   }
 
   public void trenchOverride(boolean unjamOverride) {
