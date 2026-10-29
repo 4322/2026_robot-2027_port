@@ -379,6 +379,15 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/TargetTunnelSpeedRPS", targetTunnelSpeedRPS);
     Logger.recordOutput("Shooter/TargetIndexerSpeedRPS", targetSpindexerSpeedRPS);
     Logger.recordOutput("Shooter/Turret/poseRotated", drive.getTurretPose(turret.getAngle()));
+
+    Logger.recordOutput("Shooter/Spindexer/isUnjamming", isUnjamming);
+    Logger.recordOutput("Shooter/Spindexer/hasExitedUnjam", hasExitedUnjam);
+    Logger.recordOutput("Shooter/Spindexer/jamStartTimerNormal", jamStartTimerNormal.get());
+    Logger.recordOutput("Shooter/Spindexer/jamStartTimerUnjam", jamStartTimerUnjam.get());
+    Logger.recordOutput("Shooter/Spindexer/spindexerStallTimer", spindexerStallTimer.get());
+    Logger.recordOutput("Shooter/Spindexer/autoUnjamTimer", autoUnjamTimer.get());
+    Logger.recordOutput("Shooter/Spindexer/autoUnjamFreeTimer", autoUnjamFreeTimer.get());
+
   }
 
   private void calculateFiringSolution() {
