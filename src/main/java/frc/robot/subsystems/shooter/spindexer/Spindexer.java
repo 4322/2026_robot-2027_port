@@ -11,6 +11,7 @@ public class Spindexer {
   private SpindexerIOInputsAutoLogged inputs = new SpindexerIOInputsAutoLogged();
 
   private double requestedSpeed = -1;
+  private double requestedVoltage = -1;
   private boolean unjamOverride;
 
   public enum SpindexerStates {
@@ -52,16 +53,21 @@ public class Spindexer {
                 || requestedSpeed == 0) {
               io.stop();
               requestedSpeed = 0;
+              requestedVoltage = 0;
             } else {
               requestedSpeed = 0.5;
+              requestedVoltage = 0;
               io.setTargetMechanismRotations(requestedSpeed);
             }
           }
           case INDEXING -> {
             io.setTargetMechanismRotations(requestedSpeed);
+            requestedVoltage = 0;
           }
           case UNJAM -> {
             io.setTargetVoltage(Constants.Spindexer.unjamVoltage);
+            requestedVoltage = Constants.Spindexer.unjamVoltage;
+            requestedSpeed = 0;
           }
         }
       }
@@ -83,6 +89,7 @@ public class Spindexer {
     if (!unjamOverride) {
       state = SpindexerStates.INDEXING;
       requestedSpeed = speed;
+      requestedVoltage = 0;
     }
   }
 
