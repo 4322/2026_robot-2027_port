@@ -49,7 +49,7 @@ public class Spindexer {
             }
           }
           case IDLE -> {
-            if (inputs.leaderMechanismRPS < Constants.Spindexer.stopTreshold
+            if (inputs.leaderMechanismRPS < Constants.Spindexer.stopThreshold
                 || requestedSpeed == 0) {
               io.stop();
               requestedSpeed = 0;
@@ -76,6 +76,7 @@ public class Spindexer {
 
     Logger.recordOutput("Shooter/Spindexer/State", state.toString());
     Logger.recordOutput("Shooter/Spindexer/RequestedSpeed", requestedSpeed);
+    Logger.recordOutput("Shooter/Spindexer/RequestedVoltage", requestedVoltage);
     Logger.recordOutput("Shooter/Spindexer/Stopped", isStopped());
   }
 
