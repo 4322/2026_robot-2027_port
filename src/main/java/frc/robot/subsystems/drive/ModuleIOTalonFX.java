@@ -168,6 +168,7 @@ public class ModuleIOTalonFX implements ModuleIO {
               + turnEncoder.getAddress().getDeviceId()
               + " (Swerve turn encoder) failed to configure",
           false);
+          System.exit(1); // can't drive - need power cycle
     }
     try {
       // wait for encoder position to be received
