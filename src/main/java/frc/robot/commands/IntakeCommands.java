@@ -13,7 +13,7 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 
 public class IntakeCommands {
   private static Command transitionToIntake(Intake intake, NiDsXboxController controller) {
-    return intake(intake)
+    return autoIntake(intake)
         .andThen(
             Commands.run(
                     () -> {
@@ -35,12 +35,25 @@ public class IntakeCommands {
         .onlyIf(() -> intake.hasExtended());
   }
 
-  public static Command intake(Intake intake) {
+  public static Command autoIntake(Intake intake) {
     return Commands.runOnce(
         () -> {
           intake.setState(IntakeState.INTAKING);
         });
   }
+
+ public static Command manualIntake(Intake intake) {
+    return Commands.runOnce(
+        () -> {
+          intake.setState(IntakeState.INTAKING);
+        })
+            .onlyIf(
+                () ->
+                    intake.getState() == IntakeState.IDLE
+                        || intake.getState() == IntakeState.STARING_CONFIG);
+  }
+
+
 
   public static Command toggleIntake(Intake intake, NiDsXboxController controller) {
     return new ConditionalCommand(

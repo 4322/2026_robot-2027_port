@@ -44,7 +44,7 @@ public class TwoSweep extends SequentialCommandGroup {
                 AutoBuilder.followPath(firstPath),
                 new SequentialCommandGroup(
                     new WaitCommand(Constants.Autonomous.intakeDelay),
-                    IntakeCommands.intake(intake)
+                    IntakeCommands.autoIntake(intake)
                 )
             ),
             new ParallelDeadlineGroup(
