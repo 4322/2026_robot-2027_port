@@ -12,6 +12,9 @@ public interface RollersIO {
     public double TempCelcius = 0.0;
     public double RotationsPerSec = 0.0;
     public double Volts = 0.0;
+
+    public double supplyAmpsAvg = 0.0;
+    public double rpsAvg = 0.0;
   }
   
   public default void updateInputs(RollersIOInputs inputs) {}

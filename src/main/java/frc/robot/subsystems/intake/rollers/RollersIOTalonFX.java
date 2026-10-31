@@ -18,6 +18,7 @@ import org.wpilib.units.measure.Voltage;
 import org.wpilib.driverstation.DriverStationErrors;
 
 import frc.robot.constants.Constants;
+import frc.robot.util.AverageStat;
 
 public class RollersIOTalonFX implements RollersIO {
   private TalonFX motor;
@@ -32,6 +33,9 @@ public class RollersIOTalonFX implements RollersIO {
 
   private final Debouncer connectedDebounce =
       new Debouncer(0.5, Debouncer.DebounceType.FALLING);
+
+  private AverageStat supplyAmpsAverageStat = new AverageStat(50);
+  private AverageStat rpsAverageStat = new AverageStat(50);
 
   public RollersIOTalonFX(boolean isLeftRoller) {
     int motorId = isLeftRoller ? Constants.Rollers.leftMotorId : Constants.Rollers.rightMotorId;
@@ -99,6 +103,12 @@ public class RollersIOTalonFX implements RollersIO {
     inputs.StatorCurrentAmps = statorCurrent.getValueAsDouble();
     inputs.TempCelcius = temp.getValueAsDouble();
     inputs.RotationsPerSec = velocity.getValueAsDouble();
+
+    supplyAmpsAverageStat.addSample(inputs.SupplyCurrentAmps);
+    inputs.supplyAmpsAvg = supplyAmpsAverageStat.getAverage();
+
+    rpsAverageStat.addSample(inputs.RotationsPerSec);
+    inputs.rpsAvg = rpsAverageStat.getAverage();
   }
 
   @Override
