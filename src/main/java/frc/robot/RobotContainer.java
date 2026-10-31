@@ -274,14 +274,14 @@ public class RobotContainer {
     Intake Eject - 'x' on true (Driver)
     */
         commandController.b().whileTrue(ShooterCommands.unjam(shooter));
-        commandController.leftBumper().whileTrue(ShooterCommands.trenchOverride(shooter));
+        commandController.leftTrigger().whileTrue(ShooterCommands.trenchOverride(shooter));
         if (Constants.turretLocked) {
             commandController.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
         } else {
             commandController.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
             commandController.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
         }
-        commandController.leftTrigger()
+        commandController.leftBumper()
             .onTrue(IntakeCommands.manualIntake(intake))
             .onFalse(IntakeCommands.idle(intake));
         commandController.x().onTrue(IntakeCommands.eject(intake)).onFalse(IntakeCommands.toggleOff(intake));
