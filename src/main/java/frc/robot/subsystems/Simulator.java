@@ -24,7 +24,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.TWO_SWEEP_AUTOS;
+  private static final RegressTests regressTest = RegressTests.INTAKE_TEST;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -219,6 +219,7 @@ public class Simulator {
     }
   }
 
+  @SuppressWarnings("null")
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
       case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_FULL, Alliance.BLUE));
@@ -313,6 +314,7 @@ public class Simulator {
     }
   }
 
+  @SuppressWarnings("null")
   private List<SimEvent> buildAutoScenario() {
     if (autoScenario == null) {
       return List.of();
@@ -323,6 +325,7 @@ public class Simulator {
     };
   }
 
+  @SuppressWarnings("null")
   private List<SimEvent> buildTeleopScenario() {
     if (teleopScenario == null) {
       return List.of();
