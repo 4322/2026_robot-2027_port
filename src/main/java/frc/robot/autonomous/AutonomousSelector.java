@@ -44,12 +44,21 @@ public class AutonomousSelector {
   public enum AutoName {
     DO_NOTHING,
     R_AGGRESSIVE_FULL,
+    R_AGGRESSIVE_NOTHUNGRY,
     L_AGGRESSIVE_FULL,
-    R_CODEORANGE,
-    L_CODEORANGE,
+    L_AGGRESSIVE_NOTHUNGRY,
+    L_SINGLE_SWEEP,
+    R_SINGLE_SWEEP,
 
     C_START_TO_DEPOT,
     C_PRELOAD,
+
+    R_SECOND_SHALLOW_BUMP,
+    R_SECOND_SHALLOW_TRENCH,
+    R_SECOND_SHALLOW_BUMP_DEPOT,
+    R_SECOND_SHALLOW_TRENCH_DEPOT,
+    L_SECOND_SHALLOW_BUMP,
+    L_SECOND_SHALLOW_TRENCH,
 
     DRIVE_WHEEL_RADIUS_CHARACTERIZATION,
     DRIVE_SIMPLE_FF_CHARACTERIZATION,
@@ -121,15 +130,38 @@ public class AutonomousSelector {
           List.of(
               new Auto(AutoName.DO_NOTHING, new DoNothing(hood)),
               new Auto(AutoName.R_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepFull, true)),
-              new Auto(AutoName.R_CODEORANGE, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, true)),
+              new Auto(AutoName.R_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.RSweepAggressive, Robot.RSweepNotHungry, true)),
               new Auto(AutoName.L_AGGRESSIVE_FULL, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepFull, false)),
-              new Auto(AutoName.L_CODEORANGE, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, false)),
+              new Auto(AutoName.L_AGGRESSIVE_NOTHUNGRY, new TwoSweep(drive, intake, shooter, autoStartDelay, Robot.LSweepAggressive, Robot.LSweepNotHungry, false)),
               new Auto(
                   AutoName.C_START_TO_DEPOT,
                   new CenterStartToDepot(drive, intake, shooter, autoStartDelay)),
               new Auto(
-                  AutoName.C_PRELOAD, new CenterPreload(drive, intake, shooter, autoStartDelay))
-              );
+                  AutoName.C_PRELOAD, new CenterPreload(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_BUMP,
+                  new RSecondShallowBump(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_BUMP_DEPOT,
+                  new RSecondShallowBumpDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH,
+                  new RSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SECOND_SHALLOW_TRENCH_DEPOT,
+                  new RSecondShallowTrenchDepot(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_BUMP,
+                  new LSecondShallowBump(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SECOND_SHALLOW_TRENCH,
+                  new LSecondShallowTrench(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.R_SINGLE_SWEEP,
+                  new RSingleSweep(drive, intake, shooter, autoStartDelay)),
+              new Auto(
+                  AutoName.L_SINGLE_SWEEP,
+                  new LSingleSweep(drive, intake, shooter, autoStartDelay)));
     }
 
     for (Auto nextAuto : autos) {

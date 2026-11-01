@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_Sweep_NotHungry"
+            "pathName": "R_Sweep_Hungry"
           }
         },
         {
