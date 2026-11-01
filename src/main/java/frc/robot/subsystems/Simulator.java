@@ -888,7 +888,7 @@ public class Simulator {
       // notifyNewData() fails 1 out of 5000 calls for unknown reasons
       DriverStationSim.notifyNewData();
     } while (DriverStationBackend.getStickAxesAvailable(hidPort) != 6
-        || DriverStationBackend.getStickButtonsAvailable(hidPort) != 10);
+        || DriverStationBackend.getStickButtonsMaximumIndex(hidPort) != 10);
     if (retry > 2) {
       System.out.println(
           "Warning: Xbox ontroller update required "
@@ -907,7 +907,7 @@ public class Simulator {
     // ensure controller has expected number of axes and buttons
     DriverStationSim.setJoystickIsGamepad(hidPort, true);
     DriverStationSim.setJoystickAxesAvailable(hidPort, 6);
-    DriverStationSim.setJoystickButtonsAvailable(hidPort, 10);
+    DriverStationSim.setJoystickButtonsMaximumIndex(hidPort, 10);
     DriverStationSim.setJoystickPOVsAvailable(hidPort, 1);
   }
 
@@ -977,16 +977,16 @@ public class Simulator {
   }
 
   private void holdButton(NiDsXboxController.Button button) {
-    activeButtonBitmask |= 1 << (button.value - 1);
+    activeButtonBitmask |= 1 << (button.value);
   }
 
   private void releaseButton(NiDsXboxController.Button button) {
-    activeButtonBitmask &= ~(1 << (button.value - 1));
+    activeButtonBitmask &= ~(1 << (button.value));
   }
 
   private void pressButton(NiDsXboxController.Button button) {
-    activeButtonBitmask |= 1 << (button.value - 1);
-    momentaryButtonBitmask |= 1 << (button.value - 1);
+    activeButtonBitmask |= 1 << (button.value);
+    momentaryButtonBitmask |= 1 << (button.value);
   }
 
   private void releaseMomentaryButtons() {
