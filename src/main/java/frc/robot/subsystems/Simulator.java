@@ -24,7 +24,7 @@ import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Simulator {
-  private static final RegressTests regressTest = RegressTests.INTAKE_TEST;
+  private static final RegressTests regressTest = RegressTests.AUTO;
   public static AutoName autoScenario;
   private TeleopScenario teleopScenario;
   private List<TeleAnomaly> teleAnomalies;
@@ -222,16 +222,16 @@ public class Simulator {
   @SuppressWarnings("null")
   private List<RegressionTest> regressionTestCases() {
     return switch (regressTest) {
-      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_AGGRESSIVE_FULL, Alliance.BLUE));
+      case AUTO -> List.of(new RegressionTest("AUTO", AutoName.R_CODEORANGE, Alliance.BLUE));
       case TWO_SWEEP_AUTOS -> List.of(
           new RegressionTest("AggressiveHungry", AutoName.R_AGGRESSIVE_FULL, Alliance.BLUE),
-          new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveNotHungry", AutoName.R_CODEORANGE, Alliance.BLUE),
           new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_FULL, Alliance.BLUE),
-          new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.BLUE),
+          new RegressionTest("AggressiveNotHungry", AutoName.L_CODEORANGE, Alliance.BLUE),
         new RegressionTest("AggressivieHungry", AutoName.R_AGGRESSIVE_FULL, Alliance.RED),
-      new RegressionTest("AggressiveNotHungry", AutoName.R_AGGRESSIVE_NOTHUNGRY, Alliance.RED),
+      new RegressionTest("AggressiveNotHungry", AutoName.R_CODEORANGE, Alliance.RED),
     new RegressionTest("AggressiveHungry", AutoName.L_AGGRESSIVE_FULL, Alliance.RED),
-    new RegressionTest("AggressiveNotHungry", AutoName.L_AGGRESSIVE_NOTHUNGRY, Alliance.RED));
+    new RegressionTest("AggressiveNotHungry", AutoName.L_CODEORANGE, Alliance.RED));
       case SHOOT -> List.of(new RegressionTest("Shoot", TeleopScenario.SHOOT, Alliance.BLUE));
       case DO_NOTHING -> List.of(
           new RegressionTest("Do nothing", AutoName.DO_NOTHING, Alliance.BLUE));
