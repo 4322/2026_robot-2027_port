@@ -612,6 +612,21 @@ public class Simulator {
           new SimEvent(t += 0.5, "Start smooshing while intaking", EventType.HOLD_Y),
           new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
           new SimEvent(t += 0.5, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Re-home Intake", EventType.PRESS_A),
+          new SimEvent(t += 2.0, "Deploy/Intake", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Deploy/Intake Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "IntakeOff Release", EventType.RELEASE_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing", EventType.HOLD_Y),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
+          new SimEvent(t += 0.5, "Start intaking", EventType.HOLD_LEFT_BUMPER),
+          new SimEvent(t += 0.5, "Start ejecting while intaking", EventType.HOLD_X),
+          new SimEvent(t += 2.0, "Stop ejecting", EventType.RELEASE_X),
+          new SimEvent(t += 0.5, "Start smooshing while intaking", EventType.HOLD_Y),
+          new SimEvent(t += 2.0, "Stop smooshing", EventType.RELEASE_Y),
+          new SimEvent(t += 0.5, "Stop intaking", EventType.RELEASE_LEFT_BUMPER),
           new SimEvent(t += 0.1, "End", EventType.END_OF_SCENARIO));
       case DRIVE_WHILE_SHOOTING -> List.of(
           new SimEvent(
