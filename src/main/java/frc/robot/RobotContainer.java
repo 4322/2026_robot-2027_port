@@ -26,6 +26,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.deployer.Deployer;
 import frc.robot.subsystems.intake.deployer.DeployerIO;
 import frc.robot.subsystems.intake.deployer.DeployerIOSim;
@@ -71,6 +72,7 @@ import org.wpilib.command2.button.CommandGamepad;
 import org.wpilib.command2.button.CommandNiDsXboxController;
 import org.wpilib.command2.button.CommandXboxController;
 import org.wpilib.command2.Commands;
+import org.wpilib.command2.InstantCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -280,7 +282,6 @@ public class RobotContainer {
             commandController.rightTrigger().whileTrue(ShooterCommands.aimAndShoot(shooter, drive, intake));
         } else {
             commandController.rightTrigger().whileTrue(ShooterCommands.autoShoot(shooter, drive, intake));
-            commandController.a().whileTrue(ShooterCommands.fixedShoot(shooter, drive, intake));
         }
         commandController.leftBumper()
             .onTrue(IntakeCommands.manualIntake(intake))
@@ -289,6 +290,7 @@ public class RobotContainer {
         commandController.y().onTrue(IntakeCommands.smoosh(intake)).onFalse(IntakeCommands.toggleOff(intake));
         commandController.rightBumper().onTrue(ShooterCommands.turretUnjamOverride(shooter, true));
         commandController.rightBumper().onFalse(ShooterCommands.turretUnjamOverride(shooter, false));
+        commandController.a().onTrue(new InstantCommand(()-> intake.setState(IntakeState.DEPLOY)));
     }
 
     /**
