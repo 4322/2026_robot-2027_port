@@ -1,21 +1,20 @@
-package frc.robot.util;
-
-// Copyright (c) 2023 FRC 6328
+// Copyright (c) 2025-2026 Littleton Robotics
 // http://github.com/Mechanical-Advantage
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
+package frc.robot.util;
+
 import org.wpilib.math.geometry.Pose2d;
 import org.wpilib.math.geometry.Pose3d;
 import org.wpilib.math.geometry.Rotation2d;
-import org.wpilib.math.geometry.Rotation3d;
 import org.wpilib.math.geometry.Transform2d;
 import org.wpilib.math.geometry.Transform3d;
 import org.wpilib.math.geometry.Translation2d;
-import org.wpilib.math.geometry.Translation3d;
 import org.wpilib.math.geometry.Twist2d;
+import org.wpilib.math.kinematics.ChassisVelocities;
 
 /** Geometry utilities for working with translations, rotations, transforms, and poses. */
 public class GeomUtil {
@@ -25,19 +24,19 @@ public class GeomUtil {
    * @param translation The translation to create the transform with
    * @return The resulting transform
    */
-  public static Transform2d translationToTransform(Translation2d translation) {
+  public static Transform2d toTransform2d(Translation2d translation) {
     return new Transform2d(translation, Rotation2d.ZERO);
   }
 
   /**
    * Creates a pure translating transform
    *
-   * @param x The x componenet of the translation
-   * @param y The y componenet of the translation
+   * @param x The x coordinate of the translation
+   * @param y The y coordinate of the translation
    * @return The resulting transform
    */
-  public static Transform2d translationToTransform(double x, double y) {
-    return new Transform2d(new Translation2d(x, y), Rotation2d.ZERO);
+  public static Transform2d toTransform2d(double x, double y) {
+    return new Transform2d(x, y, Rotation2d.ZERO);
   }
 
   /**
@@ -46,8 +45,8 @@ public class GeomUtil {
    * @param rotation The rotation to create the transform with
    * @return The resulting transform
    */
-  public static Transform2d rotationToTransform(Rotation2d rotation) {
-    return new Transform2d(new Translation2d(), rotation);
+  public static Transform2d toTransform2d(Rotation2d rotation) {
+    return new Transform2d(Translation2d.ZERO, rotation);
   }
 
   /**
@@ -56,8 +55,14 @@ public class GeomUtil {
    * @param pose The pose that will represent the transform
    * @return The resulting transform
    */
-  public static Transform2d poseToTransform(Pose2d pose) {
+  public static Transform2d toTransform2d(Pose2d pose) {
     return new Transform2d(pose.getTranslation(), pose.getRotation());
+  }
+
+  public static Pose2d inverse(Pose2d pose) {
+    Rotation2d rotationInverse = pose.getRotation().unaryMinus();
+    return new Pose2d(
+        pose.getTranslation().unaryMinus().rotateBy(rotationInverse), rotationInverse);
   }
 
   /**
@@ -67,7 +72,7 @@ public class GeomUtil {
    * @param transform The transform that will represent the pose
    * @return The resulting pose
    */
-  public static Pose2d transformToPose(Transform2d transform) {
+  public static Pose2d toPose2d(Transform2d transform) {
     return new Pose2d(transform.getTranslation(), transform.getRotation());
   }
 
@@ -77,7 +82,7 @@ public class GeomUtil {
    * @param translation The translation to create the pose with
    * @return The resulting pose
    */
-  public static Pose2d translationToPose(Translation2d translation) {
+  public static Pose2d toPose2d(Translation2d translation) {
     return new Pose2d(translation, Rotation2d.ZERO);
   }
 
@@ -87,8 +92,8 @@ public class GeomUtil {
    * @param rotation The rotation to create the pose with
    * @return The resulting pose
    */
-  public static Pose2d rotationToPose(Rotation2d rotation) {
-    return new Pose2d(new Translation2d(), rotation);
+  public static Pose2d toPose2d(Rotation2d rotation) {
+    return new Pose2d(Translation2d.ZERO, rotation);
   }
 
   /**
@@ -98,7 +103,7 @@ public class GeomUtil {
    * @param factor The scaling factor for the twist components
    * @return The new twist
    */
-  public static Twist2d multiplyTwist(Twist2d twist, double factor) {
+  public static Twist2d multiply(Twist2d twist, double factor) {
     return new Twist2d(twist.dx * factor, twist.dy * factor, twist.dtheta * factor);
   }
 
@@ -108,8 +113,19 @@ public class GeomUtil {
    * @param pose The pose that will represent the transform
    * @return The resulting transform
    */
-  public static Transform3d pose3dToTransform3d(Pose3d pose) {
+  public static Transform3d toTransform3d(Pose3d pose) {
     return new Transform3d(pose.getTranslation(), pose.getRotation());
+  }
+
+  /**
+   * Converts a Transform3d to a Transform2d
+   *
+   * @param transform The original transform
+   * @return The resulting transform
+   */
+  public static Transform2d toTransform2d(Transform3d transform) {
+    return new Transform2d(
+        transform.getTranslation().toTranslation2d(), transform.getRotation().toRotation2d());
   }
 
   /**
@@ -119,38 +135,62 @@ public class GeomUtil {
    * @param transform The transform that will represent the pose
    * @return The resulting pose
    */
-  public static Pose3d transform3dToPose3d(Transform3d transform) {
+  public static Pose3d toPose3d(Transform3d transform) {
     return new Pose3d(transform.getTranslation(), transform.getRotation());
   }
 
   /**
-   * Converts a Translation3d to a Translation2d by extracting two dimensions (X and Y). chain
+   * Converts a ChassisVelocities to a Twist2d by extracting two dimensions (Y and Z). chain
    *
-   * @param transform The original translation
+   * @param speeds The original translation
    * @return The resulting translation
    */
-  public static Translation2d translation3dTo2dXY(Translation3d translation) {
-    return new Translation2d(translation.getX(), translation.getY());
+  public static Twist2d toTwist2d(ChassisVelocities speeds) {
+    return new Twist2d(
+        speeds.vx, speeds.vy, speeds.omega);
   }
 
   /**
-   * Converts a Translation3d to a Translation2d by extracting two dimensions (X and Z). chain
+   * Creates a new pose from an existing one using a different translation value.
    *
-   * @param transform The original translation
-   * @return The resulting translation
+   * @param pose The original pose
+   * @param translation The new translation to use
+   * @return The new pose with the new translation and original rotation
    */
-  public static Translation2d translation3dTo2dXZ(Translation3d translation) {
-    return new Translation2d(translation.getX(), translation.getZ());
+  public static Pose2d withTranslation(Pose2d pose, Translation2d translation) {
+    return new Pose2d(translation, pose.getRotation());
   }
 
-  public static Translation2d[] vectorTranslationToTranslation2dList(
-      Translation2d origin, Translation2d vector) {
-    return new Translation2d[] {origin, origin.plus(vector)};
+  /**
+   * Creates a new pose from an existing one using a different rotation value.
+   *
+   * @param pose The original pose
+   * @param rotation The new rotation to use
+   * @return The new pose with the original translation and new rotation
+   */
+  public static Pose2d withRotation(Pose2d pose, Rotation2d rotation) {
+    return new Pose2d(pose.getTranslation(), rotation);
   }
 
-  public static Pose3d pose2dToPose3d(Pose2d pose, double height) {
-    Translation3d translation = new Translation3d(pose.getX(), pose.getY(), height);
-    Rotation3d rotation = new Rotation3d(0, 0, pose.getRotation().getRadians());
-    return new Pose3d(translation, rotation);
+  /**
+   * Transforms a velocity along a translation.
+   *
+   * @param velocity The original velocity
+   * @param transform The transform to the new position
+   * @param currentRotation The current rotation of the robot
+   * @return The new velocity
+   */
+  public static ChassisVelocities transformVelocity(
+      ChassisVelocities velocity, Translation2d transform, Rotation2d currentRotation) {
+    return new ChassisVelocities(
+        velocity.vx
+            - velocity.omega
+                * (transform.getX() * currentRotation.getSin()
+                    + transform.getY() * currentRotation.getCos()),
+        velocity.vy
+            + velocity.omega
+                * (transform.getX() * currentRotation.getCos()
+                    - transform.getY() * currentRotation.getSin()),
+        velocity.omega);
   }
 }
