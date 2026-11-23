@@ -1,0 +1,6 @@
+{
+  "name": "Drive While Shooting",
+  "runs": [
+    { "scenario": "drive-while-shooting", "alliances": ["BLUE"] }
+  ]
+}

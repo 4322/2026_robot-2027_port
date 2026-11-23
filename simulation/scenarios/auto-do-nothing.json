@@ -1,0 +1,4 @@
+{
+  "name": "Auto DO_NOTHING",
+  "auto": { "routine": "DO_NOTHING", "duration": 20, "events": [] }
+}

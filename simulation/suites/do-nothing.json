@@ -1,0 +1,6 @@
+{
+  "name": "Do Nothing",
+  "runs": [
+    { "scenario": "auto-do-nothing", "alliances": ["BLUE"] }
+  ]
+}

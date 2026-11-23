@@ -1,0 +1,18 @@
+{
+  "name": "Controller Test 2",
+  "description": "Run after controller-test-1: checks the controls held at the end of that test were released.",
+  "debugBindings": true,
+  "teleop": {
+    "events": [
+      { "wait": 1, "type": "button", "button": "X", "action": "press" },
+      { "wait": 1, "type": "pov", "direction": "RIGHT", "action": "press" },
+      { "wait": 1, "type": "trigger", "side": "LEFT", "value": 1 },
+      { "wait": 1, "type": "trigger", "side": "RIGHT", "value": 1 },
+      { "wait": 1, "type": "button", "button": "LEFT_BUMPER", "action": "press" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "press" },
+      { "wait": 1, "type": "drive", "x": 0.4, "y": 0 },
+      { "wait": 1, "type": "turn", "rate": -0.3 },
+      { "wait": 1, "type": "end", "label": "Final Movement" }
+    ]
+  }
+}

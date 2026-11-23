@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Main window: scenario list on the left, tabs on the right. Each tab is its own FXML file. -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="frc.robot.simgui.MainController">
+  <top>
+    <HBox spacing="10" alignment="CENTER_LEFT" styleClass="status-bar">
+      <Label text="Simulator Editor" styleClass="app-title"/>
+      <Label fx:id="dirLabel" styleClass="hint"/>
+      <Region HBox.hgrow="ALWAYS"/>
+      <Button text="Reload from disk" onAction="#reload"/>
+      <Button text="Save all" styleClass="primary" onAction="#saveAll">
+        <tooltip><Tooltip text="Save every changed file (Ctrl+S)"/></tooltip>
+      </Button>
+    </HBox>
+  </top>
+
+  <center>
+    <SplitPane fx:id="split" dividerPositions="0.16">
+      <VBox spacing="6" minWidth="170">
+        <padding><Insets top="8" right="6" bottom="8" left="8"/></padding>
+        <Label text="SCENARIOS" styleClass="section-title"/>
+        <ListView fx:id="scenarioList" styleClass="scenario-list" VBox.vgrow="ALWAYS"/>
+        <HBox spacing="4">
+          <Button text="New" onAction="#newScenario" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+          <Button text="Duplicate" onAction="#duplicateScenario" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+          <Button text="Delete" styleClass="danger" onAction="#deleteScenario" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+        </HBox>
+      </VBox>
+
+      <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE">
+        <Tab text="Scenario">
+          <fx:include fx:id="scenarioTab" source="scenario.fxml"/>
+        </Tab>
+        <Tab text="Field Locations">
+          <fx:include fx:id="locationsTab" source="locations.fxml"/>
+        </Tab>
+        <Tab text="Suites">
+          <fx:include fx:id="suitesTab" source="suites.fxml"/>
+        </Tab>
+        <Tab text="Run">
+          <fx:include fx:id="runTab" source="run.fxml"/>
+        </Tab>
+      </TabPane>
+    </SplitPane>
+  </center>
+
+  <bottom>
+    <HBox styleClass="status-bar">
+      <Label fx:id="statusLabel" text="Ready"/>
+    </HBox>
+  </bottom>
+</BorderPane>

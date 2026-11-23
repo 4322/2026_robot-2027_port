@@ -1,0 +1,6 @@
+{
+  "name": "Intake Test",
+  "runs": [
+    { "scenario": "intake-test", "alliances": ["BLUE"] }
+  ]
+}

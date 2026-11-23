@@ -1,0 +1,6 @@
+{
+  "name": "Default (R_CODEORANGE auto)",
+  "runs": [
+    { "scenario": "auto-r-codeorange", "alliances": ["BLUE"] }
+  ]
+}

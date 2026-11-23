@@ -1,0 +1,26 @@
+{
+  "name": "Auto Rotate",
+  "description": "Shoot from the alliance zone, the opposing zone, and on the move.",
+  "teleop": {
+    "events": [
+      { "wait": 1, "type": "setPose", "location": "AllianceZoneTestSpot", "label": "Start pose" },
+      { "wait": 1, "type": "drive", "x": 0.5, "y": 0.5, "label": "Drive to Neutral Zone" },
+      { "wait": 1.5, "type": "drive", "x": 0, "y": 0, "label": "Stop Drive" },
+      { "wait": 0.1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold", "label": "Shoot" },
+      { "wait": 6, "type": "button", "button": "RIGHT_BUMPER", "action": "release", "label": "Stop Shooting" },
+      { "wait": 0.1, "type": "drive", "x": -0.5, "y": -0.5, "label": "Drive Back" },
+      { "wait": 1.5, "type": "drive", "x": 0.67, "y": 0, "label": "Drive to Opposing Zone" },
+      { "wait": 4, "type": "drive", "x": 0, "y": 0, "label": "Stop Drive" },
+      { "wait": 0.1, "type": "trigger", "side": "RIGHT", "value": 1, "label": "Shoot" },
+      { "wait": 6, "type": "trigger", "side": "RIGHT", "value": 0, "label": "Stop Shooting" },
+      { "wait": 0.1, "type": "drive", "x": -0.67, "y": 0, "label": "Drive Back" },
+      { "wait": 4, "type": "drive", "x": 0, "y": 0, "label": "Stop Drive" },
+      { "wait": 0.1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold", "label": "Shoot" },
+      { "wait": 6, "type": "button", "button": "RIGHT_BUMPER", "action": "release", "label": "Stop Shooting" },
+      { "wait": 0, "type": "drive", "x": 0, "y": 0.3, "label": "Shoot on the move" },
+      { "wait": 0.1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold", "label": "Shoot" },
+      { "wait": 6, "type": "button", "button": "RIGHT_BUMPER", "action": "release", "label": "Stop Shooting" },
+      { "wait": 0.1, "type": "end", "label": "Final Movement" }
+    ]
+  }
+}

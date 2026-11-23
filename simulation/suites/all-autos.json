@@ -1,0 +1,6 @@
+{
+  "name": "All Autos",
+  "runs": [
+    { "autos": "ALL", "alliances": ["BLUE", "RED"], "duration": 20 }
+  ]
+}

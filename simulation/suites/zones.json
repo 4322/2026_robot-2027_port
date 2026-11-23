@@ -1,0 +1,6 @@
+{
+  "name": "Zones",
+  "runs": [
+    { "scenario": "zones", "alliances": ["BLUE", "RED"] }
+  ]
+}

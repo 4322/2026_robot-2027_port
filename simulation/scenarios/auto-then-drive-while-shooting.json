@@ -1,0 +1,21 @@
+{
+  "name": "Auto then Drive While Shooting",
+  "description": "R_AGGRESSIVE_FULL auto followed by the drive-while-shooting teleop.",
+  "auto": { "routine": "R_AGGRESSIVE_FULL", "duration": 20, "events": [] },
+  "teleop": {
+    "events": [
+      { "wait": 0.1, "type": "setPose", "location": "OwnRightWallStrip", "label": "Start pose" },
+      { "wait": 0.1, "type": "button", "button": "LEFT_BUMPER", "action": "hold", "label": "Start intake button" },
+      { "wait": 0.1, "type": "button", "button": "LEFT_BUMPER", "action": "release", "label": "Release intake button" },
+      { "wait": 0.1, "type": "drive", "x": 0, "y": 1, "label": "Move Left No Shoot" },
+      { "wait": 3, "type": "drive", "x": 0, "y": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "trigger", "side": "RIGHT", "value": 1, "label": "Start shooting" },
+      { "wait": 2, "type": "drive", "x": 0, "y": -1, "label": "Move Right Shoot" },
+      { "wait": 3.5, "type": "drive", "x": 0, "y": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "turn", "rate": 1, "label": "Spin Shoot" },
+      { "wait": 10, "type": "turn", "rate": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "trigger", "side": "RIGHT", "value": 0, "label": "Stop shooting" },
+      { "wait": 0.1, "type": "end", "label": "End" }
+    ]
+  }
+}

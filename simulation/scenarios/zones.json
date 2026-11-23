@@ -1,0 +1,20 @@
+{
+  "name": "Zones",
+  "description": "Drives through the zone boundaries and trenches, then shoots from a fixed spot.",
+  "teleop": {
+    "events": [
+      { "wait": 0, "type": "setPose", "location": "ZonesLateralStart", "label": "Lateral" },
+      { "wait": 0.1, "type": "drive", "x": 0, "y": 0.42, "label": "Move" },
+      { "wait": 10, "type": "drive", "x": 0, "y": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "setPose", "location": "ZonesRightTrenchStart", "label": "Right Trench" },
+      { "wait": 0.1, "type": "drive", "x": 0.46, "y": 0, "label": "Move" },
+      { "wait": 10, "type": "drive", "x": 0, "y": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "setPose", "location": "ZonesLeftTrenchStart", "label": "Left Trench" },
+      { "wait": 0.1, "type": "drive", "x": 0.46, "y": 0, "label": "Move" },
+      { "wait": 10, "type": "drive", "x": 0, "y": 0, "label": "Stop" },
+      { "wait": 0.1, "type": "setPose", "location": "ZonesFixedShootSpot", "label": "Fixed Pose" },
+      { "wait": 0.1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold", "label": "Fixed Shoot" },
+      { "wait": 5, "type": "end", "label": "End" }
+    ]
+  }
+}

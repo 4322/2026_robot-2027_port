@@ -1,0 +1,23 @@
+{
+  "name": "Subsystem Test",
+  "description": "Intake on/off, then a drive and turn pattern.",
+  "teleop": {
+    "events": [
+      { "wait": 0, "type": "setPose", "location": "OwnRightTrenchNeutralSide", "label": "Start Pose" },
+      { "wait": 4, "type": "button", "button": "Y", "action": "press", "label": "Start Intake" },
+      { "wait": 1, "type": "button", "button": "X", "action": "press", "label": "Stop Intake" },
+      { "wait": 2, "type": "drive", "x": 0.5, "y": 0, "label": "Drive 1" },
+      { "wait": 1, "type": "drive", "x": 0.5, "y": 0.5, "label": "Drive 2" },
+      { "wait": 0, "type": "turn", "rate": -0.5, "label": "Turn 1" },
+      { "wait": 1.5, "type": "drive", "x": 0, "y": -0.5, "label": "Drive 3" },
+      { "wait": 0, "type": "turn", "rate": 0.5, "label": "Turn 2" },
+      { "wait": 1.5, "type": "turn", "rate": 0, "label": "Turn 3" },
+      { "wait": 0.75, "type": "drive", "x": -0.8, "y": 0, "label": "Drive 4" },
+      { "wait": 2, "type": "drive", "x": -0.5, "y": 0.5, "label": "Drive 5" },
+      { "wait": 0.75, "type": "drive", "x": 0.5, "y": 0.5, "label": "Drive 6" },
+      { "wait": 1, "type": "drive", "x": 0, "y": 0.75, "label": "Drive 7" },
+      { "wait": 1, "type": "drive", "x": 0, "y": 0, "label": "Drive 8" },
+      { "wait": 3, "type": "end", "label": "Final Movement" }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Slowly Up Down",
+  "description": "Slow strafes left and right. (The old Java version fired every event at t=0 and had no end.)",
+  "teleop": {
+    "events": [
+      { "wait": 0, "type": "drive", "x": 0, "y": 0.3, "label": "Strafe left" },
+      { "wait": 3, "type": "drive", "x": 0, "y": -0.3, "label": "Strafe right" },
+      { "wait": 3, "type": "drive", "x": 0, "y": 0.3, "label": "Strafe left" },
+      { "wait": 3, "type": "drive", "x": 0, "y": -0.3, "label": "Strafe right" },
+      { "wait": 3, "type": "stopJoysticks" },
+      { "wait": 0.5, "type": "end" }
+    ]
+  }
+}

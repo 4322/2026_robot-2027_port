@@ -1,0 +1,4 @@
+{
+  "name": "Auto R_AGGRESSIVE_FULL",
+  "auto": { "routine": "R_AGGRESSIVE_FULL", "duration": 20, "events": [] }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Two Sweep Autos",
+  "runs": [
+    { "scenario": "auto-r-aggressive-full", "alliances": ["BLUE"] },
+    { "scenario": "auto-r-codeorange", "alliances": ["BLUE"] },
+    { "scenario": "auto-l-aggressive-full", "alliances": ["BLUE"] },
+    { "scenario": "auto-l-codeorange", "alliances": ["BLUE"] },
+    { "scenario": "auto-r-aggressive-full", "alliances": ["RED"] },
+    { "scenario": "auto-r-codeorange", "alliances": ["RED"] },
+    { "scenario": "auto-l-aggressive-full", "alliances": ["RED"] },
+    { "scenario": "auto-l-codeorange", "alliances": ["RED"] }
+  ]
+}

@@ -185,3 +185,8 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+# Simulator runtime files (written by the sim and the simEditor GUI)
+simulation/run.json
+simulation/results/
+simulation/.stop

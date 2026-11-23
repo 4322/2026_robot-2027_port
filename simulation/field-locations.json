@@ -1,0 +1,31 @@
+{
+  "field": { "length": 16.541, "width": 8.0693 },
+  "preview": { "maxSpeedMps": 4.5, "maxTurnDegPerSec": 360 },
+  "locations": {
+    "FieldOrigin": { "x": 0, "y": 0, "deg": 0 },
+    "AllianceZoneTestSpot": { "x": 2, "y": 2, "deg": 0 },
+    "NeutralZoneFacingOwnWall": { "x": 12, "y": 4, "deg": 180 },
+    "OwnRightTrenchNeutralSide": { "x": 4.44, "y": 0.65, "deg": 0 },
+    "OwnRightTrenchApproach": { "x": 3, "y": 1, "deg": 0 },
+    "OwnLeftTrenchApproach": { "x": 3, "y": 8, "deg": 0 },
+    "OppRightTrenchApproach": { "x": 13, "y": 1, "deg": 0 },
+    "OppLeftTrenchApproach": { "x": 13, "y": 8, "deg": 0 },
+    "OwnRightWallStrip": { "x": 3, "y": 0.5, "deg": 0 },
+    "ZonesLateralStart": { "x": 3.7, "y": -0.5, "deg": 0 },
+    "ZonesRightTrenchStart": { "x": -0.5, "y": 0.5, "deg": 0 },
+    "ZonesLeftTrenchStart": { "x": -0.5, "y": 7.5, "deg": 0 },
+    "ZonesFixedShootSpot": { "x": 3.7, "y": 6.5, "deg": 0 }
+  },
+  "features": [
+    { "name": "Blue hub", "x1": 4.0284, "y1": 3.4378, "x2": 5.2222, "y2": 4.6316, "color": "#7f7f7f" },
+    { "name": "Blue trench R", "x1": 4.3434, "y1": 0, "x2": 4.9073, "y2": 1.285, "color": "#c9a227" },
+    { "name": "Blue trench L", "x1": 4.3434, "y1": 6.7906, "x2": 4.9073, "y2": 8.0693, "color": "#c9a227" },
+    { "name": "Blue bump R", "x1": 4.0284, "y1": 1.5836, "x2": 5.2222, "y2": 3.4378, "color": "#8a6d3b" },
+    { "name": "Blue bump L", "x1": 4.0284, "y1": 4.6316, "x2": 5.2222, "y2": 6.4858, "color": "#8a6d3b" },
+    { "name": "Red hub", "x1": 11.3187, "y1": 3.4378, "x2": 12.5125, "y2": 4.6316, "color": "#7f7f7f" },
+    { "name": "Red trench R", "x1": 11.6337, "y1": 6.7843, "x2": 12.1976, "y2": 8.0693, "color": "#c9a227" },
+    { "name": "Red trench L", "x1": 11.6337, "y1": 0, "x2": 12.1976, "y2": 1.2788, "color": "#c9a227" },
+    { "name": "Red bump R", "x1": 11.3187, "y1": 4.6316, "x2": 12.5125, "y2": 6.4858, "color": "#8a6d3b" },
+    { "name": "Red bump L", "x1": 11.3187, "y1": 1.5836, "x2": 12.5125, "y2": 3.4378, "color": "#8a6d3b" }
+  ]
+}

@@ -98,8 +98,63 @@ test {
 }
 
 // Simulation configuration (e.g. environment variables).
-wpi.sim.addGui().defaultEnabled = true
+// -PsimHeadless runs scripted simulator suites without the sim GUI window (the editor's Run tab
+// sets it when "Headless" is ticked).
+wpi.sim.addGui().defaultEnabled = !project.hasProperty('simHeadless')
 wpi.sim.addDriverstation()
+// Lets frc.robot.sim.Simulator find simulation/ no matter what working directory the sim uses.
+wpi.sim.getEnvironment().put("SIM_ROOT", projectDir.absolutePath)
+
+// `./gradlew run` launches the desktop simulation (this is what the simEditor Run tab uses).
+// Load the sim GUI extension the same way the VS Code "Simulate Robot Code" command does.
+tasks.named('run') {
+    environment 'SIM_ROOT', projectDir.absolutePath
+    if (!project.hasProperty('simHeadless')) {
+        def os = System.getProperty('os.name').toLowerCase()
+        def guiLib = os.contains('win') ? 'halsim_gui.dll' : (os.contains('mac') ? 'libhalsim_gui.dylib' : 'libhalsim_gui.so')
+        environment 'HALSIM_EXTENSIONS', new File(buildDir, "jni/release/${guiLib}").absolutePath
+    }
+}
+
+// Simulator scenario editor / runner (JavaFX). Run with: ./gradlew simEditor
+// Layouts are FXML and styling is CSS in src/simgui/resources/frc/robot/simgui (the source set's
+// default resources folder; the FXML files can be opened in
+// Scene Builder). It only uses frc.robot.sim.scenario (plain Java + json-simple), so no WPILib
+// natives load.
+def javafxVersion = '25.0.1'
+def javafxPlatform = {
+    def os = System.getProperty('os.name').toLowerCase()
+    def arm = System.getProperty('os.arch').toLowerCase().contains('aarch64')
+    if (os.contains('win')) return 'win'
+    if (os.contains('mac')) return arm ? 'mac-aarch64' : 'mac'
+    return arm ? 'linux-aarch64' : 'linux'
+}()
+sourceSets {
+    simgui {
+        java.srcDir 'src/simgui/java'
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+configurations {
+    simguiImplementation.extendsFrom implementation
+}
+dependencies {
+    ['base', 'graphics', 'controls', 'fxml'].each { module ->
+        simguiImplementation "org.openjfx:javafx-${module}:${javafxVersion}:${javafxPlatform}"
+    }
+}
+tasks.register('simEditor', JavaExec) {
+    group = 'simulation'
+    description = 'Opens the simulator scenario editor and runner GUI.'
+    dependsOn tasks.named('classes'), tasks.named('simguiClasses')
+    classpath = sourceSets.simgui.runtimeClasspath
+    mainClass = 'frc.robot.simgui.Launcher'
+    workingDir = projectDir
+    // JavaFX loads its native libraries; allow it without a warning on every launch
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+    args projectDir.absolutePath
+}
 
 application.mainClass = ROBOT_MAIN_CLASS
 

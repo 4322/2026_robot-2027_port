@@ -1,0 +1,7 @@
+{
+  "name": "Controller Test",
+  "runs": [
+    { "scenario": "controller-test-1", "alliances": ["BLUE"] },
+    { "scenario": "controller-test-2", "alliances": ["BLUE"] }
+  ]
+}

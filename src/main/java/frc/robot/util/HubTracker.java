@@ -7,7 +7,6 @@ import org.wpilib.driverstation.MatchState;
 import org.wpilib.driverstation.RobotState;
 import org.wpilib.driverstation.Alliance;
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.Mode;
 import java.util.Optional;
 
 // TODO check if in practice mode
@@ -182,10 +181,7 @@ public class HubTracker {
    * if in between auto and teleop
    */
   public static double getMatchTime() {
-    // TODO get match time working for sim
-    if (Constants.currentMode == Mode.SIM) {
-      return 10;
-    }
+    // In simulation, frc.robot.sim.Simulator drives the DS match time countdown.
     if (RobotState.isAutonomous()) {
       if (MatchState.getMatchTime() < 0) return MatchState.getMatchTime();
       return 20 - MatchState.getMatchTime();

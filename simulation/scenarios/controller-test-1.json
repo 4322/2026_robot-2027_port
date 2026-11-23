@@ -1,0 +1,38 @@
+{
+  "name": "Controller Test 1",
+  "description": "Exercises every input type; Sim/Debug logs button edges. Ends with inputs still held so controller-test-2 can check they were reset.",
+  "debugBindings": true,
+  "teleop": {
+    "events": [
+      { "wait": 1, "type": "setPose", "location": "NeutralZoneFacingOwnWall", "label": "Start pose" },
+      { "wait": 1, "type": "button", "button": "X", "action": "press" },
+      { "wait": 1, "type": "pov", "direction": "LEFT", "action": "press" },
+      { "wait": 1, "type": "button", "button": "LEFT_BUMPER", "action": "press" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "press" },
+      { "wait": 1, "type": "button", "button": "X", "action": "hold" },
+      { "wait": 1, "type": "pov", "direction": "LEFT", "action": "hold" },
+      { "wait": 1, "type": "trigger", "side": "LEFT", "value": 1 },
+      { "wait": 1, "type": "trigger", "side": "RIGHT", "value": 1 },
+      { "wait": 1, "type": "button", "button": "LEFT_BUMPER", "action": "hold" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold" },
+      { "wait": 1, "type": "button", "button": "X", "action": "release" },
+      { "wait": 1, "type": "drive", "x": -0.3, "y": 0.3 },
+      { "wait": 1, "type": "turn", "rate": 0.3 },
+      { "wait": 1, "type": "pov", "direction": "CENTER", "action": "hold", "label": "Release POV" },
+      { "wait": 1, "type": "trigger", "side": "LEFT", "value": 0 },
+      { "wait": 1, "type": "trigger", "side": "RIGHT", "value": 0 },
+      { "wait": 1, "type": "button", "button": "LEFT_BUMPER", "action": "release" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "release" },
+      { "wait": 1, "type": "stopJoysticks" },
+      { "wait": 1, "type": "pov", "direction": "UP", "action": "hold" },
+      { "wait": 1, "type": "trigger", "side": "LEFT", "value": 1 },
+      { "wait": 1, "type": "trigger", "side": "RIGHT", "value": 1 },
+      { "wait": 1, "type": "button", "button": "LEFT_BUMPER", "action": "hold" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold" },
+      { "wait": 1, "type": "drive", "x": -0.3, "y": 0.3 },
+      { "wait": 1, "type": "turn", "rate": -0.3 },
+      { "wait": 1, "type": "button", "button": "X", "action": "hold" },
+      { "wait": 1, "type": "end", "label": "Final Movement" }
+    ]
+  }
+}

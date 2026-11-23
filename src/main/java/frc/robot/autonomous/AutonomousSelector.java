@@ -24,7 +24,7 @@ import frc.robot.autonomous.modes.secondShallow.RSecondShallowTrenchDepot;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
-import frc.robot.subsystems.Simulator;
+import frc.robot.sim.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -32,6 +32,7 @@ import frc.robot.subsystems.shooter.hood.Hood;
 import frc.robot.subsystems.shooter.turret.Turret;
 import frc.robot.subsystems.vision.visionObjectDetection.VisionObjectDetection;
 import java.util.List;
+import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 public class AutonomousSelector {
@@ -143,15 +144,19 @@ public class AutonomousSelector {
   }
 
   public Command get() {
-    if (Constants.currentMode == Mode.SIM) {
+    Optional<AutoName> simAuto =
+        Constants.currentMode == Mode.SIM ? Simulator.requestedAuto() : Optional.empty();
+    if (simAuto.isPresent()) {
       for (Auto nextAuto : autos) {
-        if (nextAuto.name == Simulator.getAutoScenario()) {
-          Logger.recordOutput("AutoName", Simulator.getAutoScenario());
+        if (nextAuto.name == simAuto.get()) {
+          Logger.recordOutput("AutoName", simAuto.get());
           return nextAuto.command;
         }
       }
-      System.out.println("Simulated auto " + Simulator.getAutoScenario() + " not found");
-      System.exit(1);
+      // Report and keep going so the rest of the suite still runs.
+      Simulator.reportError(
+          "Auto " + simAuto.get() + " is not in the auto list (check Constants.enableCharacterizationAutos)");
+      return Commands.none();
     }
     return autonomousSelector.getSelected();
   }

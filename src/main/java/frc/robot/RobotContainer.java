@@ -18,7 +18,7 @@ import frc.robot.commands.ShooterCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Simulator;
+import frc.robot.sim.Simulator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOBoron;

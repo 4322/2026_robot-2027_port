@@ -1,0 +1,36 @@
+{
+  "name": "Trenches",
+  "description": "Drives through all four trenches with the intake deployed while shooting. Poses are alliance-relative: on RED every pose is mirrored, so 'own' trenches are always the ones by your own driver station.",
+  "teleop": {
+    "events": [
+      { "wait": 0.1, "type": "setPose", "location": "OwnRightTrenchApproach", "label": "Start pose" },
+      { "wait": 0, "type": "expect", "probe": "pose", "location": "OwnRightTrenchApproach", "tolerance": 0.3, "within": 0.5, "label": "At start pose" },
+      { "wait": 0.1, "type": "button", "button": "LEFT_BUMPER", "action": "hold", "label": "Deploy intake" },
+      { "wait": 3, "type": "trigger", "side": "RIGHT", "value": 1, "label": "Shoot" },
+      { "wait": 0.1, "type": "drive", "x": 1, "y": 0, "label": "Go through own right trench" },
+      { "wait": 0, "type": "expect", "probe": "drive.speedMps", "min": 2, "within": 1.5, "label": "Driving through own right trench" },
+      { "wait": 5, "type": "drive", "x": -1, "y": 0, "label": "Go back through own right trench" },
+      { "wait": 5, "type": "setPose", "location": "OwnLeftTrenchApproach", "label": "Own left trench pose" },
+      { "wait": 0, "type": "expect", "probe": "pose", "location": "OwnLeftTrenchApproach", "tolerance": 0.3, "within": 0.5, "label": "At own left trench" },
+      { "wait": 0.1, "type": "drive", "x": 1, "y": 0, "label": "Go through own left trench" },
+      { "wait": 5, "type": "drive", "x": -1, "y": 0, "label": "Go back through own left trench" },
+      { "wait": 5, "type": "setPose", "location": "OppRightTrenchApproach", "label": "Opposing right trench pose" },
+      {
+        "wait": 0,
+        "type": "expect",
+        "probe": "pose",
+        "location": "OppRightTrenchApproach",
+        "tolerance": 0.3,
+        "within": 0.5,
+        "label": "At opposing right trench"
+      },
+      { "wait": 0.1, "type": "drive", "x": -1, "y": 0, "label": "Go through opposing right trench" },
+      { "wait": 5, "type": "drive", "x": 1, "y": 0, "label": "Go back through opposing right trench" },
+      { "wait": 5, "type": "setPose", "location": "OppLeftTrenchApproach", "label": "Opposing left trench pose" },
+      { "wait": 0, "type": "expect", "probe": "pose", "location": "OppLeftTrenchApproach", "tolerance": 0.3, "within": 0.5, "label": "At opposing left trench" },
+      { "wait": 0.1, "type": "drive", "x": -1, "y": 0, "label": "Go through opposing left trench" },
+      { "wait": 5, "type": "drive", "x": 1, "y": 0, "label": "Go back through opposing left trench" },
+      { "wait": 5, "type": "end", "label": "End" }
+    ]
+  }
+}

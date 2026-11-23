@@ -1,0 +1,14 @@
+{
+  "name": "Full Regression",
+  "runs": [
+    { "scenario": "controller-test-1", "alliances": ["BLUE"] },
+    { "scenario": "controller-test-2", "alliances": ["BLUE"] },
+    { "scenario": "subsystem-test", "alliances": ["BLUE"] },
+    { "scenario": "intake-test", "alliances": ["BLUE"] },
+    { "scenario": "drive-while-shooting", "alliances": ["BLUE"] },
+    { "scenario": "auto-rotate", "alliances": ["BLUE"] },
+    { "scenario": "zones", "alliances": ["BLUE", "RED"] },
+    { "scenario": "trenches", "alliances": ["BLUE", "RED"] },
+    { "autos": "ALL", "alliances": ["BLUE", "RED"], "duration": 20 }
+  ]
+}

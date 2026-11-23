@@ -1,0 +1,17 @@
+{
+  "name": "Turret Test",
+  "description": "Requires the turret to be unlocked. Spins in place while shooting, with unjam.",
+  "teleop": {
+    "events": [
+      { "wait": 0.1, "type": "button", "button": "LEFT_BUMPER", "action": "hold", "label": "Start intake" },
+      { "wait": 0.1, "type": "button", "button": "LEFT_BUMPER", "action": "release", "label": "Release button" },
+      { "wait": 0.5, "type": "trigger", "side": "RIGHT", "value": 1, "label": "Start shooting" },
+      { "wait": 0.1, "type": "setPose", "location": "AllianceZoneTestSpot", "label": "Start pose" },
+      { "wait": 0.1, "type": "turn", "rate": 0.3, "label": "Spin" },
+      { "wait": 1, "type": "button", "button": "RIGHT_BUMPER", "action": "hold", "label": "Start unjam button" },
+      { "wait": 5, "type": "button", "button": "RIGHT_BUMPER", "action": "release", "label": "Stop unjam button" },
+      { "wait": 20, "type": "turn", "rate": -0.3, "label": "Spin" },
+      { "wait": 40, "type": "end", "label": "Final Movement" }
+    ]
+  }
+}

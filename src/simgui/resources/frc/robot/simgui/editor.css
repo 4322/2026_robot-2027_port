@@ -1,0 +1,142 @@
+/*
+ * Simulator editor theme. JavaFX's built-in "Modena" theme derives most colours from the
+ * variables in .root, so changing the palette below restyles the whole app.
+ * Reference: https://openjfx.io/javadoc/25/javafx.graphics/javafx/scene/doc-files/cssref.html
+ */
+
+.root {
+    /* palette */
+    -app-bg: #1e2126;
+    -app-panel: #262a31;
+    -app-panel-border: #353b44;
+    -app-text: #e6e8eb;
+    -app-muted: #9aa3ad;
+    -app-accent: #f28c28;          /* orange */
+    -app-ok: #5cc56b;
+    -app-warn: #f2b84b;
+    -app-error: #ef6461;
+
+    /* Modena inputs */
+    -fx-base: #30353d;
+    -fx-background: -app-bg;
+    -fx-control-inner-background: #2a2f36;
+    -fx-control-inner-background-alt: #2e333b;
+    -fx-accent: -app-accent;
+    -fx-default-button: derive(-app-accent, -10%);
+    -fx-focus-color: -app-accent;
+    -fx-faint-focus-color: transparent;
+    -fx-selection-bar: derive(-app-accent, -35%);
+    -fx-selection-bar-non-focused: #3c434d;
+    -fx-text-base-color: -app-text;
+    -fx-font-size: 13px;
+}
+
+/* ---------- layout pieces ---------- */
+
+.card {
+    -fx-background-color: -app-panel;
+    -fx-background-radius: 6;
+    -fx-border-color: -app-panel-border;
+    -fx-border-radius: 6;
+    -fx-padding: 10;
+}
+
+.section-title {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-muted;
+    -fx-padding: 0 0 4 0;
+}
+
+.app-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-accent;
+}
+
+.hint {
+    -fx-text-fill: -app-muted;
+    -fx-font-style: italic;
+    -fx-font-size: 12px;
+}
+
+.status-bar {
+    -fx-background-color: #181a1e;
+    -fx-padding: 6 10 6 10;
+    -fx-border-color: -app-panel-border transparent transparent transparent;
+}
+
+.status-ok { -fx-text-fill: -app-ok; }
+.status-warn { -fx-text-fill: -app-warn; }
+.status-error { -fx-text-fill: -app-error; }
+
+/* ---------- buttons ---------- */
+
+.button.primary {
+    -fx-base: -app-accent;
+    -fx-text-fill: #1e1e1e;
+    -fx-font-weight: bold;
+}
+
+.button.danger {
+    -fx-base: #7a2f2e;
+}
+
+.button.icon {
+    -fx-min-width: 34;
+}
+
+.toggle-button.red-preview:selected {
+    -fx-base: #a33a38;
+}
+
+/* ---------- tabs ---------- */
+
+.tab-pane > .tab-header-area > .headers-region > .tab {
+    -fx-padding: 4 14 4 14;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected {
+    -fx-border-color: transparent transparent -app-accent transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+/* ---------- lists & tables ---------- */
+
+.scenario-list .list-cell.dirty {
+    -fx-font-style: italic;
+}
+
+.scenario-list .list-cell.invalid {
+    -fx-text-fill: -app-error;
+}
+
+.table-view .result-pass { -fx-text-fill: -app-ok; -fx-font-weight: bold; }
+.table-view .result-fail { -fx-text-fill: -app-error; -fx-font-weight: bold; }
+.table-view .result-other { -fx-text-fill: -app-muted; }
+
+/* ---------- event form ---------- */
+
+.event-form {
+    -fx-hgap: 10;
+    -fx-vgap: 6;
+    -fx-padding: 4 2 4 2;
+}
+
+.event-form .form-label {
+    -fx-text-fill: -app-muted;
+}
+
+.event-type-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -app-accent;
+}
+
+/* ---------- console ---------- */
+
+.console {
+    -fx-font-family: "Consolas", "Menlo", monospace;
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #15171a;
+}

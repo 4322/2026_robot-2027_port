@@ -1,0 +1,7 @@
+{
+  "name": "Subsystem Test (teleop)",
+  "runs": [
+    { "scenario": "intake-test", "alliances": ["BLUE"] },
+    { "scenario": "drive-while-shooting", "alliances": ["BLUE"] }
+  ]
+}

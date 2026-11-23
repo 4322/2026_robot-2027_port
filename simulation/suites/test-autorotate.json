@@ -1,0 +1,6 @@
+{
+  "name": "Auto Rotate",
+  "runs": [
+    { "scenario": "auto-rotate", "alliances": ["BLUE"] }
+  ]
+}

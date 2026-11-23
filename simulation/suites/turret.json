@@ -1,0 +1,6 @@
+{
+  "name": "Turret",
+  "runs": [
+    { "scenario": "turret", "alliances": ["BLUE"] }
+  ]
+}

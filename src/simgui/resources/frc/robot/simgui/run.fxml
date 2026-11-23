@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Run tab: choose what to run, start/stop it, watch the console, read pass/fail results. -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="frc.robot.simgui.RunController">
+  <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
+  <fx:define>
+    <ToggleGroup fx:id="modeGroup"/>
+    <ToggleGroup fx:id="sourceGroup"/>
+  </fx:define>
+
+  <top>
+    <VBox spacing="10" styleClass="card">
+      <BorderPane.margin><Insets bottom="8"/></BorderPane.margin>
+      <HBox spacing="16" alignment="CENTER_LEFT">
+        <Label text="MODE" styleClass="section-title"/>
+        <RadioButton fx:id="scripted" text="Scripted" toggleGroup="$modeGroup" selected="true"/>
+        <RadioButton fx:id="manual" text="Manual gamepad" toggleGroup="$modeGroup"/>
+      </HBox>
+
+      <StackPane>
+        <!-- scripted options -->
+        <GridPane fx:id="scriptedPane" hgap="10" vgap="8">
+          <RadioButton fx:id="bySuite" text="Suite" toggleGroup="$sourceGroup" selected="true"
+                       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+          <ComboBox fx:id="suite" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+          <RadioButton fx:id="byScenarios" text="Scenarios" toggleGroup="$sourceGroup"
+                       GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP"/>
+          <ListView fx:id="scenarioList" prefHeight="130" prefWidth="260" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+          <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <Label text="on"/>
+            <CheckBox fx:id="blue" text="BLUE" selected="true"/>
+            <CheckBox fx:id="red" text="RED"/>
+          </VBox>
+          <Label styleClass="hint" wrapText="true" maxWidth="360" GridPane.columnIndex="3" GridPane.rowIndex="1"
+                 GridPane.valignment="TOP"
+                 text="Ctrl/Shift-click to pick several. Each runs once per ticked alliance, in list order."/>
+          <CheckBox fx:id="headless" text="Headless (no sim GUI window)" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </GridPane>
+
+        <!-- manual gamepad options -->
+        <HBox fx:id="manualPane" spacing="24" visible="false">
+          <GridPane hgap="10" vgap="8">
+            <Label text="Alliance" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <ComboBox fx:id="manualAlliance" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="Robot mode" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="manualMode" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <Label text="Start location" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <ComboBox fx:id="manualStart" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Auto routine" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="manualAuto" prefWidth="200" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+          </GridPane>
+          <VBox spacing="4" maxWidth="560">
+            <Label text="HOW TO DRIVE" styleClass="section-title"/>
+            <Label wrapText="true" text="1. Plug in your gamepad BEFORE pressing Run (the sim GUI only lists controllers it saw at start-up). The sim GUI window always opens in manual mode."/>
+            <Label wrapText="true" text="2. In the sim GUI's System Joysticks window, drag your controller onto slot 1 (not 0) of the Joysticks window."/>
+            <Label wrapText="true" text="3. Tick Map gamepad for slot 1. The simulator converts it from the 2027 layout to the old Xbox layout the robot code reads, and puts it on Joystick 0."/>
+            <Label wrapText="true" text="4. In the Robot State window, select Teleoperated (or Autonomous), then click Enable below it. Selecting the mode alone leaves the robot disabled, and a disabled robot ignores the controller."/>
+            <Label styleClass="hint" wrapText="true"
+                   text="The console below shows where your controller is, e.g. '[Sim] Controller: XInput Controller #1 on Joystick 1 -> robot Joystick 0 as an Xbox controller' (also logged as Sim/Manual/Controller). In AdvantageScope's Joysticks tab, view Joystick 1: Joystick 0 is the converted copy in the old layout, which AdvantageScope draws wrong. The sim GUI remembers the assignment in simgui-ds.json, so steps 2-3 are once per controller."/>
+            <Label styleClass="hint" wrapText="true"
+                   text="The simulator only sets alliance, mode and start pose; it never touches the controller. Match time counts down while enabled. Auto routine (blank = dashboard choice) runs when you enable Autonomous."/>
+          </VBox>
+        </HBox>
+      </StackPane>
+
+      <HBox spacing="8" alignment="CENTER_LEFT">
+        <Button fx:id="runButton" text="▶  Run" styleClass="primary" onAction="#run"/>
+        <Button fx:id="stopButton" text="■  Stop" styleClass="danger" onAction="#stop"/>
+        <CheckBox fx:id="offline" text="Gradle --offline" selected="true"/>
+        <Button text="Clear console" onAction="#clearConsole"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="state" text="Idle"/>
+      </HBox>
+    </VBox>
+  </top>
+
+  <center>
+    <SplitPane orientation="VERTICAL" dividerPositions="0.55">
+      <TextArea fx:id="console" editable="false" styleClass="console" wrapText="false"/>
+      <VBox spacing="6">
+        <padding><Insets top="6"/></padding>
+        <Label styleClass="hint" wrapText="true"
+               text="Results. Double-click a check to open it in the Scenario tab. Robot output: open the log in AdvantageScope, or connect AdvantageScope live (NT4) while it runs."/>
+        <TableView fx:id="results" VBox.vgrow="ALWAYS">
+          <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN"/></columnResizePolicy>
+          <columns>
+            <TableColumn fx:id="colResult" text="Result" prefWidth="70" sortable="false"/>
+            <TableColumn fx:id="colTest" text="Test" prefWidth="260" sortable="false"/>
+            <TableColumn fx:id="colAlliance" text="Alliance" prefWidth="70" sortable="false"/>
+            <TableColumn fx:id="colCheck" text="Check / error" prefWidth="320" sortable="false"/>
+            <TableColumn fx:id="colTime" text="Sim time" prefWidth="70" sortable="false"/>
+            <TableColumn fx:id="colObserved" text="Observed" prefWidth="320" sortable="false"/>
+          </columns>
+          <placeholder><Label text="No results yet."/></placeholder>
+        </TableView>
+      </VBox>
+    </SplitPane>
+  </center>
+</BorderPane>
