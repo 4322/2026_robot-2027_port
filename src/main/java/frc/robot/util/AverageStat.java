@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import org.wpilib.math.geometry.Pose2d;
+
 public class AverageStat {
   private double[] samples;
   private int maxSamples;
@@ -11,6 +13,8 @@ public class AverageStat {
     this.maxSamples = maxSamples;
     samples = new double[maxSamples];
   }
+
+  private Pose2d pose = new Pose2d()
 
   public void addSample(double sample) {
     if (numSamples < maxSamples) {

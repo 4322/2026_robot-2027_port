@@ -1,0 +1,16 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "mcp": {
+    "exa": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "exa-mcp-server"
+      ],
+      "environment": {
+        "EXA_API_KEY": "e53202bc-804a-4468-8bb6-f5a02d139054"
+      }
+    }
+  }
+}
